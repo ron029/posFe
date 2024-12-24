@@ -1,4 +1,4 @@
-import auth from "../APIs/auth";
+import AUTH_API from "../APIs/auth";
 import AXIOS from "@/plugins/axios";
 
 export const authentication = {
@@ -8,7 +8,7 @@ export const authentication = {
   actions: {
     login({commit}, args) {
         try {
-            auth
+            AUTH_API
             .login(args)
             .then(res => {
                 if (res.status === 200) {
@@ -21,7 +21,7 @@ export const authentication = {
     },
     async getCsrfToken() {
       try {
-        const res = await auth.getCsrfToken();
+        const res = await AUTH_API.getCsrfToken();
         AXIOS.defaults.headers.common['X-CSRF-TOKEN'] = res.data.csrfToken;
         return AXIOS.defaults.headers;
       } catch (err) {
@@ -31,7 +31,7 @@ export const authentication = {
     },
     async logout() {
         try {
-          await auth.logout();
+          await AUTH_API.logout();
         } catch (err) {
           console.error(err);
         }

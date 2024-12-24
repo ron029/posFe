@@ -33,7 +33,7 @@ AXIOS.interceptors.response.use((response) => {
 
     // if(response.status == 418) console.log("Server is a teapot.")
 
-    // if (response.status == 401) store.commit('IS_SESSION_EXPIRED', true)
+    if (response.status == 401) store.commit('IS_SESSION_EXPIRED', true)
 
     return response;
   } else {

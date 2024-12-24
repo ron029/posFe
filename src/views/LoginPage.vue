@@ -42,7 +42,6 @@ export default {
     },
     watch: {
         loginData(newVal) {
-            console.log('watch loginData newVal: ', newVal)
             if (newVal) {
                 if (newVal.STATUS === 200) {
                     this.$router.push({name: 'dashboard'})
