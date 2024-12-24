@@ -12,7 +12,6 @@ const routes = [
         component: () =>  { return import('@/views/LoginPage.vue') },
         beforeEnter(to, from, next) {
             const isLoggedIn = window.$cookies.get('login')
-            console.log('isLoggedIn: ', isLoggedIn)
             if (isLoggedIn) {
                 next(`/dashboard`);
             } else {

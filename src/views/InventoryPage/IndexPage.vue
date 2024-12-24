@@ -6,81 +6,25 @@
         <v-btn @click="show.category = true">Categories</v-btn>
         <v-btn @click="show.brand = true">Brands</v-btn>
         <v-btn @click="show.supplier = true">Suppliers</v-btn>
-        <v-expand-transition>
-            <div v-if="show.product">
-                <v-form
-                    ref="newProduct"
-                    v-model="valid"
-                    @submit.prevent="submitForm()"
-                >
-                    <v-autocomplete
-                        v-model.trim="item.category_id"
-                        :items="select.categories"
-                        item-text="name"
-                        item-value="category_id"
-                        label="Category Name"
-                        :rules="rule.category"
-                    ></v-autocomplete>
-                    <v-autocomplete
-                        v-model.trim="item.supplier_id"
-                        :items="select.suppliers"
-                        item-text="name"
-                        item-value="supplier_id"
-                        label="Supplier's Name"
-                        :rules="rule.supplier"
-                    ></v-autocomplete>
-                    <v-autocomplete
-                        v-model.trim="item.brand_id"
-                        :items="select.brands"
-                        item-text="name"
-                        item-value="brand_id"
-                        label="Brand Name"
-                        :rules="rule.brand"
-                    ></v-autocomplete>
-                    <v-text-field
-                        label="Product Name"
-                        v-model.trim="item.name"
-                        :rules="rule.name"
-                    ></v-text-field>
-                    <v-autocomplete
-                        v-model.trim="item.unit_id"
-                        :items="select.units"
-                        item-text="name"
-                        item-value="unit_id"
-                        label="Measurements"
-                        :rules="rule.unit"
-                    ></v-autocomplete>
-                    <v-text-field
-                        label="Quantity"
-                        type="number"
-                        v-model.trim=item.quantity
-                        :rules="rule.quantity"
-                    ></v-text-field>
-                    <v-text-field
-                        label="Price"
-                        v-model.trim="item.price"
-                        type="number"
-                        step="0.01"
-                        @input="validateDecimal"
-                        :rules="rule.price"
-                    ></v-text-field>
-                    <v-text-field
-                        label="Reorder Level"
-                        v-model.trim="item.reorder_level"
-                        type="number"
-                        :rules="rule.reorder_level"
-                    ></v-text-field>
-                    <v-btn color="success" type="submit" :disabled="!valid">submit</v-btn>
-                </v-form>
-            </div>
-        </v-expand-transition>
         <v-card>
             <v-data-table
                 :headers="productHeaders"
                 :items="productItems"
                 dense
-            ></v-data-table>
+            >
+                <template slot="item.actions" slot-scope="{ item }">
+                    <v-icon @click="editItem(item)" color="warning">mdi-pencil</v-icon>
+                    <v-icon @click="deleteItem(item)" color="error">mdi-trash-can</v-icon>
+                </template>
+            </v-data-table>
         </v-card>
+        <v-dialog v-if="show.productEdit">
+            <v-card>
+                <v-card-title>
+
+                </v-card-title>
+            </v-card>
+        </v-dialog>
         <showUnit
             :show="show.unit"
             @hideUnit="show.unit = false"
@@ -97,17 +41,41 @@
             :show="show.supplier"
             @hideSupplier="show.supplier = false"
         />
+        <addPage
+            v-if="show.product.status"
+            :data="{select}"
+            :show="show.product.status"
+            @closeAddProduct="show.product.status = false"
+        />
+        <editPage
+            v-if="show.product.edit"
+            :data="{select, item: show.product.data}"
+            :show="show.product.edit"
+            @closeEditProduct="show.product.edit = false"
+        />
+        <deletePage
+            v-if="show.product.delete"
+            :data="{item: show.product.data}"
+            :show="show.product.delete"
+            @closeDeleteDialog="show.product.delete = false"
+        />
     </div>
 </template>
 
 <script>
+import deletePage from './dialogs/ProductPage/DeletePage.vue';
+import addPage from './dialogs/ProductPage/AddPage.vue';
 import showBrand from './dialogs/BrandPage.vue';
 import showSupplier from './dialogs/SupplierPage.vue';
 import showUnit from './dialogs/UnitPage.vue';
 import showCategory from './dialogs/CategoryPage.vue';
 import { mapActions, mapGetters } from 'vuex';
+import editPage from './dialogs/ProductPage/EditPage.vue';
 export default {
     components: {
+        deletePage,
+        addPage,
+        editPage,
         showBrand,
         showSupplier,
         showUnit,
@@ -115,7 +83,12 @@ export default {
     },
     data: ()=>({
         show: {
-            product: false,
+            product: {
+                status: false,
+                delete: false,
+                edit: false,
+                data: [],
+            },
             unit: false,
             category: false,
             brand: false,
@@ -133,6 +106,7 @@ export default {
             brand_id: null,
             supplier_id: null,
             category_id: null,
+            barcode: null,
             name: null,
             price: null,
             quantity: null,
@@ -141,28 +115,21 @@ export default {
         productHeaders: [
             { text: 'Name', value: 'name' },
             { text: 'Price', value: 'price' },
+            { text: 'Barcode', value: 'barcode' },
             { text: 'Quantity', value: 'quantity' },
             { text: 'Reorder Level', value: 'reorder_level' },
+            { text: 'Unit', value: 'unit' },
+            { text: 'Brand', value: 'brand' },
+            { text: 'Category', value: 'category' },
+            { text: 'Supplier', value: 'supplier' },
+            { text: 'Actions', value: 'actions' }
         ],
         productItems: [],
-        rule: {
-            unit: [ v => !!v || 'Measurement is required' ] ,
-            brand: [ v => !!v || 'Brand Name is required'],
-            category: [ v => !!v || 'Category Name is required' ],
-            supplier: [ v => !!v || 'Supplier Name is required' ],
-            name: [ v => v && !!v.trim() || 'Product Name is required' ],
-            quantity: [ v => v && !!v.trim() || 'quantity is required' ],
-            price: [ v => !!v || 'price is required' ],
-            reorder_level: [ v => !!v || 'reorder_level is required' ],
-        }
     }),
     computed: {
-        ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData', 'productPostData'])
+        ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData'])
     },
     watch: {
-        productPostData(newVal) {
-            if (newVal) console.log('productPostData newVal: ', newVal)
-        },
         productData(newVal) {
             this.productItems = newVal.DATA
         },
@@ -181,20 +148,23 @@ export default {
     },
     methods: {
         ...mapActions(['getCsrfToken', 'units', 'categories', 'brands', 'suppliers', 'products', 'productPost']),
+        editItem(item) {
+            let stageItem = item
+            delete stageItem.unit
+            delete stageItem.brand
+            delete stageItem.supplier
+            delete stageItem.category
+            delete stageItem.unit
+            this.show.product.data = item
+            this.show.product.edit = !this.show.product.edit
+        },
+        deleteItem(item) {
+            this.show.product.data = item
+            this.show.product.delete = !this.show.product.delete
+        },
         showProductForm() {
-            this.show.product = !this.show.product
+            this.show.product.status = !this.show.product.status
         },
-        validateDecimal(value) {
-            // Ensure the value is a valid decimal with at most 2 decimal places
-            const validatedValue = value.match(/^\d*\.?\d{0,2}$/) ? value : this.item.price;
-            this.item.price = validatedValue; // Update only if the value is valid
-        },
-        submitForm() {
-            if (this.$refs.newProduct.validate()) {
-                console.log('form validate successufl')
-                this.productPost(this.item)
-            }
-        }
     },
     async mounted() {
         await this.getCsrfToken()
