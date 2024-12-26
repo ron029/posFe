@@ -181,8 +181,9 @@ export default {
         },
         unitPostData(newVal) {
             if (newVal.STATUS === 200) {
-                this.newItem.unit_id = newVal.DATA.insertId
-                this.createUnitItem()
+                // this.newItem.unit_id = newVal.DATA.insertId
+                // this.createUnitItem()
+                this.units()
             }
             this.loading = false
         },
@@ -194,23 +195,25 @@ export default {
         },
         unitPutData(newVal) {
             if (newVal.STATUS === 200) {
-                this.updateUnitItems()
+                // this.updateUnitItems()
+                this.units()
             }
             this.loading = false
         },
         unitDeleteData(newVal) {
             if (newVal.STATUS === 200) {
-                this.removeUnitItem()
+                // this.removeUnitItem()
+                this.units()
             }
             this.loading = false
         },
         async show() {
             await this.getCsrfToken()
-            this.categories()
+            this.units()
         }
     },
     methods: {
-        ...mapActions(['getCsrfToken', 'categories', 'unitPost', 'unitDelete', 'unitPut']),
+        ...mapActions(['getCsrfToken', 'units', 'unitPost', 'unitDelete', 'unitPut']),
         newUnit() {
             if (this.$refs.newUnit.validate()) {
                 this.loading = true

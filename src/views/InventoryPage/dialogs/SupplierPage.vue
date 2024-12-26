@@ -201,7 +201,8 @@ export default {
         },
         supplierDeleteData(newVal) {
             if (newVal.STATUS === 200) {
-                this.removeSupplierItem()
+                // this.removeSupplierItem()
+                this.suppliers()
             }
             this.loading = false
         },

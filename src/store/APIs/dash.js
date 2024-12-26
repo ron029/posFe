@@ -51,10 +51,10 @@ export default {
         return API.post('/dash/units', data)
     },
     unitDelete(data) {
-        return API.delete(`/dash/brands/${data.unit_id}`)
+        return API.delete(`/dash/units/${data.unit_id}`)
     },
     unitPut(data) {
-        return API.put(`/dash/brands/${data.unit_id}`, data)
+        return API.put(`/dash/units/${data.unit_id}`, data)
     },
 
     // categories

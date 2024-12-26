@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 import { authentication } from "./modules/auth";
-// import { dash } from './modules/dash'
+import { cashReg } from './modules/cashReg';
 import { product } from './modules/product';
 import { unit } from './modules/unit';
 import { brand } from './modules/brand';
@@ -16,7 +16,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   modules: {
     authentication,
-    // dash,
+    cashReg,
     product,
     unit,
     brand,

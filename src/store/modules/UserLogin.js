@@ -10,36 +10,13 @@ export const userLoginValidation = {
     isAccountLocked: "",
   },
   actions: {
-    loginValidationProvider({ commit }, userLoginCredentials) {
-      commit("USER_LOGIN_VALIDATION", "");
-      userLoginAPI.validateLoginProvider(userLoginCredentials).then((res) => {
-        // If true, will redirect to dashboard and login token is saved as cookie and loggedin cookie as modifier
-        if (res.status == 200) {
-          router.push("/provider/info");
-        } else {
-          // IF ACIVE AND USERNAME OR PASSWORD INCORRECT
-          commit("USER_LOGIN_VALIDATION", res.data.state);
-          // FOR login validation if user is INACTIVE or other NON-ACTIVE Status
-          commit("USER_LOGIN_MODIFIER", res.data.MODIFIER);
-          commit("USER_LOGIN_STATUS", res.data.status);
-        }
-      }).catch((error) => {
-        if (error.response.status == 406){
-          // IF ACIVE AND USERNAME OR PASSWORD INCORRECT
-          commit("USER_LOGIN_VALIDATION", error.response.data.LOGIN_MSG);
-          // FOR login validation if user is INACTIVE or other NON-ACTIVE Status
-          commit("USER_LOGIN_MODIFIER", error.response.data.MODIFIER);
-          commit("USER_LOGIN_STATUS", error.response.data.STATUS);
-        }
-      });
-    },
     // Call this action when login button is clicked
     loginValidation({ commit }, userLoginCredentials) {
       commit("USER_LOGIN_VALIDATION", "");
       userLoginAPI.validateLogin(userLoginCredentials).then((res) => {
         // If true, will redirect to dashboard and login token is saved as cookie and loggedin cookie as modifier
         if (res.data.IS_LOGGED_IN) {
-          router.push("/dashboard/info/");
+          router.push({name: 'pos'});
         } else {
           // IF ACIVE AND USERNAME OR PASSWORD INCORRECT
           commit("USER_LOGIN_VALIDATION", res.data.LOGIN_MSG);
@@ -77,7 +54,7 @@ export const userLoginValidation = {
       // VueCookie.remove("usermembn");
       // VueCookie.remove("PORTAL_LOGIN_AUTH");
       // window.location.reload();
-      userLoginAPI.userLogout().then((res) => {
+      userLoginAPI.userLogout().then(() => {
         window.location.href = '/'
       });
     },

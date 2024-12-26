@@ -200,17 +200,18 @@ export default {
         },
         brandDeleteData(newVal) {
             if (newVal.STATUS === 200) {
-                this.removeBrandItem()
+                // this.removeBrandItem()
+                this.brands()
             }
             this.loading = false
         },
         async show() {
             await this.getCsrfToken()
-            this.categories()
+            this.brands()
         }
     },
     methods: {
-        ...mapActions(['getCsrfToken', 'categories', 'brandPost', 'brandDelete', 'brandPut']),
+        ...mapActions(['getCsrfToken', 'brands', 'brandPost', 'brandDelete', 'brandPut']),
         newBrand() {
             if (this.$refs.newBrand.validate()) {
                 this.loading = true

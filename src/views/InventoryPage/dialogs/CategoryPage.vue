@@ -200,7 +200,8 @@ export default {
         },
         categoryDeleteData(newVal) {
             if (newVal.STATUS === 200) {
-                this.removeCategoryItem()
+                // this.removeCategoryItem()
+                this.categories()
             }
             this.loading = false
         },

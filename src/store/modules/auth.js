@@ -3,6 +3,7 @@ import AXIOS from "@/plugins/axios";
 
 export const authentication = {
   state: {
+    isUserTimeout: false, 
     loginData: null,
   },
   actions: {
@@ -11,9 +12,7 @@ export const authentication = {
             AUTH_API
             .login(args)
             .then(res => {
-                if (res.status === 200) {
-                    commit('LOGIN', res.data)
-                }
+                commit('LOGIN', res.data)
             })
         } catch (err) {
             console.error(err)
@@ -38,11 +37,18 @@ export const authentication = {
       },
   },
   mutations: {
+    IS_SESSION_EXPIRED(state, isUserTimeout) {
+        state.isUserTimeout = isUserTimeout
+    },
     LOGIN(state, loginData) {
+        state.isUserTimeout = false
         state.loginData = loginData
     }
   },
   getters: {
+    isUserTimeout(state) {
+        return state.isUserTimeout
+    },
     loginData(state) {
         return state.loginData;
     },

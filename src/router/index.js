@@ -9,11 +9,15 @@ Vue.use(VueRouter);
 const routes = [
     {
         path: '/',
+        name: 'login',
         component: () =>  { return import('@/views/LoginPage.vue') },
         beforeEnter(to, from, next) {
             const isLoggedIn = window.$cookies.get('login')
+            console.log('window.cookies: ', window.$cookies.get('POS_AUTH'))
+            console.log('window.cookies: ', window.$cookies.get('login'))
+            console.log('window.cookies: ', window.$cookies.get('user_id'))
             if (isLoggedIn) {
-                next(`/dashboard`);
+                next(`/pos`);
             } else {
                 // will prevent from going back to login page
                 next();
@@ -21,8 +25,8 @@ const routes = [
         },
     },
     {
-        path: '/dashboard',
-        name: 'dashboard',
+        path: '/pos',
+        name: 'pos',
         component: () =>  { return import('@/views/NavBar.vue') },
         meta: {
             middleware: [ auth ]
@@ -32,6 +36,14 @@ const routes = [
                 path: 'inventory',
                 name: 'inventory',
                 component: () =>  { return import('@/views/InventoryPage/IndexPage.vue') },
+                meta: {
+                    middleware: [ auth ]
+                },
+            },
+            {
+                path: 'cash-register',
+                name: 'cash-register',
+                component: () =>  { return import('@/views/CashRegisterPage/IndexPage.vue') },
                 meta: {
                     middleware: [ auth ]
                 },

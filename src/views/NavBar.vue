@@ -1,17 +1,20 @@
 <template>
-    <div style="height: 100%; vertical-align: top;">
+    <div style="height: 100%; vertical-align: top; font-size: 20px;">
         <v-card
-            style="position: absolute"
             height="100%"
-            width="300"
+            :style="`position: absolute; z-index: 5; display: ${this.$route.name === 'cash-register' ? 'none' : 'block'}`"
         >
-            <v-navigation-drawer
-                absolute
+        <!-- absolute
                 dark
                 color="#D5B07E"
                 width="100%"
                 permanent
                 left
+                expand-on-hover -->
+            <v-navigation-drawer
+                color="#D5B07E"
+                permanent
+                expand-on-hover
             >
                 <div style="height: 200px;"></div>
                 <v-list>
@@ -27,7 +30,7 @@
                 </v-list>
             </v-navigation-drawer>
         </v-card>
-        <div style="margin-left: 300px;">
+        <div :style="`margin-left: ${this.$route.name === 'cash-register' ? 0 : 60}px`">
             <router-view />
         </div>
     </div>
@@ -37,15 +40,14 @@
   export default {
     data: () => ({
       items: [
-        ['mdi-email', 'DASHBOARD'],
-        ['mdi-email', 'INVENTORY', 'inventory'],
-        ['mdi-email', 'TRANSACTIONS'],
-        ['mdi-email', 'ITEMS'],
-        ['mdi-email', 'STAFF'],
-        ['mdi-email', 'CASH DRAWER'],
-        ['mdi-email', 'SETTINGS'],
-        ['mdi-email', 'ACCOUNT'],
-        ['', ''],
+        ['mdi-view-dashboard', 'Dashboard', null],
+        ['mdi-warehouse', 'Inventory', 'inventory'],
+        ['mdi-finance', 'Transaction', null],
+        ['mdi-account-group', 'Staff', null],
+        ['mdi-cash-register', 'Cash Drawer', 'cash-register'],
+        ['mdi-cog', 'Settings', null],
+        ['mdi-account-cog', 'Account', null],
+        ['', '', ''],
       ],
     }),
   }

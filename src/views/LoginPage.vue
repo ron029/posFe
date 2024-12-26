@@ -44,7 +44,7 @@ export default {
         loginData(newVal) {
             if (newVal) {
                 if (newVal.STATUS === 200) {
-                    this.$router.push({name: 'dashboard'})
+                    this.$router.push({name: 'pos'})
                 }
             }
         }

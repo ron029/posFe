@@ -5,8 +5,9 @@ module.exports = defineConfig({
   ],
   devServer: {
     port: 8080,
-    host: '0.0.0.0',
-    hot: false,
-    liveReload: true,
+    host: '0.0.0.0', // Allow access from any host
+    hot: true,
+    liveReload: false,
+    allowedHosts: "all", // Allow all hosts
   },
 })

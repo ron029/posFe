@@ -7,6 +7,13 @@ import axios from "./plugins/axios";
 import VueCookies from 'vue-cookies';
 Vue.config.productionTip = false
 Vue.use(VueCookies)
+
+if (module.hot) {
+    module.hot.accept((err) => {
+        console.error("HMR failed:", err);
+    });
+}
+
 new Vue({
   router,
   store,
