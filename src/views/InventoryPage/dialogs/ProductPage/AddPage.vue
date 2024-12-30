@@ -1,83 +1,98 @@
 <template>
-    <v-dialog v-model="showDialog">
+    <v-dialog
+        v-model="showDialog"
+        width="600px"
+    >
         <v-card>
-            <v-card-title>New Product</v-card-title>
-            <v-card-text>
-                <v-form
-                    ref="newProduct"
-                    v-model="valid"
-                    @submit.prevent="submitForm"
-                >
-                    <v-autocomplete
-                        v-model.trim="item.category_id"
-                        :items="select.categories"
-                        item-text="name"
-                        item-value="category_id"
-                        label="Category Name"
-                        :rules="rule.category"
-                    ></v-autocomplete>
-                    <v-autocomplete
-                        v-model.trim="item.brand_id"
-                        :items="select.brands"
-                        item-text="name"
-                        item-value="brand_id"
-                        label="Brand Name"
-                        :rules="rule.brand"
-                    ></v-autocomplete>
-                    <v-text-field
-                        label="Product Name"
-                        v-model.trim="item.name"
-                        :rules="rule.name"
-                    ></v-text-field>
-                    <v-text-field
-                        label="Barcode"
-                        v-model.trim="item.barcode"
-                        :rules="rule.barcode"
-                    ></v-text-field>
-                    <v-autocomplete
-                        v-model.trim="item.unit_id"
-                        :items="select.units"
-                        item-text="name"
-                        item-value="unit_id"
-                        label="Measurements"
-                        :rules="rule.unit"
-                    ></v-autocomplete>
-                    <v-text-field
-                        label="Quantity"
-                        type="number"
-                        v-model.trim=item.quantity
-                        :rules="rule.quantity"
-                    ></v-text-field>
-                    <v-text-field
-                        label="Price"
-                        v-model.trim="item.price"
-                        type="number"
-                        step="0.01"
-                        @input="validateDecimal"
-                        :rules="rule.price"
-                    ></v-text-field>
-                    <v-text-field
-                        label="Reorder Level"
-                        v-model.trim="item.reorder_level"
-                        type="number"
-                        :rules="rule.reorder_level"
-                    ></v-text-field>
-                    <v-autocomplete
-                        v-model.trim="item.supplier_id"
-                        :items="select.suppliers"
-                        item-text="name"
-                        item-value="supplier_id"
-                        label="Supplier's Name"
-                        :rules="rule.supplier"
-                    ></v-autocomplete>
-                    <v-btn
-                        color="success"
-                        type="submit"
-                        :disabled="!valid"
-                        :loading="loading"
-                    >submit</v-btn>
+            <v-form
+                ref="newProduct"
+                v-model="valid"
+                @submit.prevent="submitForm"
+            >
+                <v-card-title>New Product</v-card-title>
+                <v-card-text>
+                        <v-autocomplete
+                            v-model.trim="item.category_id"
+                            :items="select.categories"
+                            item-text="name"
+                            item-value="category_id"
+                            label="Category Name"
+                            :rules="rule.category"
+                        ></v-autocomplete>
+                        <v-autocomplete
+                            v-model.trim="item.brand_id"
+                            :items="select.brands"
+                            item-text="name"
+                            item-value="brand_id"
+                            label="Brand Name"
+                            :rules="rule.brand"
+                        ></v-autocomplete>
+                        <v-text-field
+                            label="Product Name"
+                            v-model.trim="item.name"
+                            :rules="rule.name"
+                        ></v-text-field>
+                        <v-text-field
+                            label="Barcode"
+                            v-model.trim="item.barcode"
+                            :rules="rule.barcode"
+                        ></v-text-field>
+                        <v-autocomplete
+                            v-model.trim="item.unit_id"
+                            :items="select.units"
+                            item-text="name"
+                            item-value="unit_id"
+                            label="Measurements"
+                            :rules="rule.unit"
+                        ></v-autocomplete>
+                        <v-text-field
+                            label="Quantity"
+                            type="number"
+                            v-model.trim=item.quantity
+                            :rules="rule.quantity"
+                        ></v-text-field>
+                        <v-text-field
+                            label="Cost Price"
+                            v-model.trim="item.cost_price"
+                            type="number"
+                            step="0.01"
+                            @input="validateDecimal"
+                            :rules="rule.cost_price"
+                        ></v-text-field>
+                        <v-text-field
+                            label="Selling Price"
+                            v-model.trim="item.selling_price"
+                            type="number"
+                            step="0.01"
+                            @input="validateDecimal"
+                            :rules="rule.selling_price"
+                        ></v-text-field>
+                        <v-text-field
+                            label="Reorder Level"
+                            v-model.trim="item.reorder_level"
+                            type="number"
+                            :rules="rule.reorder_level"
+                        ></v-text-field>
+                        <v-autocomplete
+                            v-model.trim="item.supplier_id"
+                            :items="select.suppliers"
+                            item-text="name"
+                            item-value="supplier_id"
+                            label="Supplier's Name"
+                            :rules="rule.supplier"
+                        ></v-autocomplete>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="success"
+                            type="submit"
+                            :disabled="!valid"
+                            :loading="loading"
+                            style="margin-right: 20px;"
+                        >submit</v-btn>
+                    </v-card-actions>
                 </v-form>
-            </v-card-text>
         </v-card>
     </v-dialog>
 </template>
@@ -98,7 +113,8 @@ export default {
             supplier: [ v => !!v || 'Supplier Name is required' ],
             name: [ v => v && !!v.trim() || 'Product Name is required' ],
             quantity: [ v => v && !!v.trim() || 'quantity is required' ],
-            price: [ v => !!v || 'price is required' ],
+            cost_price: [ v => !!v || 'Cost Price is required' ],
+            selling_price: [ v => !!v || 'Selling Price is required' ],
             reorder_level: [ v => !!v || 'reorder_level is required' ],
         },
         item: {
@@ -108,7 +124,8 @@ export default {
             category_id: null,
             barcode: null,
             name: null,
-            price: null,
+            selling_price: null,
+            cost_price: null,
             quantity: null,
             reorder_level: null,
         },
@@ -142,8 +159,8 @@ export default {
         ...mapActions(['productPost', 'products']),
         validateDecimal(value) {
             // Ensure the value is a valid decimal with at most 2 decimal places
-            const validatedValue = value.match(/^\d*\.?\d{0,2}$/) ? value : this.item.price;
-            this.item.price = validatedValue; // Update only if the value is valid
+            const validatedValue = value.match(/^\d*\.?\d{0,2}$/) ? value : this.item.selling_price;
+            this.item.selling_price = validatedValue; // Update only if the value is valid
         },
         submitForm() {
             if (this.$refs.newProduct.validate()) {

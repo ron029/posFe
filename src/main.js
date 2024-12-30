@@ -5,8 +5,11 @@ import router from './router';
 import store from "./store";
 import axios from "./plugins/axios";
 import VueCookies from 'vue-cookies';
+import EventBus from './eventBus';
+
 Vue.config.productionTip = false
 Vue.use(VueCookies)
+Vue.prototype.$eventBus = EventBus;
 
 if (module.hot) {
     module.hot.accept((err) => {

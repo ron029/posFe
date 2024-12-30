@@ -1,5 +1,8 @@
 <template>
-    <v-dialog v-model="showDialog">
+    <v-dialog
+        v-model="showDialog"
+        width="400px"
+    >
         <v-card>
             <v-data-table
                 :headers="headers"
@@ -40,6 +43,7 @@
         <!-- dialogs edit -->
         <v-dialog
             v-model="showDialogEdit"
+            width="400px"
         >
             <v-form
                 ref="editUnit"
@@ -66,7 +70,10 @@
         </v-dialog>
 
         <!-- dialogs new -->
-        <v-dialog v-model="showDialogNew">
+        <v-dialog
+            v-model="showDialogNew"
+            width="400px"
+        >
             <v-form
                 ref="newUnit"
                 @submit.prevent="newUnit()"
@@ -92,7 +99,10 @@
         </v-dialog>
 
         <!-- dialogs delete -->
-        <v-dialog v-model="showDialogDelete">
+        <v-dialog
+            v-model="showDialogDelete"
+            width="400px"
+        >
             <v-card>
                 <v-card-title color="error">Delete Unit named {{ this.currentItem?.name }}?</v-card-title>
                 <v-card-actions>

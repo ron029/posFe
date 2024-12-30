@@ -4,11 +4,14 @@
         <router-view />
         <base-loading></base-loading>
         <NotifDialog
-            v-if="$router.path !== '/'"
+            v-if="$route.path !== '/'"
             :show="showDialog"
             :data="{message: 'Your session has timed out.'}"
+            :persistent="true"
             @closeDialog="closeDialog"
-        />
+        >
+            <v-btn @click="forceLogin">Relog in</v-btn>
+        </NotifDialog>
     </v-main>
   </v-app>
 </template>
@@ -23,21 +26,28 @@ export default {
         NotifDialog,
         BaseLoading
     },
+    data: () => ({
+        showForceLogin: false
+    }),
     computed: {
         ...mapGetters(['isUserTimeout']),
         showDialog: {
             get() {
-                return this.isUserTimeout 
+                return this.isUserTimeout
             },
             set() {
                 store.commit('IS_SESSION_EXPIRED', false)
-                this.$router.push({name: 'login'}) 
             }
         }
     },
     methods: {
         closeDialog() {
             console.log('Please log in again.')
+        },
+        forceLogin() {
+            this.showDialog = false
+            if (this.$route.path !== '/') this.$router.push({name: 'login'})
+
         }
     },
     mounted() {

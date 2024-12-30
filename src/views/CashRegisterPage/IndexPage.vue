@@ -3,8 +3,6 @@
         <v-row no-gutters>
             <v-col lg="5" md="5" style="padding: 10px 5px 0 10px;">
                 <div>
-                    <span class="title1 colorBlue" style="margin-right: 40px;">Terminal: 2</span>
-                    <span class="title1 colorBlue" >Transaction: 1/1</span>
                     <!-- <v-text-field
                         value="1002000000000205"
                         outlined
@@ -21,14 +19,10 @@
                         <ul style="list-style-type: none; padding-left: 0;">
                             <li>Barcode: <span class="colorBlue">{{ currentTransaction.barcode }}</span></li>
                             <li>Description: <span class="colorBlue">{{ currentTransaction.name }}</span></li>
-                            <li>Price: <span class="colorBlue">{{ currentTransaction.price ? `${parseInt(currentTransaction.price).toFixed(2)} each` : null }}</span></li>
-                            <li>Memo: </li>
-                            <li>Status: NonVAT | NonSenior</li>
-                            <li>Discount: </li>
+                            <li>Selling Price: <span class="colorBlue">{{ currentTransaction.selling_price ? `${parseInt(currentTransaction.selling_price).toFixed(2)} each` : null }}</span></li>
                         </ul>
-                        <p style="margin-top: 20px;">Press [Alt + i] to Show Inventory</p>
                     </div>
-                    <div>
+                    <!-- <div>
                         Transaction Discount
                         <v-row>
                             <v-col>
@@ -40,99 +34,130 @@
                                 <p>Other Discount: 0.00</p>
                             </v-col>
                         </v-row>
-                    </div>
+                    </div> -->
+                    <p>Clerk: {{ cashierName }}</p>
                     <div>
-                        <v-row>
-                            <v-col>
-                                <p>Customer:</p>
-                                <p>Mode:</p>
-                                <p>Clerk: Jamaica</p>
-                            </v-col>
-                            <v-col>
-                                <p>Member: </p>
-                                <p>Memo: </p>
-                                <p>Salesman:</p>
-                            </v-col>
-                        </v-row>
+                        <div style="height: 100px; width: 100px; background-color: blue; color: white; display: flex; justify-content: center; align-items: center;">F8 Payment</div>
                     </div>
                 </div>
             </v-col>
             <v-col lg="7" md="7" style="padding: 10px 10px 0 5px;">
                 <div>
                     <BarcodeQuantity
+                        :focusToBarcode="focus.barcode"
                         @saveBarcodeQuantity="saveBarcodeQuantity"
+                        @offFocusToBarcode="focus.barcode = false"
                     />
                     <div style="border: 1px solid black; padding: 10px; margin-top: 10px; position: relative;">
                         <p class="title1" style="margin: 0; padding: 0; position: absolute; left: 10px; top: 10px;">TOTAL</p>
                         <p class="text-right" style="font-size: 80px; font-weight: 700; color: red; padding: 0; margin: 0">{{ totalAmount.toFixed(2) }}</p>
                     </div>
-                    <div>
-                        <v-data-table
-                            :items="transactions"
-                            :headers="headers.transactions"
-                            style="height: 400px; font: 20px; overflow-y: scroll;"
-                            hide-default-footer
-                            :item-class="getRowClass"
-                            :items-per-page="-1"
-                            dense
-                        >
-                            <template slot="item.name" slot-scope="{ item }">
-                                <span style="text-wrap: nowrap;">{{ item.name }}</span>
-                            </template>
-                            <template slot="item.amount" slot-scope="{ item }">
-                                <span style="text-wrap: nowrap;">{{ amountEachItem(item) }}</span>
-                            </template>
-                        </v-data-table>
-                    </div>
+                    <ItemTable :transactions="transactions" />
                 </div>
             </v-col>
         </v-row>
+        <PaymentPage
+            :data="{ totalAmount, transactions }"
+            @focusToBarcode="focusToBarcode"
+            @saveTransaction="saveTransaction"
+        />
+        <NotifDialog
+            :show="show.error"
+            :data="{message: 'Something went wrong'}"
+            @closeDialog="closeNotif"
+        />
+        <ChangeDialog
+            :show="show.change"
+            :change="changeAmount"
+            @closeDialog="closechangeAmount"
+        />
+        <EditCurrentItem
+            :show="show.editItem"
+            :currentTransaction="currentTransaction"
+            @closeEditCurrentItem="closeEditCurrentItem"
+        />
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import EditCurrentItem from './EditCurrentItem.vue';
+import ItemTable from './ItemTable.vue';
+import ChangeDialog from './ChangeDialog.vue';
+import NotifDialog from '@/components/NotifDialog.vue';
+import PaymentPage from './PaymentPage.vue';
+import { mapActions, mapGetters } from 'vuex';
 import BarcodeQuantity from './BarcodeQuantity.vue';
 export default {
     components: {
+        EditCurrentItem,
+        ItemTable,
+        ChangeDialog,
+        PaymentPage,
         BarcodeQuantity,
+        NotifDialog,
     },
     data: () => ({
-        headers: {
-            transactions: [
-                { text: 'Description', value: 'name'},
-                { text: 'Qty', value: 'itemQuantity'},
-                { text: 'Unit', value: 'unit'},
-                { text: 'Price', value: 'price'},
-                { text: 'Amount', value: 'amount'},
-            ],
+        cashierName: null,
+        changeAmount: 0,
+        edit: {
+            selling_price: 0,
+            quantity: 0
         },
-        transactions: [
-            // { id: 1, description: 'GIFT WRAP (CHRISTMAS) asdf adsf adf adsf', price: 5.00, amount: 10.00, qty: 2, unit: 'pcs.', barcode: '200000003221'  }
-        ]
+        transactions: [],
+        show: {
+            payment: false,
+            change: false,
+            error: false,
+            editItem: false,
+        },
+        focus: {
+            barcode: false
+        }
     }),
     computed: {
-        ...mapGetters(['findBarcodeData']),
+        ...mapGetters(['findBarcodeData', 'saveSalesData']),
         currentTransaction() {
             if (this.transactions.length > 0) {
-                return this.transactions[0]
+                const existingProductIndex = this.transactions.findIndex(item => item.isCurrent === true)
+                return this.transactions[existingProductIndex]
             } else {
-                return { id: null, description: null, price: null, amount: null, qty: null, unit: null, barcode: null  }
+                return { id: null, description: null, selling_price: null, amount: null, qty: null, unit: null, barcode: null  }
             }
         },
         totalAmount() {
             return this.transactions.reduce((total, transaction) => {
-                return total + parseFloat(transaction.price) * transaction.itemQuantity;
+                return total + parseFloat(transaction.selling_price) * transaction.itemQuantity;
             }, 0);
         }
     },
+    watch: {
+        saveSalesData(newVal) {
+            if (newVal.STATUS === 201) {
+                this.changeAmount = newVal.DATA.change
+                this.show.change = true
+            } else {
+                this.show.error
+            }
+        }
+    },
     methods: {
-        getRowClass(item) {
-            return item.isCurrent ? 'current-row' : '';
+        ...mapActions(['saveSales']),
+        closeEditCurrentItem(data) {
+            this.show.editItem = false
+            console.log('closeEditCurrentItem data: ', data)
         },
-        amountEachItem(item) {
-            const amount = parseFloat(item.price) * parseFloat(item.itemQuantity)
-            return amount ? amount.toFixed(2) : null
+        closechangeAmount() {
+            this.show.change = false
+            this.transactions = []
+        },
+        closeNotif() {
+            this.show.error = false
+        },
+        saveTransaction(data) {
+            this.saveSales({items: this.transactions, totalAmount: this.totalAmount, ...data})
+        },
+        focusToBarcode() {
+            this.focus.barcode = true
         },
         saveBarcodeQuantity(data) {
             console.log('saveBarcodeQuantity data: ', data);
@@ -146,12 +171,12 @@ export default {
             const existingProductIndex = this.transactions.findIndex(item => item.product_id === data.product_id);
 
             if (existingProductIndex !== -1) {
-                // If the product exists, update its quantity and price
+                // If the product exists, update its quantity and selling_price
                 const existingProduct = this.transactions[existingProductIndex];
                 existingProduct.itemQuantity += parseInt(data.itemQuantity);
-                existingProduct.price = (
-                    parseFloat(existingProduct.price) + parseFloat(data.price)
-                ).toFixed(2); // Ensure the price stays a string with 2 decimal places
+                existingProduct.selling_price = (
+                    parseFloat(existingProduct.selling_price) + parseFloat(data.selling_price)
+                ).toFixed(2); // Ensure the selling_price stays a string with 2 decimal places
                 existingProduct.isCurrent = true
                 // Remove the existing product from its current position
                 // this.transactions.splice(existingProductIndex, 1);
@@ -163,8 +188,49 @@ export default {
                 data.isCurrent = true
                 this.transactions.unshift(data);
             }
-        }
-    }
+        },
+        handleKeyPress(event) {
+            if (event.key === "Enter" && this.show.change) {
+                event.preventDefault()
+                this.closechangeAmount()
+                this.show.change = false
+            }
+            if (event.altKey && event.key === "e" || event.altKey && event.key === "E") {
+                event.preventDefault()
+                if (this.transactions.length > 0) {
+                    this.$eventBus.$emit('isDialogOpen', { status: true });
+                    this.show.editItem = true
+                }
+            }
+            if (event.key === "ArrowUp") {
+                event.preventDefault()
+                if (this.transactions.length > 0) {
+                    const existingProductIndex = this.transactions.findIndex(item => item.isCurrent === true);
+                    if (existingProductIndex >= 1) {
+                        this.transactions[existingProductIndex].isCurrent = false
+                        this.transactions[existingProductIndex - 1].isCurrent = true
+                    }
+                }
+            }
+            if (event.key === "ArrowDown") {
+                event.preventDefault()
+                if (this.transactions.length > 0) {
+                    const existingProductIndex = this.transactions.findIndex(item => item.isCurrent === true);
+                    if (existingProductIndex < this.transactions.length - 1) {
+                        this.transactions[existingProductIndex].isCurrent = false
+                        this.transactions[existingProductIndex + 1].isCurrent = true
+                    }
+                }
+            }
+        },
+    },
+    mounted() {
+        this.cashierName = window.$cookies.get('name')
+        window.addEventListener("keydown", this.handleKeyPress);
+    },
+    beforeUnmount() {
+        window.removeEventListener("keydown", this.handleKeyPress);
+    },
 }
 </script>
 
@@ -172,18 +238,4 @@ export default {
 .title1 {
     font-size: 25px;
 }
-.colorBlue {
-    color:blue
-}
-.v-data-table > .v-data-table__wrapper > table > thead > tr > th, span
-.v-data-table > .v-data-table__wrapper > table > tbody > tr > td, span {
-  font-size: 20px; /* Adjust the size as needed */
-}
-.v-data-table >>> tr.current-row {
-    background-color: blue !important;
-    font-weight: bold;
-    border: 2px solid #007bff;
-    color: white;
-}
-
 </style>

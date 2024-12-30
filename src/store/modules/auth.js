@@ -3,7 +3,8 @@ import AXIOS from "@/plugins/axios";
 
 export const authentication = {
   state: {
-    isUserTimeout: false, 
+    isCashRegisterRecordedData: null,
+    isUserTimeout: false,
     loginData: null,
   },
   actions: {
@@ -37,6 +38,9 @@ export const authentication = {
       },
   },
   mutations: {
+    IS_CASH_REGISTER_RECORDED(state, isCashRegisterRecordedData) {
+        state.isCashRegisterRecordedData = isCashRegisterRecordedData
+    },
     IS_SESSION_EXPIRED(state, isUserTimeout) {
         state.isUserTimeout = isUserTimeout
     },

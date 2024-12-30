@@ -4,13 +4,6 @@
             height="100%"
             :style="`position: absolute; z-index: 5; display: ${this.$route.name === 'cash-register' ? 'none' : 'block'}`"
         >
-        <!-- absolute
-                dark
-                color="#D5B07E"
-                width="100%"
-                permanent
-                left
-                expand-on-hover -->
             <v-navigation-drawer
                 color="#D5B07E"
                 permanent
@@ -22,7 +15,7 @@
                         v-for="([icon, text, url], i) in items"
                         :key="i"
                         link
-                        @click="$router.push({name: url})"
+                        @click="handleRoute(url)"
                     >
                         <v-list-item-icon> <v-icon>{{ icon }}</v-icon> </v-list-item-icon>
                         <v-list-item-content> <v-list-item-title>{{ text }}</v-list-item-title> </v-list-item-content>
@@ -41,8 +34,8 @@
     data: () => ({
       items: [
         ['mdi-view-dashboard', 'Dashboard', null],
-        ['mdi-warehouse', 'Inventory', 'inventory'],
-        ['mdi-finance', 'Transaction', null],
+        ['mdi-warehouse', 'Inventory', `inventory`],
+        ['mdi-finance', 'Sales', null],
         ['mdi-account-group', 'Staff', null],
         ['mdi-cash-register', 'Cash Drawer', 'cash-register'],
         ['mdi-cog', 'Settings', null],
@@ -50,5 +43,37 @@
         ['', '', ''],
       ],
     }),
+    methods: {
+        handleRoute(url) {
+            if (url) {
+                if (this.$route.path !== `/pos/${url}`)
+                    this.$router.push({name: url})
+            }
+        },
+        handleKeyPress(event) {
+            if (event.altKey && event.key === "d" || event.altKey && event.key === "D") {
+                event.preventDefault()
+                if (this.$route.path !== '/pos') this.$router.push('/pos')
+            }
+            if (event.altKey && event.key === "s" || event.altKey && event.key === "S") {
+                event.preventDefault()
+                if (this.$route.path !== '/pos/sales') this.$router.push('/pos/sales')
+            }
+            if (event.altKey && event.key === "c" || event.altKey && event.key === "C") {
+                event.preventDefault()
+                if (this.$route.path !== '/pos/cash-register') this.$router.push('/pos/cash-register')
+            }
+            if (event.altKey && event.key === "i" || event.altKey && event.key === "I") {
+                event.preventDefault()
+                if (this.$route.path !== '/pos/inventory') this.$router.push('/pos/inventory')
+            }
+        },
+    },
+    mounted() {
+        window.addEventListener("keydown", this.handleKeyPress);
+    },
+    beforeUnmount() {
+        window.removeEventListener("keydown", this.handleKeyPress);
+    },
   }
 </script>

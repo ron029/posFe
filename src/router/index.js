@@ -47,6 +47,14 @@ const routes = [
                 meta: {
                     middleware: [ auth ]
                 },
+            },
+            {
+                path: 'sales',
+                name: 'sales',
+                component: () =>  { return import('@/views/SalesPage/IndexPage.vue') },
+                meta: {
+                    middleware: [ auth ]
+                },
             }
         ]
     },

@@ -49,12 +49,20 @@
                         :rules="rule.quantity"
                     ></v-text-field>
                     <v-text-field
-                        label="Price"
-                        v-model="item.price"
+                        label="Cost Price"
+                        v-model="item.cost_price"
                         type="number"
                         step="0.01"
                         @input="validateDecimal"
-                        :rules="rule.price"
+                        :rules="rule.cost_price"
+                    ></v-text-field>
+                    <v-text-field
+                        label="Selling Price"
+                        v-model="item.selling_price"
+                        type="number"
+                        step="0.01"
+                        @input="validateDecimal"
+                        :rules="rule.selling_price"
                     ></v-text-field>
                     <v-text-field
                         label="Reorder Level"
@@ -98,7 +106,8 @@ export default {
             supplier: [ v => !!v || 'Supplier Name is required' ],
             name: [ v => v && !!v.trim() || 'Product Name is required' ],
             quantity: [ v => v === 0 || !!v || 'quantity is required' ],
-            price: [ v => !!v || 'price is required' ],
+            cost_price: [ v => !!v || 'Cost Price is required' ],
+            selling_price: [ v => !!v || 'Selling Price is required' ],
             reorder_level: [ v => !!v || 'reorder_level is required' ],
         },
         item: {
@@ -108,7 +117,8 @@ export default {
             category_id: null,
             barcode: null,
             name: null,
-            price: null,
+            cost_price: null,
+            selling_price: null,
             quantity: null,
             reorder_level: null,
         },
@@ -136,8 +146,8 @@ export default {
         ...mapActions(['productPut', 'products']),
         validateDecimal(value) {
             // Ensure the value is a valid decimal with at most 2 decimal places
-            const validatedValue = value.match(/^\d*\.?\d{0,2}$/) ? value : this.item.price;
-            this.item.price = validatedValue; // Update only if the value is valid
+            const validatedValue = value.match(/^\d*\.?\d{0,2}$/) ? value : this.item.selling_price;
+            this.item.selling_price = validatedValue; // Update only if the value is valid
         },
         submitForm() {
             if (this.$refs.editProduct.validate()) {

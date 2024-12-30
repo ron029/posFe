@@ -84,11 +84,13 @@ export default {
         NotifDialog,
     },
     data: () => ({
+        isDialogOpen: false,
         barcode: null,
         isBarcodeNotFound : false,
         showQuantity: false,
         quantity: 1,
     }),
+    props: ['focusToBarcode'],
     computed: {
         ...mapGetters(['findBarcodeData']),
         showDialog: {
@@ -96,16 +98,26 @@ export default {
                 return this.showQuantity
             },
             set() {
+                this.$nextTick(()=>{
+                    if (this.$refs) {
+                        if (this.$refs.barcode)
+                            this.$refs.barcode.focus()
+                    }
+                })
                 this.showQuantity = false
             }
-        }
+        },
     },
     watch: {
+        focusToBarcode(newVal) {
+            if (newVal) {
+                this.focusInBarcode()
+                this.$emit('offFocusToBarcode')
+            }
+        },
         findBarcodeData(newVal) {
             if (newVal) {
                 if (newVal.STATUS === 200) {
-                    console.log('barcodeFound')
-                    console.log('newVal.DATA: ', newVal.DATA)
                     this.$emit('saveBarcodeQuantity', {itemQuantity: this.quantity, ...newVal.DATA[0]})
                     this.barcode = ''
                     this.quantity = 1
@@ -125,6 +137,7 @@ export default {
         closeNotif() {
             this.isBarcodeNotFound = false
             this.barcode = ""
+            this.focusInBarcode()
         },
         handleKeyPress(event) {
             console.log('handleKeyPress event.key: ', event.key)
@@ -133,13 +146,9 @@ export default {
                 this.isBarcodeNotFound = false
             }
             if (this.showQuantity && event.key === "Enter") {
+                event.preventDefault()
                 this.showQuantity = false
-                this.$nextTick(()=>{
-                    if (this.$refs) {
-                        if (this.$refs.barcode)
-                            this.$refs.barcode.focus()
-                    }
-                })
+                this.focusInBarcode()
                 if (isNaN(this.quantity) || this.quantity < 1) {
                     this.quantity = 1
                 }
@@ -155,10 +164,24 @@ export default {
                 })
                 this.showQuantity = true
             }
+            if (!this.isDialogOpen) this.focusInBarcode()
         },
+        focusInBarcode() {
+            this.$nextTick(()=>{
+                if (this.$refs) {
+                    if (this.$refs.barcode) {
+                        this.$refs.barcode.focus()
+                    }
+                }
+            })
+        }
     },
     mounted() {
         window.addEventListener("keydown", this.handleKeyPress);
+        this.$eventBus.$on('isDialogOpen', (data) => {
+            this.isDialogOpen = data.status
+        });
+
     },
     beforeUnmount() {
         window.removeEventListener("keydown", this.handleKeyPress);

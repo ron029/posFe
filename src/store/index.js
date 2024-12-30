@@ -8,6 +8,7 @@ import { unit } from './modules/unit';
 import { brand } from './modules/brand';
 import { category } from './modules/category';
 import { supplier } from './modules/supplier';
+import { sales } from './modules/sales';
 
 import loading from "./modules/loading";
 
@@ -23,5 +24,6 @@ export default new Vuex.Store({
     category,
     supplier,
     loading,
+    sales,
   }
 });
