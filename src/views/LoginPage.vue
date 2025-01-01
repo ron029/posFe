@@ -44,7 +44,7 @@ export default {
         loginData(newVal) {
             if (newVal) {
                 if (newVal.STATUS === 200) {
-                    if (this.$route.path !== '/pos') this.$router.push({name: 'pos'})
+                    if (this.$route.path !== '/pos') window.location.href = '/pos'
                 }
             }
         }
@@ -53,7 +53,6 @@ export default {
         ...mapActions(['login', 'getCsrfToken']),
         submitForm() {
             if (this.$refs.form.validate()) {
-                console.log('submit')
                 this.login({username: this.cred.user, password: this.cred.pass})
             }
         }

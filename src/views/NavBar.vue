@@ -1,6 +1,7 @@
 <template>
     <div style="height: 100%; vertical-align: top; font-size: 20px;">
         <v-card
+            class="overflow-hidden mx-auto"
             height="100%"
             :style="`position: absolute; z-index: 5; display: ${this.$route.name === 'cash-register' ? 'none' : 'block'}`"
         >
@@ -8,6 +9,7 @@
                 color="#D5B07E"
                 permanent
                 expand-on-hover
+                :value="mainValue"
             >
                 <div style="height: 200px;"></div>
                 <v-list>
@@ -21,6 +23,22 @@
                         <v-list-item-content> <v-list-item-title>{{ text }}</v-list-item-title> </v-list-item-content>
                     </v-list-item>
                 </v-list>
+                <v-bottom-navigation
+                    absolute
+                    hide-on-scroll
+                    horizontal
+                    >
+                    <!-- scroll-target="#hide-on-scroll-example" -->
+                    <v-btn value="log-out" color="#D5B07E" @click="showCashRegisterRecorder">
+                        <v-icon style="margin-left: 15px;">mdi-power</v-icon>
+                    </v-btn>
+                    <v-btn value="settings" color="#D5B07E">
+                        <v-icon style="margin-left: 15px;">mdi-cog</v-icon>
+                    </v-btn>
+                    <v-btn value="account-settings" color="#D5B07E">
+                        <v-icon style="margin-left: 15px;">mdi-account-cog</v-icon>
+                    </v-btn>
+                </v-bottom-navigation>
             </v-navigation-drawer>
         </v-card>
         <div :style="`margin-left: ${this.$route.name === 'cash-register' ? 0 : 60}px`">
@@ -32,18 +50,21 @@
 <script>
   export default {
     data: () => ({
-      items: [
-        ['mdi-view-dashboard', 'Dashboard', null],
-        ['mdi-warehouse', 'Inventory', `inventory`],
-        ['mdi-finance', 'Sales', null],
-        ['mdi-account-group', 'Staff', null],
-        ['mdi-cash-register', 'Cash Drawer', 'cash-register'],
-        ['mdi-cog', 'Settings', null],
-        ['mdi-account-cog', 'Account', null],
-        ['', '', ''],
-      ],
+        mainValue: null,
+        value: 'recent',
+        items: [
+            ['mdi-view-dashboard', 'Dashboard', ''],
+            ['mdi-warehouse', 'Inventory', `inventory`],
+            ['mdi-finance', 'Sales', 'sales'],
+            ['mdi-account-group', 'Staff', null],
+            ['mdi-cash-register', 'Cash Drawer', 'cash-register'],
+            ['', '', ''],
+        ],
     }),
     methods: {
+        showCashRegisterRecorder() {
+            this.$eventBus.$emit('showCashRegisterRecorder', true)
+        },
         handleRoute(url) {
             if (url) {
                 if (this.$route.path !== `/pos/${url}`)

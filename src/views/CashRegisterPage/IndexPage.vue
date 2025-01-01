@@ -154,7 +154,7 @@ export default {
             this.show.error = false
         },
         saveTransaction(data) {
-            this.saveSales({items: this.transactions, totalAmount: this.totalAmount, ...data})
+            this.saveSales({items: this.transactions, totalAmount: this.totalAmount, ...data, register_cash_flow_id: Number(window.$cookies.get('cash_register_recorded_id'))})
         },
         focusToBarcode() {
             this.focus.barcode = true

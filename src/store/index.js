@@ -9,6 +9,7 @@ import { brand } from './modules/brand';
 import { category } from './modules/category';
 import { supplier } from './modules/supplier';
 import { sales } from './modules/sales';
+import { registerCashFlow } from './modules/cashFlow';
 
 import loading from "./modules/loading";
 
@@ -25,5 +26,6 @@ export default new Vuex.Store({
     supplier,
     loading,
     sales,
+    registerCashFlow,
   }
 });
