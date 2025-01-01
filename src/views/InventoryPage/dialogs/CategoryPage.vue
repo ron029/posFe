@@ -208,9 +208,10 @@ export default {
             }
             this.loading = false
         },
-        categoryDeleteData(newVal) {
+        async categoryDeleteData(newVal) {
             if (newVal.STATUS === 200) {
                 // this.removeCategoryItem()
+                await this.getCsrfToken()
                 this.categories()
             }
             this.loading = false
@@ -222,22 +223,25 @@ export default {
     },
     methods: {
         ...mapActions(['getCsrfToken', 'categories', 'categoryPost', 'categoryDelete', 'categoryPut']),
-        newCategory() {
+        async newCategory() {
             if (this.$refs.newCategory.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.categoryPost(this.newItem)
                 this.action.new = false
             }
         },
-        editCategory() {
+        async editCategory() {
             if (this.$refs.editCategory.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.categoryPut(this.newItem)
                 this.action.edit = false
             }
         },
-        deleteCategory() {
+        async deleteCategory() {
             this.loading = true
+            await this.getCsrfToken()
             this.categoryDelete({category_id: this.currentItem.category_id})
             this.action.delete = false
         },

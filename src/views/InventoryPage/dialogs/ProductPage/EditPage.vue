@@ -136,22 +136,26 @@ export default {
         }
     },
     watch: {
-        productPutData(newVal) {
+        async productPutData(newVal) {
             this.loading = false
             this.$emit('closeEditProduct')
-            if (newVal) this.products()
+            if (newVal) {
+                await this.getCsrfToken()
+                this.products()
+            }
         },
     },
     methods: {
-        ...mapActions(['productPut', 'products']),
+        ...mapActions(['productPut', 'products', 'getCsrfToken']),
         validateDecimal(value) {
             // Ensure the value is a valid decimal with at most 2 decimal places
             const validatedValue = value.match(/^\d*\.?\d{0,2}$/) ? value : this.item.selling_price;
             this.item.selling_price = validatedValue; // Update only if the value is valid
         },
-        submitForm() {
+        async submitForm() {
             if (this.$refs.editProduct.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.productPut(this.item)
             }
         }

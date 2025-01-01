@@ -208,9 +208,10 @@ export default {
             }
             this.loading = false
         },
-        brandDeleteData(newVal) {
+        async brandDeleteData(newVal) {
             if (newVal.STATUS === 200) {
                 // this.removeBrandItem()
+                await this.getCsrfToken()
                 this.brands()
             }
             this.loading = false
@@ -222,22 +223,25 @@ export default {
     },
     methods: {
         ...mapActions(['getCsrfToken', 'brands', 'brandPost', 'brandDelete', 'brandPut']),
-        newBrand() {
+        async newBrand() {
             if (this.$refs.newBrand.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.brandPost(this.newItem)
                 this.action.new = false
             }
         },
-        editBrand() {
+        async editBrand() {
             if (this.$refs.editBrand.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.brandPut(this.newItem)
                 this.action.edit = false
             }
         },
-        deleteBrand() {
+        async deleteBrand() {
             this.loading = true
+            await this.getCsrfToken()
             this.brandDelete({brand_id: this.currentItem.brand_id})
             this.action.delete = false
         },

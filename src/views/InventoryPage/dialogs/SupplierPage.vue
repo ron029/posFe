@@ -209,9 +209,10 @@ export default {
             }
             this.loading = false
         },
-        supplierDeleteData(newVal) {
+        async supplierDeleteData(newVal) {
             if (newVal.STATUS === 200) {
                 // this.removeSupplierItem()
+                await this.getCsrfToken()
                 this.suppliers()
             }
             this.loading = false
@@ -223,22 +224,25 @@ export default {
     },
     methods: {
         ...mapActions(['getCsrfToken', 'suppliers', 'supplierPost', 'supplierDelete', 'supplierPut']),
-        newSupplier() {
+        async newSupplier() {
             if (this.$refs.newSupplier.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.supplierPost(this.newItem)
                 this.action.new = false
             }
         },
-        editSupplier() {
+        async editSupplier() {
             if (this.$refs.editSupplier.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.supplierPut(this.newItem)
                 this.action.edit = false
             }
         },
-        deleteSupplier() {
+        async deleteSupplier() {
             this.loading = true
+            await this.getCsrfToken()
             this.supplierDelete({supplier_id: this.currentItem.supplier_id})
             this.action.delete = false
         },

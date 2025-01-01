@@ -95,18 +95,24 @@ export default {
         }
     },
     watch: {
-        'date.from'(newVal) {
-            if (newVal) this.fetchSales({from: newVal, to: this.date.to})
+        async 'date.from'(newVal) {
+            if (newVal) {
+                await this.getCsrfToken()
+                this.fetchSales({from: newVal, to: this.date.to})
+            }
         },
-        'date.to'(newVal) {
-            if (newVal) this.fetchSales({from: this.date.from, to: newVal})
+        async 'date.to'(newVal) {
+            if (newVal) {
+                await this.getCsrfToken()
+                this.fetchSales({from: this.date.from, to: newVal})
+            }
         },
         fetchSalesData(newVal) {
             if (newVal) this.fetchSalesData
         }
     },
     methods: {
-        ...mapActions(['fetchSales']),
+        ...mapActions(['getCsrfToken', 'fetchSales']),
         formatDate(date) {
             return moment(date).format('MMM D, YYYY')
         },
@@ -114,7 +120,8 @@ export default {
             return item.tendered - item.total_after_discount
         }
     },
-    mounted() {
+    async mounted() {
+        await this.getCsrfToken()
         this.fetchSales(this.date)
     }
 }

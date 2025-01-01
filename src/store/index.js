@@ -10,6 +10,7 @@ import { category } from './modules/category';
 import { supplier } from './modules/supplier';
 import { sales } from './modules/sales';
 import { registerCashFlow } from './modules/cashFlow';
+import { reorder } from './modules/reorder';
 
 import loading from "./modules/loading";
 
@@ -27,5 +28,6 @@ export default new Vuex.Store({
     loading,
     sales,
     registerCashFlow,
+    reorder,
   }
 });

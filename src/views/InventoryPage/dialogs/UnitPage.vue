@@ -210,9 +210,10 @@ export default {
             }
             this.loading = false
         },
-        unitDeleteData(newVal) {
+        async unitDeleteData(newVal) {
             if (newVal.STATUS === 200) {
                 // this.removeUnitItem()
+                await this.getCsrfToken()
                 this.units()
             }
             this.loading = false
@@ -224,22 +225,25 @@ export default {
     },
     methods: {
         ...mapActions(['getCsrfToken', 'units', 'unitPost', 'unitDelete', 'unitPut']),
-        newUnit() {
+        async newUnit() {
             if (this.$refs.newUnit.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.unitPost(this.newItem)
                 this.action.new = false
             }
         },
-        editUnit() {
+        async editUnit() {
             if (this.$refs.editUnit.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.unitPut(this.newItem)
                 this.action.edit = false
             }
         },
-        deleteUnit() {
+        async deleteUnit() {
             this.loading = true
+            await this.getCsrfToken()
             this.unitDelete({unit_id: this.currentItem.unit_id})
             this.action.delete = false
         },

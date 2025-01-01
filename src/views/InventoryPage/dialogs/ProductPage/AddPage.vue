@@ -56,7 +56,7 @@
                             v-model.trim="item.cost_price"
                             type="number"
                             step="0.01"
-                            @input="validateDecimal"
+                            @input="validateDecimalCost"
                             :rules="rule.cost_price"
                         ></v-text-field>
                         <v-text-field
@@ -64,7 +64,7 @@
                             v-model.trim="item.selling_price"
                             type="number"
                             step="0.01"
-                            @input="validateDecimal"
+                            @input="validateDecimalSelling"
                             :rules="rule.selling_price"
                         ></v-text-field>
                         <v-text-field
@@ -143,10 +143,13 @@ export default {
         }
     },
     watch: {
-        productPostData(newVal) {
+        async productPostData(newVal) {
             this.loading = false
             this.$emit('closeAddProduct')
-            if (newVal) this.products()
+            if (newVal) {
+                await this.getCsrfToken()
+                this.products()
+            }
         },
         data: {
             handler(newVal) {
@@ -156,15 +159,21 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['productPost', 'products']),
-        validateDecimal(value) {
+        ...mapActions(['productPost', 'products', 'getCsrfToken']),
+        validateDecimalSelling(value) {
             // Ensure the value is a valid decimal with at most 2 decimal places
             const validatedValue = value.match(/^\d*\.?\d{0,2}$/) ? value : this.item.selling_price;
             this.item.selling_price = validatedValue; // Update only if the value is valid
         },
-        submitForm() {
+        validateDecimalCost(value) {
+            // Ensure the value is a valid decimal with at most 2 decimal places
+            const validatedValue = value.match(/^\d*\.?\d{0,2}$/) ? value : this.item.cost_price;
+            this.item.cost_price = validatedValue; // Update only if the value is valid
+        },
+        async submitForm() {
             if (this.$refs.newProduct.validate()) {
                 this.loading = true
+                await this.getCsrfToken()
                 this.productPost(this.item)
             }
         }

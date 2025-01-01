@@ -32,6 +32,17 @@ export const authentication = {
     async logout() {
         try {
           await AUTH_API.logout();
+            window.$cookies.remove("POS_AUTH")
+            window.$cookies.remove("_csrf")
+            window.$cookies.remove("admin")
+            window.$cookies.remove("cash_register_is_set")
+            window.$cookies.remove("cash_register_recorded")
+            window.$cookies.remove("cash_register_recorded_id")
+            window.$cookies.remove("login")
+            window.$cookies.remove("name")
+            window.$cookies.remove("timeIn")
+            window.$cookies.remove("userId")
+            location.reload()
         } catch (err) {
           console.error(err);
         }

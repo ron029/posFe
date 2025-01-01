@@ -128,9 +128,10 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['findBarcode']),
-        searchBarcode() {
+        ...mapActions(['findBarcode', 'getCsrfToken']),
+        async searchBarcode() {
             if (!this.isBarcodeNotFound && this.$refs.searchBarcode.validate()) {
+                await this.getCsrfToken()
                 this.findBarcode({barcode: this.barcode, quatity: this.quantity})
             }
         },

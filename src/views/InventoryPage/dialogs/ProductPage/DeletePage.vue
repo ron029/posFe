@@ -31,16 +31,20 @@ export default {
         }
     },
     watch: {
-        productDeleteData(newVal) {
+        async productDeleteData(newVal) {
             this.loading = false
             this.$emit('closeDeleteDialog')
-            if (newVal) this.products()
+            if (newVal) {
+                await this.getCsrfToken()
+                this.products()
+            }
         }
     },
     methods: {
-        ...mapActions(['products', 'productDelete']),
-        deleteProduct() {
+        ...mapActions(['products', 'productDelete', 'getCsrfToken']),
+        async deleteProduct() {
             this.loading = true
+            await this.getCsrfToken()
             this.productDelete(this.data.item)
         },
     }

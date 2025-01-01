@@ -13,9 +13,6 @@ const routes = [
         component: () =>  { return import('@/views/LoginPage.vue') },
         beforeEnter(to, from, next) {
             const isLoggedIn = window.$cookies.get('login')
-            console.log('window.cookies: ', window.$cookies.get('POS_AUTH'))
-            console.log('window.cookies: ', window.$cookies.get('login'))
-            console.log('window.cookies: ', window.$cookies.get('user_id'))
             if (isLoggedIn) {
                 next(`/pos`);
             } else {
@@ -52,6 +49,14 @@ const routes = [
                 path: 'sales',
                 name: 'sales',
                 component: () =>  { return import('@/views/SalesPage/IndexPage.vue') },
+                meta: {
+                    middleware: [ auth ]
+                },
+            },
+            {
+                path: 'reorder',
+                name: 'reorder',
+                component: () =>  { return import('@/views/ReorderPage/IndexPage.vue') },
                 meta: {
                     middleware: [ auth ]
                 },

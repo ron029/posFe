@@ -273,7 +273,6 @@ export default {
             if (newVal.STATUS === 200 && this.mode === 'out') {
                 await this.getCsrfToken()
                 this.logout()
-                window.location.reload()
             }
         },
         fetchSalesBySessionData(newVal) {
@@ -320,7 +319,7 @@ export default {
                 }
             }
         },
-        submitCashRegister() {
+        async submitCashRegister() {
             if (this.$refs.form.validate()) {
                 this.data.deno.register_cash_flow_id = window.$cookies.get('cash_register_recorded_id')
                 if (this.mode === 'in') {
@@ -337,7 +336,8 @@ export default {
         },
 
     },
-    mounted() {
+    async mounted() {
+        await this.getCsrfToken()
         this.user.name = window.$cookies.get('name')
         const timeIn = decodeURI(window.$cookies.get('timeIn'));
         this.data.deno.isTimeIn = timeIn

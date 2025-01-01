@@ -141,7 +141,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['saveSales']),
+        ...mapActions(['saveSales', 'getCsrfToken']),
         closeEditCurrentItem(data) {
             this.show.editItem = false
             console.log('closeEditCurrentItem data: ', data)
@@ -153,7 +153,8 @@ export default {
         closeNotif() {
             this.show.error = false
         },
-        saveTransaction(data) {
+        async saveTransaction(data) {
+            await this.getCsrfToken()
             this.saveSales({items: this.transactions, totalAmount: this.totalAmount, ...data, register_cash_flow_id: Number(window.$cookies.get('cash_register_recorded_id'))})
         },
         focusToBarcode() {
