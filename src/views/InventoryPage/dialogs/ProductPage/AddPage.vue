@@ -52,6 +52,12 @@
                             :rules="rule.quantity"
                         ></v-text-field>
                         <v-text-field
+                            label="Reorder Level"
+                            v-model.trim="item.reorder_level"
+                            type="number"
+                            :rules="rule.reorder_level"
+                        ></v-text-field>
+                        <v-text-field
                             label="Cost Price"
                             v-model.trim="item.cost_price"
                             type="number"
@@ -66,12 +72,6 @@
                             step="0.01"
                             @input="validateDecimalSelling"
                             :rules="rule.selling_price"
-                        ></v-text-field>
-                        <v-text-field
-                            label="Reorder Level"
-                            v-model.trim="item.reorder_level"
-                            type="number"
-                            :rules="rule.reorder_level"
                         ></v-text-field>
                         <v-autocomplete
                             v-model.trim="item.supplier_id"

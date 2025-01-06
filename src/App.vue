@@ -14,6 +14,7 @@
             v-if="$route.path !== '/'"
             :show="showCashRegisterRecorder"
             :mode="mode"
+            @closeCashRegisterTransactions="showCashRegisterRecorder=false"
         />
     </v-main>
   </v-app>

@@ -1,11 +1,21 @@
 <template>
-    <h1>Reorder Level</h1>
+    <div>
+        <h1>Reorder Level</h1>
+        <MainPage
+            :reorders="reorders"
+            :ignoredReorders="ignoredReorders"
+        />
+    </div>
 </template>
 
 <script>
+import MainPage from './MainPage.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
+    components: {
+        MainPage,
+    },
     data: () => ({
         reorders: [],
         ignoredReorders: []
@@ -16,8 +26,8 @@ export default {
     watch: {
         fetchReorderData(newVal) {
             if (newVal.STATUS === 200) {
-                this.reorders = (newVal.DATA).filter(item => item.isIgnoreReorder !== 0)
-                this.ignoredReorders = (newVal.DATA).filter(item => item.isIgnoreReorder !== 1)
+                this.reorders = (newVal.DATA).filter(item => item.is_ignored_reorder !== 1)
+                this.ignoredReorders = (newVal.DATA).filter(item => item.is_ignored_reorder === 1)
             }
         }
     },

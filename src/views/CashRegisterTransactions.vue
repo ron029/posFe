@@ -10,7 +10,15 @@
                 ref="form"
                 @submit.prevent="submitCashRegister()"
             >
-                <v-card-title style="background-color: blue; color: white">Cash Register</v-card-title>
+                <v-card-title style="background-color: blue; color: white">Cash Register
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        outlined
+                        @click="$emit('closeCashRegisterTransactions')"
+                        small
+                        color="white"
+                    >ESC</v-btn>
+                </v-card-title>
                 <v-card-text>
                     <v-row>
                         <v-col cols="6">
@@ -150,8 +158,8 @@ export default {
             register: {
                 employee_id: Number(window.$cookies.get('userId')),
                 discrepancy: 0,
-                openingAmount: 0,
-                closingAmount: 0,
+                opening_amount: 0,
+                closing_amount: 0,
             },
             deno: {
                 register_cash_flow_id: null,
@@ -193,8 +201,8 @@ export default {
     computed: {
         ...mapGetters(['registerCashFlowData', 'getExistingCashFlowData', 'fetchSalesBySessionData']),
         discrepancy() {
-            if (this.mode === 'out' && this.data.register.openingAmount && this.sales) {
-                const openingAndSales = parseFloat(this.data.register.openingAmount) + parseFloat(this.sales)
+            if (this.mode === 'out' && this.data.register.opening_amount && this.sales) {
+                const openingAndSales = parseFloat(this.data.register.opening_amount) + parseFloat(this.sales)
                 return openingAndSales - this.totalAmount
             } else {
                 return '0.00'
@@ -216,7 +224,7 @@ export default {
             }
         },
         totalOpeningColor() {
-            if (this.data.register.openingAmount) {
+            if (this.data.register.opening_amount) {
                 return 'success'
             }
             if (this.mode === 'in' && Number(this.totalAmount) > 0) {
@@ -226,7 +234,7 @@ export default {
             }
         },
         totalClosingColor() {
-            if (this.data.register.closingAmount) {
+            if (this.data.register.closing_amount) {
                 return 'success'
             }
             if (this.mode === 'out' && Number(this.totalAmount) > 0) {
@@ -239,14 +247,14 @@ export default {
             if (this.mode === 'in') {
                 return this.totalAmount ? this.formatAmount(this.totalAmount) : '0.00'
             } else if (this.mode === 'out') {
-                return this.data.register.openingAmount
+                return this.data.register.opening_amount
             } else {
                 return '0.00'
             }
         },
         totalAmountClosingDisplay() {
             if (this.mode === 'in') {
-                return this.data.register.closingAmount
+                return this.data.register.closing_amount
             } else if (this.mode === 'out') {
                 return this.totalAmount ? this.formatAmount(this.totalAmount) : '0.00'
             } else {
@@ -285,7 +293,7 @@ export default {
         },
         getExistingCashFlowData(newVal) {
             if (newVal.STATUS === 200) {
-                this.data.register.openingAmount = newVal.DATA[0].openingAmount
+                this.data.register.opening_amount = newVal.DATA[0].opening_amount
             }
         },
         mode(newVal) {
@@ -323,13 +331,13 @@ export default {
             if (this.$refs.form.validate()) {
                 this.data.deno.register_cash_flow_id = window.$cookies.get('cash_register_recorded_id')
                 if (this.mode === 'in') {
-                    this.data.register.openingAmount = Number(this.totalAmount)
+                    this.data.register.opening_amount = Number(this.totalAmount)
                     this.data.deno.isTimeIn = 1
                 }
                 if (this.mode === 'out') {
                     this.data.register.discrepancy = Number(this.discrepancy)
                     this.data.deno.isTimeIn = 0
-                    this.data.register.closingAmount = Number(this.totalAmount)
+                    this.data.register.closing_amount = Number(this.totalAmount)
                 }
                 this.registerCashFlow(this.data)
             }

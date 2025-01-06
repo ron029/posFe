@@ -1,0 +1,145 @@
+<template>
+    <div>
+        <v-card>
+            <v-tabs
+                v-model="tab"
+                align-with-title
+            >
+                <v-tabs-slider color="#D5B07E"></v-tabs-slider>
+                <v-tab
+                    v-for="item in items"
+                    :key="item"
+                >
+                    {{ item }}
+                </v-tab>
+            </v-tabs>
+
+            <v-tabs-items v-model="tab">
+                <v-tab-item
+                    v-for="item in items"
+                    :key="item"
+                >
+                    <v-card flat>
+                    <v-card-text v-if="item=='reorder'">
+                        <v-card>
+                            <v-data-table
+                                v-model="selected"
+                                :headers="headers.reoders"
+                                :items="reorders"
+                                :search="search"
+                                show-select
+                                item-key="product_id"
+                            >
+                                <template slot="top">
+                                    <v-row>
+                                        <v-col cols="10">
+                                            <v-text-field
+                                                style="margin: 0 20px"
+                                                v-model="searchQuery"
+                                                @keyup.enter="search=searchQuery"
+                                                placeholder="Search"
+                                                append-icon="mdi-magnify"
+                                                clearable
+                                                @click:clear="search=''"
+                                                @click:append="search=searchQuery"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="2"><v-btn :disabled="enableIgnore" large @click="show.ignore=true">ignore</v-btn></v-col>
+                                    </v-row>
+                                </template>
+                                <template slot="item.notificatioStatus">
+                                    <v-icon>mdi-bell</v-icon> Active
+                                </template>
+                                <template slot="item.actions" slot-scope="{ item }">
+                                    <v-btn
+                                        @click="focusProduct(item.product_id)"
+                                    >Ignore</v-btn>
+                                </template>
+                            </v-data-table>
+                        </v-card>
+                    </v-card-text>
+                    <v-card-text v-if="item=='ignored'">
+                        <v-card>
+                            <v-data-table
+                                :headers="headers.ignoredReorders"
+                                :items="ignoredReorders"
+                            >
+                                <template slot="item.notificatioStatus">
+                                    <v-icon>mdi-bell-off</v-icon> Muted
+                                </template>
+                            </v-data-table>
+                        </v-card>
+                    </v-card-text>
+                    </v-card>
+                </v-tab-item>
+            </v-tabs-items>
+        </v-card>
+        <IgnorePage
+            :show="show.ignore"
+            :data="selected"
+            @closeDialog="show.ignore=false"
+            @ignoreProduct="ignoreProduct"
+        />
+    </div>
+</template>
+
+<script>
+import { mapActions, mapGetters } from 'vuex';
+import IgnorePage from './IgnorePage.vue';
+export default {
+    components: {
+        IgnorePage
+    },
+    data () {
+        return {
+            show: {
+                ignore: false,
+            },
+            search: '',
+            searchQuery: '',
+            selected: [],
+            tab: null,
+            items: [ 'reorder', 'ignored' ],
+            headers: {
+                reoders: [
+                    { text: 'Name', value: 'name' },
+                    { text: 'Quantity', value: 'quantity' },
+                    { text: 'Reorder Level', value: 'reorder_level' },
+                    { text: 'Supplier', value: 'supplier' },
+                    { text: 'Notification Status', value: 'notificatioStatus'},
+                ],
+                ignoredReorders: [
+                    { text: 'Name', value: 'name' },
+                    { text: 'Quantity', value: 'quantity' },
+                    { text: 'Reorder Level', value: 'reorder_level' },
+                    { text: 'Reason Ignored', value: 'reasonIgnored' },
+                    { text: 'Notification Status', value: 'notificatioStatus'},
+                ]
+            }
+        }
+    },
+    props: ['reorders', 'ignoredReorders'],
+    computed: {
+        ...mapGetters(['newReorderData']),
+        enableIgnore() {
+            return !this.selected.length>0
+        }
+    },
+    watch: {
+        searchQuery(newVal) {
+            if (newVal == '' || newVal == null || newVal == undefined) this.search = ''
+        }
+    },
+    methods: {
+        ...mapActions(['newReorder']),
+        focusProduct(product_id) {
+            console.log('focusProduct product_id: ', product_id)
+        },
+        ignoreProduct(data) {
+            console.log('ignoreProduct data: ', data)
+            this.show.ignore = false
+            this.newReorder(data)
+        }
+    }
+};
+</script>
