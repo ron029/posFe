@@ -20,6 +20,7 @@ export const product = {
                 }
             })
         } catch (err) {
+            commit('PRODUCT_POST', err.response)
             console.error(err)
         }
     },
@@ -33,6 +34,7 @@ export const product = {
                 }
             })
         } catch (err) {
+            commit('PRODUCT', err.response)
             console.error(err)
         }
     },
@@ -46,6 +48,7 @@ export const product = {
                 }
             })
         } catch (err) {
+            commit('PRODUCT_PUT', err.response)
             console.error(err)
         }
     },
@@ -59,6 +62,7 @@ export const product = {
                 }
             })
         } catch (err) {
+            commit('PRODUCT_DELETE', err.response)
             console.error(err)
         }
     },

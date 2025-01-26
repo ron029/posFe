@@ -13,6 +13,7 @@ export const sales = {
                 commit('FETCH_SALES', res.data)
             })
         } catch (err) {
+            commit('FETCH_SALES', err.response)
             console.error(err)
         }
     },

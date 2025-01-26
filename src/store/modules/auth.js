@@ -3,19 +3,33 @@ import AXIOS from "@/plugins/axios";
 
 export const authentication = {
   state: {
+    signUpData: null,
     isCashRegisterRecordedData: null,
     isUserTimeout: false,
     loginData: null,
   },
   actions: {
-    login({commit}, args) {
+    signUp({commit}, params) {
         try {
             AUTH_API
-            .login(args)
+            .signUp(params)
+            .then(res => {
+                commit('SIGNUP', res.data)
+            })
+        } catch (err) {
+            commit('SIGNUP', err.response)
+            console.error(err)
+        }
+    },
+    login({commit}, params) {
+        try {
+            AUTH_API
+            .login(params)
             .then(res => {
                 commit('LOGIN', res.data)
             })
         } catch (err) {
+            commit('LOGIN', err.response)
             console.error(err)
         }
     },
@@ -49,6 +63,9 @@ export const authentication = {
       },
   },
   mutations: {
+    SIGNUP(state, signUpData) {
+        state.signUpData = signUpData
+    },
     IS_CASH_REGISTER_RECORDED(state, isCashRegisterRecordedData) {
         state.isCashRegisterRecordedData = isCashRegisterRecordedData
     },
@@ -61,6 +78,9 @@ export const authentication = {
     }
   },
   getters: {
+    signUpData(state) {
+        return state.signUpData
+    },
     isUserTimeout(state) {
         return state.isUserTimeout
     },

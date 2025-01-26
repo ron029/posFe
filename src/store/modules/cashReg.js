@@ -14,6 +14,7 @@ export const cashReg = {
                 commit('SAVE_SALES', res.data)
             })
         } catch (err) {
+            commit('SAVE_SALES', err.response)
             console.error(err)
         }
     },
@@ -25,6 +26,7 @@ export const cashReg = {
                 commit('FIND_BARCODE', res.data)
             })
         } catch (err) {
+            commit('FIND_BARCODE', err.response)
             console.error(err)
         }
     },

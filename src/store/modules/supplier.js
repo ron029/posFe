@@ -20,6 +20,7 @@ export const supplier = {
                 }
             })
         } catch (err) {
+            commit('SUPPLIER_POST', err.response)
             console.error(err)
         }
     },
@@ -33,6 +34,7 @@ export const supplier = {
                 }
             })
         } catch (err) {
+            commit('SUPPLIERS', err.response)
             console.error(err)
         }
     },
@@ -46,6 +48,7 @@ export const supplier = {
                 }
             })
         } catch (err) {
+            commit('SUPPLIER_PUT', err.response)
             console.error(err)
         }
     },
@@ -59,6 +62,7 @@ export const supplier = {
                 }
             })
         } catch (err) {
+            commit('SUPPLIER_DELETE', err.response)
             console.error(err)
         }
     },

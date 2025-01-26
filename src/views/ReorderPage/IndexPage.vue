@@ -21,18 +21,28 @@ export default {
         ignoredReorders: []
     }),
     computed: {
-        ...mapGetters(['fetchReorderData'])
+        ...mapGetters(['fetchReorderData', 'newReorderData', 'destroyReorderData'])
     },
     watch: {
         fetchReorderData(newVal) {
-            if (newVal.STATUS === 200) {
-                this.reorders = (newVal.DATA).filter(item => item.is_ignored_reorder !== 1)
-                this.ignoredReorders = (newVal.DATA).filter(item => item.is_ignored_reorder === 1)
-            }
-        }
+            if (newVal.STATUS === 200)
+                this.setReorderAndIgnore(newVal.DATA)
+        },
+        newReorderData(newVal) {
+            if (newVal.STATUS === 201)
+                this.fetchReorder()
+        },
+        destroyReorderData(newVal) {
+            if (newVal.STATUS === 200)
+                this.fetchReorder()
+        },
     },
     methods: {
-        ...mapActions(['getCsrfToken', 'fetchReorder'])
+        ...mapActions(['getCsrfToken', 'fetchReorder']),
+        setReorderAndIgnore(data) {
+            this.reorders = (data).filter(item => item.is_ignored_reorder !== 1)
+            this.ignoredReorders = (data).filter(item => item.is_ignored_reorder === 1)
+        },
     },
     async mounted() {
         await this.getCsrfToken()

@@ -58,7 +58,7 @@
             ['mdi-finance', 'Sales', 'sales'],
             ['mdi-warehouse', 'Inventory', `inventory`],
             ['mdi-reload-alert', 'Reorder Level', 'reorder'],
-            ['mdi-account-group', 'Staff', null],
+            ['mdi-account-group', 'Staff', 'staff'],
             ['', '', ''],
         ],
     }),

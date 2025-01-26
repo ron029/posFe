@@ -29,6 +29,7 @@ export const registerCashFlow = {
                 commit('GET_EXISTING_CASH_FLOW', res.data)
             })
         } catch (err) {
+            commit('GET_EXISTING_CASH_FLOW', err.response)
             console.error(err)
         }
     },
@@ -43,6 +44,7 @@ export const registerCashFlow = {
                 commit('REGISTER_CASH_FLOW', res.data)
             })
         } catch (err) {
+            commit('REGISTER_CASH_FLOW', err.response)
             console.error(err)
         }
     },

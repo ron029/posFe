@@ -20,6 +20,7 @@ export const brand = {
                 }
             })
         } catch (err) {
+            commit('BRAND_POST', err.response)
             console.error(err)
         }
     },
@@ -33,6 +34,7 @@ export const brand = {
                 }
             })
         } catch (err) {
+            commit('BRANDS', err.response)
             console.error(err)
         }
     },
@@ -46,6 +48,7 @@ export const brand = {
                 }
             })
         } catch (err) {
+            commit('BRAND_PUT', err.response)
             console.error(err)
         }
     },
@@ -59,6 +62,7 @@ export const brand = {
                 }
             })
         } catch (err) {
+            commit('BRAND_DELETE', err.response)
             console.error(err)
         }
     },

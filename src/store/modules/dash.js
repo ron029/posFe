@@ -38,6 +38,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('SUPPLIER_POST', err.response)
             console.error(err)
         }
     },
@@ -51,6 +52,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('SUPPLIERS', err.response)
             console.error(err)
         }
     },
@@ -64,6 +66,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('SUPPLIER_PUT', err.response)
             console.error(err)
         }
     },
@@ -77,6 +80,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('SUPPLIER_DELETE', err.response)
             console.error(err)
         }
     },
@@ -93,6 +97,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('BRAND_POST', err.response)
             console.error(err)
         }
     },
@@ -106,6 +111,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('BRANDS', err.response)
             console.error(err)
         }
     },
@@ -119,6 +125,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('BRAND_PUT', err.response)
             console.error(err)
         }
     },
@@ -132,6 +139,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('BRAND_DELETE', err.response)
             console.error(err)
         }
     },
@@ -147,6 +155,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('UNIT_POST', err.response)
             console.error(err)
         }
     },
@@ -160,6 +169,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('UNITS', err.response)
             console.error(err)
         }
     },
@@ -173,6 +183,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('UNIT_PUT', err.response)
             console.error(err)
         }
     },
@@ -186,6 +197,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('UNIT_DELETE', err.response)
             console.error(err)
         }
     },
@@ -201,6 +213,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('CATEGORY_POST', err.response)
             console.error(err)
         }
     },
@@ -214,6 +227,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('CATEGORIES', err.response)
             console.error(err)
         }
     },
@@ -227,6 +241,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('CATEGORY_PUT', err.response)
             console.error(err)
         }
     },
@@ -240,6 +255,7 @@ export const dash = {
                 }
             })
         } catch (err) {
+            commit('CATEGORY_DELETE', err.response)
             console.error(err)
         }
     },

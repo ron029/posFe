@@ -60,6 +60,14 @@ const routes = [
                 meta: {
                     middleware: [ auth ]
                 },
+            },
+            {
+                path: 'staff',
+                name: 'staff',
+                component: () =>  { return import('@/views/StaffPage/IndexPage.vue') },
+                meta: {
+                    middleware: [ auth ]
+                },
             }
         ]
     },

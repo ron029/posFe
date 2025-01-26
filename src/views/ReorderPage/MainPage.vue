@@ -44,16 +44,11 @@
                                                 @click:append="search=searchQuery"
                                             ></v-text-field>
                                         </v-col>
-                                        <v-col cols="2"><v-btn :disabled="enableIgnore" large @click="show.ignore=true">ignore</v-btn></v-col>
+                                        <v-col cols="2"><v-btn :disabled="enableIgnore" color="success" large @click="show.ignore=true">ignore</v-btn></v-col>
                                     </v-row>
                                 </template>
                                 <template slot="item.notificatioStatus">
                                     <v-icon>mdi-bell</v-icon> Active
-                                </template>
-                                <template slot="item.actions" slot-scope="{ item }">
-                                    <v-btn
-                                        @click="focusProduct(item.product_id)"
-                                    >Ignore</v-btn>
                                 </template>
                             </v-data-table>
                         </v-card>
@@ -63,7 +58,28 @@
                             <v-data-table
                                 :headers="headers.ignoredReorders"
                                 :items="ignoredReorders"
+                                v-model="selected"
+                                :search="search"
+                                show-select
+                                item-key="product_id"
                             >
+                                <template slot="top">
+                                    <v-row>
+                                        <v-col cols="10">
+                                            <v-text-field
+                                                style="margin: 0 20px"
+                                                v-model="searchQuery"
+                                                @keyup.enter="search=searchQuery"
+                                                placeholder="Search"
+                                                append-icon="mdi-magnify"
+                                                clearable
+                                                @click:clear="search=''"
+                                                @click:append="search=searchQuery"
+                                            ></v-text-field>
+                                        </v-col>
+                                        <v-col cols="2"><v-btn :disabled="enableIgnore" color="success" large @click="show.focus=true">Focus</v-btn></v-col>
+                                    </v-row>
+                                </template>
                                 <template slot="item.notificatioStatus">
                                     <v-icon>mdi-bell-off</v-icon> Muted
                                 </template>
@@ -80,20 +96,29 @@
             @closeDialog="show.ignore=false"
             @ignoreProduct="ignoreProduct"
         />
+        <FocusPage
+            :show="show.focus"
+            :data="selected"
+            @closeDialog="show.focus=false"
+            @enableNotification="enableNotification"
+        />
     </div>
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex';
+import { mapActions } from 'vuex';
+import FocusPage from './FocusPage.vue';
 import IgnorePage from './IgnorePage.vue';
 export default {
     components: {
+        FocusPage,
         IgnorePage
     },
     data () {
         return {
             show: {
                 ignore: false,
+                focus: false,
             },
             search: '',
             searchQuery: '',
@@ -112,7 +137,7 @@ export default {
                     { text: 'Name', value: 'name' },
                     { text: 'Quantity', value: 'quantity' },
                     { text: 'Reorder Level', value: 'reorder_level' },
-                    { text: 'Reason Ignored', value: 'reasonIgnored' },
+                    { text: 'Reason Ignored', value: 'reason' },
                     { text: 'Notification Status', value: 'notificatioStatus'},
                 ]
             }
@@ -120,25 +145,32 @@ export default {
     },
     props: ['reorders', 'ignoredReorders'],
     computed: {
-        ...mapGetters(['newReorderData']),
         enableIgnore() {
             return !this.selected.length>0
         }
     },
     watch: {
+        tab() {
+            this.searchQuery = ''
+            this.selected = []
+        },
         searchQuery(newVal) {
             if (newVal == '' || newVal == null || newVal == undefined) this.search = ''
         }
     },
     methods: {
-        ...mapActions(['newReorder']),
-        focusProduct(product_id) {
-            console.log('focusProduct product_id: ', product_id)
+        ...mapActions(['newReorder', 'destroyReorder']),
+        enableNotification(data) {
+            console.log('enableNotification data: ', data)
+            this.show.focus=false
+            this.destroyReorder(data)
+            this.selected = []
         },
         ignoreProduct(data) {
             console.log('ignoreProduct data: ', data)
             this.show.ignore = false
             this.newReorder(data)
+            this.selected = []
         }
     }
 };

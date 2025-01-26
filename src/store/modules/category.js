@@ -20,6 +20,7 @@ export const category = {
                 }
             })
         } catch (err) {
+            commit('CATEGORY_POST', err.response)
             console.error(err)
         }
     },
@@ -33,6 +34,7 @@ export const category = {
                 }
             })
         } catch (err) {
+            commit('CATEGORIES', err.response)
             console.error(err)
         }
     },
@@ -46,6 +48,7 @@ export const category = {
                 }
             })
         } catch (err) {
+            commit('CATEGORY_PUT', err.response)
             console.error(err)
         }
     },
@@ -59,6 +62,7 @@ export const category = {
                 }
             })
         } catch (err) {
+            commit('CATEGORY_DELETE', err.response)
             console.error(err)
         }
     },

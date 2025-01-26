@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 
+import { employee } from './modules/employee';
 import { authentication } from "./modules/auth";
 import { cashReg } from './modules/cashReg';
 import { product } from './modules/product';
@@ -11,6 +12,8 @@ import { supplier } from './modules/supplier';
 import { sales } from './modules/sales';
 import { registerCashFlow } from './modules/cashFlow';
 import { reorder } from './modules/reorder';
+import { role } from './modules/role';
+import { permission } from './modules/permission';
 
 import loading from "./modules/loading";
 
@@ -18,6 +21,9 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
+    role,
+    permission,
+    employee,
     authentication,
     cashReg,
     product,

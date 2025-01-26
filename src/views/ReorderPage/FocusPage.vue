@@ -6,23 +6,16 @@
         <v-card>
             <v-card-title style="background-color: blue; color: white;">&nbsp;</v-card-title>
             <v-card-text style="padding-top: 20px;">
-                <p>Please give a reason why you need to <strong>ignore notification</strong> in product below:</p>
-                <div v-for="(item, index) in items" :key="index">
-                    <v-textarea
-                        auto-grow
-                        outlined
-                        :label="item.name"
-                        rows="2"
-                        row-height="20"
-                        v-model="item.reason"
-                        clearable
-                    ></v-textarea>
-                </div>
+                <p>You are about to <strong>enable reorder notification</strong> for the following products:</p>
+                <v-data-table
+                    :items="data"
+                    :headers="headers"
+                ></v-data-table>
             </v-card-text>
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="error" @click="showDialog=false">cancel</v-btn>
-                <v-btn color="success" @click="$emit('ignoreProduct', items)">submit</v-btn>
+                <v-btn color="success" @click="$emit('enableNotification', items)">submit</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -32,6 +25,11 @@
 export default {
     data: ()=>({
         items: [],
+        headers: [
+            { text: 'Description', value: 'name'},
+            { text: 'Quantity', value: 'quantity'},
+            { text: 'Reorder Level', value: 'reorder_level'}
+        ]
     }),
     props: ['show', 'data'],
     computed: {
@@ -50,11 +48,7 @@ export default {
                 this.items = []
                 this.items = this.data.map(item => ({
                     entity_id: item.product_id,
-                    changes_by: parseInt(window.$cookies.get('userId')),
-                    reason: null,
-                    changes_type: 'ignore',
                     entity_type: 'product',
-                    name: item.name,
                 }))
             }
         }
