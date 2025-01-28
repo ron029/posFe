@@ -12,11 +12,15 @@
                 <v-card-title style="background-color: blue; color: white">New Role</v-card-title>
                 <v-card-text>
                     <v-text-field
-                        v-model="role.name"
+                        v-model="userRole.name"
                         label="Name"
                         :rules="rules.name"
                     ></v-text-field>
-                    <div v-for="(group, actionKey) in groupedPermissions" :key="actionKey" style="width: 150px; display: inline-block; padding: 10px 20px ; vertical-align: top;">
+                    <p class="text-right">
+                        <v-btn v-if="!selectedAllPermission" @click="selectAllPermission()" small color="primary">select all</v-btn>
+                        <v-btn v-else @click="deselectAllPermission()" small color="secondary">deselect all</v-btn>
+                    </p>
+                    <div v-for="(group, actionKey) in groupedPermissions(userRole.permissions)" :key="actionKey" style="width: 150px; display: inline-block; padding: 10px 20px ; vertical-align: top;">
                     <p>{{ actionKey }}</p>
                     <v-checkbox
                         v-for="(permissionItem, index) in group"
@@ -44,26 +48,18 @@ export default {
     props: ['show'],
     data: () => ({
         valid: true,
-        role: {
-            name: null
+        userRole: {
+            name: null,
+            permissions: [],
         },
+        selectedAllPermission: false,
         permissionList: [],
         rules: {
             name: [v=>!!v||"Name is required"],
         }
     }),
     computed: {
-        ...mapGetters(['signUpData', 'permissionData']),
-        groupedPermissions() {
-            return this.permissionList.reduce((groups, item) => {
-                const actionKey = item.action[0]; // Group by action[0]
-                if (!groups[actionKey]) {
-                    groups[actionKey] = [];
-                }
-                groups[actionKey].push(item);
-                return groups;
-            }, {});
-        },
+        ...mapGetters(['signUpData', 'permissionData', 'roleData', 'rolePostData']),
         showDialog: {
             get() {
                 return this.show
@@ -75,9 +71,15 @@ export default {
         }
     },
     watch: {
+        'role.permissions': {
+            handler(newVal) {
+                console.log('watch role.permissions newVal: ', newVal)
+            },
+            deep: true,
+            immediate: true,
+        },
         permissionData(newVal) {
-            this.permissionList = newVal.DATA.map(item => ({permission_id: item.permission_id, name: item.name, action: item.name.split(':'), value: false}))
-            console.log('watch permissionData newVal: ', this.permissionList)
+            this.userRole.permissions = newVal.DATA.map(item => ({permission_id: item.permission_id, name: item.name, action: item.name.split(':'), value: false}))
         },
         signUpData(newVal) {
             console.log('signUpData newVal: ', newVal)
@@ -90,11 +92,33 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['signUp', 'employee']),
+        ...mapActions(['signUp', 'employee', 'role', 'rolePost']),
+        selectAllPermission() {
+            this.selectedAllPermission = true
+            this.userRole.permissions.forEach((item) => {
+                item.value = true
+            })
+        },
+        deselectAllPermission() {
+            this.selectedAllPermission = false
+            this.userRole.permissions.forEach((item) => {
+                item.value = false
+            })
+        },
+        groupedPermissions(permissions) {
+            return permissions.reduce((groups, item) => {
+                const actionKey = item.action[0]; // Group by action[0]
+                if (!groups[actionKey]) {
+                    groups[actionKey] = [];
+                }
+                groups[actionKey].push(item);
+                return groups;
+            }, {});
+        },
         submitForm() {
             if (this.$refs.form.validate()) {
                 console.log('form submitted')
-                // this.signUp(this.user)
+                this.rolePost(this.userRole)
             }
         }
     }

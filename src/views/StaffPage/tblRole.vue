@@ -20,6 +20,11 @@
                 ></v-switch>
             </v-toolbar>
         </template>
+        <template v-slot:name="{ item }">
+            <p>{{ item.name }}
+                <v-btn icon color="orange"><v-icon>mdi-pencil</v-icon></v-btn>
+            </p>
+        </template>
         <template v-slot:expanded-item="{ item }">
             <td :colspan="headers.length">
                 <div v-for="(group, actionKey) in groupedPermissions(item.permissions)" :key="actionKey" style="width: 150px; display: inline-block; padding: 10px 20px ; vertical-align: top;">
