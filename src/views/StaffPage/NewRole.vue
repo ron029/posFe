@@ -12,9 +12,10 @@
                 <v-card-title style="background-color: blue; color: white">New Role</v-card-title>
                 <v-card-text>
                     <v-text-field
-                        v-model="userRole.name"
+                        v-model.trim="userRole.name"
                         label="Name"
                         :rules="rules.name"
+                        autocomplete="nope"
                     ></v-text-field>
                     <p class="text-right">
                         <v-btn v-if="!selectedAllPermission" @click="selectAllPermission()" small color="primary">select all</v-btn>
@@ -71,8 +72,14 @@ export default {
         }
     },
     watch: {
-        'role.permissions': {
+        rolePostData(newVal) {
+            if (newVal.STATUS === 409) {
+                alert(newVal.STATE)
+            }
+        },
+        'userRole.permissions': {
             handler(newVal) {
+                this.selectedAllPermission = newVal.every(item => item.value === true)
                 console.log('watch role.permissions newVal: ', newVal)
             },
             deep: true,

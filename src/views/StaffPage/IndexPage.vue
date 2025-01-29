@@ -5,7 +5,7 @@
             <v-btn
                 @click="displayPageFunc('staff')"
                 :color="displayPage.staff ? 'primary' : ''"
-            ><v-icon>mdi-account</v-icon>acounts</v-btn>
+            ><v-icon>mdi-account</v-icon>accounts</v-btn>
             <v-btn
                 @click="displayPageFunc('role')"
                 :color="displayPage.role ? 'primary' : ''"
@@ -112,8 +112,9 @@ export default {
     watch: {
         roleData(newVal) {
             if (newVal.STATUS === 200) {
-                console.log('watch roleData newVal: ', newVal)
-                this.items.role = newVal.DATA
+                const test = this.groupedRolesAndPermissions(newVal.DATA)
+                console.log('watch roleData test: ', test)
+                this.items.role = test
             }
         },
         employeeFindData(newVal) {
@@ -126,12 +127,20 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['employee', 'employeeFind', 'role']),
+        ...mapActions(['employee', 'employeeFind']),
+        groupedRolesAndPermissions(roleAndPermissions) {
+            return roleAndPermissions.reduce((groups, item) => {
+                const role = item.role_name;
+                if (!groups[role]) {
+                    groups[role] = [];
+                }
+                groups[role].push(item);
+                return groups;
+            }, {});
+        },
         displayPageFunc(page) {
-            if (page === 'role') this.role()
             this.displayPage.staff = page === 'staff'
             this.displayPage.role = page === 'role'
-
         },
         editAccount(employee_id) {
             this.employeeFind(employee_id)
