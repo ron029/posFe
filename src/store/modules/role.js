@@ -2,16 +2,28 @@ import ROLE_API from "../APIs/role";
 
 export const role = {
   state: {
+    userRoleData: null,
     roleData: null,
     roleFindData: null,
     rolePutData: null,
     rolePostData: null,
   },
   actions: {
-    rolePost({commit}, args) {
+    userRole({commit}, params) {
+        try {
+            ROLE_API.userRole(params)
+            .then(res => {
+                commit('USER_ROLE', res.data)
+            })
+        } catch (err) {
+            commit('USER_ROLE', err.response)
+            console.log('userRole err: ', err)
+        }
+    },
+    rolePost({commit}, params) {
         try {
             ROLE_API
-                .rolePost(args)
+                .rolePost(params)
                 .then(res => {
                     commit('ROLE_POST', res.data)
                 })
@@ -20,10 +32,10 @@ export const role = {
             console.error(err)
         }
     },
-    rolePut({commit}, args) {
+    rolePut({commit}, params) {
         try {
             ROLE_API
-                .rolePut(args)
+                .rolePut(params)
                 .then(res => {
                     commit('ROLE_PUT', res.data)
                 })
@@ -32,10 +44,10 @@ export const role = {
             console.error(err)
         }
     },
-    roleFind({commit}, args) {
+    roleFind({commit}, params) {
         try {
             ROLE_API
-                .roleFind(args)
+                .roleFind(params)
                 .then(res => {
                     commit('ROLE_FIND', res.data)
                 })
@@ -44,10 +56,10 @@ export const role = {
             console.error(err)
         }
     },
-    role({commit}, args) {
+    role({commit}, params) {
         try {
             ROLE_API
-                .role(args)
+                .role(params)
                 .then(res => {
                     commit('ROLE', res.data)
                 })
@@ -58,6 +70,9 @@ export const role = {
     },
   },
   mutations: {
+    USER_ROLE(state, userRoleData) {
+        state.userRoleData = userRoleData
+    },
     ROLE_POST(state, rolePostData) {
         state.rolePostData = rolePostData
     },
@@ -72,6 +87,9 @@ export const role = {
     },
   },
   getters: {
+    userRoleData(state) {
+        return state.userRoleData
+    },
     rolePostData(state) {
         return state.rolePostData
     },

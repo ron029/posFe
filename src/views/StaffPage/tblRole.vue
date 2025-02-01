@@ -21,7 +21,7 @@
                 ></v-switch>
             </v-toolbar>
         </template>
-        <template v-slot:item.name="{ item }">
+        <template v-slot:item.name="{ item, index }">
             <v-hover v-slot="{ hover }">
                 <p style="vertical-align: middle; height: 20px;">
                     <span style="margin-top: 20px;">{{ item.name }}</span><span style="font-size: 20px;">&nbsp;</span>
@@ -29,13 +29,13 @@
                         :style="'background-color: orange; color: white; vertical-align: middle;'"
                         small
                         v-show="hover && item.edit"
-                        @click="triggerEdit(item, 'edit')"
+                        @click="triggerEdit(item, 'edit', index)"
                     ><v-icon style="margin" small>mdi-pencil</v-icon> edit</v-btn>
                     <v-btn
                         :style="'background-color: red; color: white; vertical-align: middle;'"
                         small
                         v-show="hover && !item.edit"
-                        @click="triggerEdit(item, 'close')"
+                        @click="triggerEdit(item, 'close', index)"
                     ><v-icon style="margin" small>mdi-close</v-icon> cancel edit</v-btn>
                     <v-btn
                         :style="'background-color: green; color: white; vertical-align: middle;'"
@@ -74,6 +74,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data: ()=>({
+        counter: 1,
         onEdit: {
             status: false,
             hasChange: false,
@@ -97,20 +98,25 @@ export default {
         }
     },
     watch: {
+        counter(newVal) {
+            console.log('watch counter newVal: ', newVal)
+        },
         expanded: {
             handler(newVal, oldVal) {
-                for (let i=0; i<newVal.length; i++) {
-                    for (let j=0; j<this.originalItem.length; j++) {
-                        if (newVal[i].name === this.originalItem[j].name) {
-                            const isPermissionChange = !util.deepEqual(newVal[i].permissions, this.originalItem[j].permissions)
-                            const currentPosition = this.tblItems.findIndex(item => item.name === newVal[i].name)
-                            if (currentPosition !== -1)
-                                this.tblItems[currentPosition].hasChangePermission = isPermissionChange
-
+                if (newVal && this.counter) {
+                    for (let i=0; i<newVal.length; i++) {
+                        for (let j=0; j<this.originalItem.length; j++) {
+                            if (newVal[i].name === this.originalItem[j].name) {
+                                const isPermissionChange = !util.deepEqual(newVal[i].permissions, this.originalItem[j].permissions)
+                                const currentPosition = this.tblItems.findIndex(item => item.name === newVal[i].name)
+                                if (currentPosition !== -1)
+                                    this.tblItems[currentPosition].hasChangePermission = isPermissionChange
+                                this.counter = 0
+                            }
                         }
                     }
                 }
-                if (oldVal.length !== newVal.length)
+                if (newVal && oldVal && oldVal.length !== newVal.length)
                     this.onEdit.hasChange = true
             },
             deep: true,
@@ -123,18 +129,14 @@ export default {
             console.log('updateRole item: ', item)
         },
         triggerEdit(item, action) {
+            this.counter = 1
+
             const index = this.expanded.indexOf(item);
-            if (index === -1)
-                this.expanded.push(item);
-            else
-                this.expanded.slice(index, 1);
+            if (index === -1) this.expanded.push(item);
 
             this.onEdit.status = action === 'edit'
 
-            if (action === 'close') {
-                this.expanded = []
-                this.role()
-            }
+            if (action === 'close') this.role()
 
             return item.edit = action === 'close'
         },

@@ -94,6 +94,7 @@ export default {
                 {text: 'Emergency Contact', value: 'emergency_contact'},
                 {text: 'Emergency Name', value: 'emergency_name'},
                 {text: 'Status', value: 'is_active'},
+                {text: 'Role', value: 'role'},
                 {text: 'Actions', value: 'actions'},
             ],
             role: [
@@ -127,7 +128,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['employee', 'employeeFind']),
+        ...mapActions(['employee', 'employeeFind', 'userRole']),
         groupedRolesAndPermissions(roleAndPermissions) {
             return roleAndPermissions.reduce((groups, item) => {
                 const role = item.role_name;
@@ -148,6 +149,7 @@ export default {
     },
     mounted() {
         this.employee()
+        this.userRole()
     }
 }
 </script>

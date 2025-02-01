@@ -11,6 +11,14 @@
             >
                 <v-card-title style="background-color: blue; color: white">New Staff</v-card-title>
                 <v-card-text>
+                    <v-select
+                        v-model="user.role_id"
+                        :items="userRoleData && userRoleData.DATA"
+                        label="Role"
+                        item-text="name"
+                        item-value="role_id"
+                        :rules="rules.role"
+                    ></v-select>
                     <v-text-field
                         v-model="user.username"
                         label="Username"
@@ -74,17 +82,19 @@ export default {
             birthdate: null,
             address: null,
             emergency_contact: null,
-            emergency_name: null
+            emergency_name: null,
+            role_id: null,
         },
         rules: {
             username: [v=>!!v||"Username is required"],
             password: [v=>!!v||"Password is required"],
             confirm_password: [v=>!!v||"Confirm Password is required"],
             name: [v=>!!v||"Name is required"],
+            role: [v=>!!v||"Role is required"],
         }
     }),
     computed: {
-        ...mapGetters(['signUpData']),
+        ...mapGetters(['signUpData', 'userRoleData']),
         showDialog: {
             get() {
                 return this.show
@@ -96,6 +106,9 @@ export default {
         }
     },
     watch: {
+        userRoleData(newVal) {
+            console.log('watch userRoleData newVal: ', newVal)
+        },
         signUpData(newVal) {
             console.log('signUpData newVal: ', newVal)
             if (newVal.STATUS===201) {

@@ -11,6 +11,14 @@
             >
                 <v-card-title style="background-color: blue; color: white">Edit Staff: ({{ employeeFindData.DATA[0].name }})</v-card-title>
                 <v-card-text>
+                    <v-select
+                        v-model="user.role_id"
+                        :items="userRoleData && userRoleData.DATA"
+                        label="Role"
+                        item-text="name"
+                        item-value="role_id"
+                        :rules="rules.role"
+                    ></v-select>
                     <v-text-field
                         v-model="user.username"
                         label="Username"
@@ -78,6 +86,7 @@ export default {
             emergency_contact: null,
             emergency_name: null,
             isAdmin: null,
+            role_id: null,
             isActive: null,
         },
         rules: {
@@ -85,10 +94,11 @@ export default {
             password: [v=>!!v||"Password is required"],
             confirm_password: [v=>!!v||"Confirm Password is required"],
             name: [v=>!!v||"Name is required"],
+            role: [v=>!!v||"Role is required"],
         }
     }),
     computed: {
-        ...mapGetters(['signUpData', 'employeeFindData', 'employeePutData']),
+        ...mapGetters(['signUpData', 'employeeFindData', 'employeePutData', 'userRoleData']),
         showDialog: {
             get() {
                 this.setForm()

@@ -10,6 +10,9 @@ export default {
     role() {
         return API.get('/role/')
     },
+    userRole() {
+        return API.get('/role/user-role')
+    },
     rolePost(data) {
         return API.post('/role/', data)
     }
