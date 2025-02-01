@@ -10,7 +10,7 @@
         :single-expand="singleExpand"
         :expanded.sync="expanded"
     >
-        <template v-slot:top>
+        <!-- <template v-slot:top>
             <v-toolbar flat>
                 <v-toolbar-title>Manage Roles</v-toolbar-title>
                 <v-spacer></v-spacer>
@@ -20,16 +20,16 @@
                     class="mt-2"
                 ></v-switch>
             </v-toolbar>
-        </template>
+        </template> -->
         <template v-slot:item.name="{ item, index }">
-            <v-hover v-slot="{ hover }">
-                <p style="vertical-align: middle; height: 20px;">
+            <v-hover v-slot="{ hover }" close-delay="200">
+                <p style="margin: 0 auto; vertical-align: middle; height: 40px;" :id="'topMostElement' + index">
                     <span style="margin-top: 20px;">{{ item.name }}</span><span style="font-size: 20px;">&nbsp;</span>
                     <v-btn
                         :style="'background-color: orange; color: white; vertical-align: middle;'"
                         small
                         v-show="hover && item.edit"
-                        @click="triggerEdit(item, 'edit', index)"
+                        @click="triggerEdit(item, 'edit', index), $vuetify.goTo('#topMostElement' + index, goToOptions)"
                     ><v-icon style="margin" small>mdi-pencil</v-icon> edit</v-btn>
                     <v-btn
                         :style="'background-color: red; color: white; vertical-align: middle;'"
@@ -42,7 +42,8 @@
                         small
                         v-show="hover && !item.edit && item.hasChangePermission"
                         @click="updateRole(item)"
-                    ><v-icon style="margin" small>mdi-content-save</v-icon> save changes</v-btn>
+                    ><v-icon style="margin" small>mdi-content-save</v-icon> save changes
+                    </v-btn>
                 </p>
             </v-hover>
         </template>
@@ -74,19 +75,22 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data: ()=>({
-        counter: 1,
         onEdit: {
             status: false,
-            hasChange: false,
         },
         isRoleChange: false,
         hoveredRow: null,
         tblItems: [],
         originalItem: null,
         expanded: [],
-        singleExpand: false,
+        singleExpand: true,
         permissionLoad: false,
         permissionList: [],
+        goToOptions: {
+            duration: 1000,
+            offset: 0,
+            easing: 'easeInOutCubic',
+        },
     }),
     props: ['show', 'headers', 'items'],
     computed: {
@@ -98,12 +102,9 @@ export default {
         }
     },
     watch: {
-        counter(newVal) {
-            console.log('watch counter newVal: ', newVal)
-        },
         expanded: {
-            handler(newVal, oldVal) {
-                if (newVal && this.counter) {
+            handler(newVal) {
+                if (newVal) {
                     for (let i=0; i<newVal.length; i++) {
                         for (let j=0; j<this.originalItem.length; j++) {
                             if (newVal[i].name === this.originalItem[j].name) {
@@ -111,13 +112,10 @@ export default {
                                 const currentPosition = this.tblItems.findIndex(item => item.name === newVal[i].name)
                                 if (currentPosition !== -1)
                                     this.tblItems[currentPosition].hasChangePermission = isPermissionChange
-                                this.counter = 0
                             }
                         }
                     }
                 }
-                if (newVal && oldVal && oldVal.length !== newVal.length)
-                    this.onEdit.hasChange = true
             },
             deep: true,
             immediate: true
@@ -128,15 +126,20 @@ export default {
         updateRole(item) {
             console.log('updateRole item: ', item)
         },
-        triggerEdit(item, action) {
-            this.counter = 1
-
+        triggerEdit(item, action, currentPosition) {
             const index = this.expanded.indexOf(item);
-            if (index === -1) this.expanded.push(item);
+            if (index === -1) {
+                this.expanded = []
+                this.expanded.push(item);
+            }
 
             this.onEdit.status = action === 'edit'
 
-            if (action === 'close') this.role()
+            if (action === 'close') {
+                this.role()
+                this.expanded = []
+                this.expanded.push(this.tblItems[currentPosition])
+            }
 
             return item.edit = action === 'close'
         },
