@@ -75,6 +75,9 @@ export default {
         rolePostData(newVal) {
             if (newVal.STATUS === 409) {
                 alert(newVal.STATE)
+            } else {
+                this.role()
+                this.$emit('closeDialog')
             }
         },
         'userRole.permissions': {
