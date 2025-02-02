@@ -2,6 +2,7 @@ import ROLE_API from "../APIs/role";
 
 export const role = {
   state: {
+    rolePermissionPutData: null,
     userRoleData: null,
     roleData: null,
     roleFindData: null,
@@ -9,12 +10,26 @@ export const role = {
     rolePostData: null,
   },
   actions: {
+    rolePermissionPut({commit}, params) {
+        try {
+            ROLE_API
+                .rolePermissionPut(params)
+                .then(res => {
+                    console.log('rolePermissionPut res: ', res.data)
+                    commit('ROLE_PERMISSION_PUT', res.data)
+                })
+        } catch (err) {
+            console.log('rolePermissionPut err: ', err)
+            commit('ROLE_PERMISSION_PUT', err.response)
+        }
+    },
     userRole({commit}, params) {
         try {
-            ROLE_API.userRole(params)
-            .then(res => {
-                commit('USER_ROLE', res.data)
-            })
+            ROLE_API
+                .userRole(params)
+                .then(res => {
+                    commit('USER_ROLE', res.data)
+                })
         } catch (err) {
             commit('USER_ROLE', err.response)
             console.log('userRole err: ', err)
@@ -70,6 +85,9 @@ export const role = {
     },
   },
   mutations: {
+    ROLE_PERMISSION_PUT(state, rolePermissionPutData) {
+        state.rolePermissionPutData = rolePermissionPutData
+    },
     USER_ROLE(state, userRoleData) {
         state.userRoleData = userRoleData
     },
@@ -87,6 +105,9 @@ export const role = {
     },
   },
   getters: {
+    rolePermissionPutData(state) {
+        return state.rolePermissionPutData
+    },
     userRoleData(state) {
         return state.userRoleData
     },

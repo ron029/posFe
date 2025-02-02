@@ -22,10 +22,10 @@ AXIOS.interceptors.request.use((config) => {
 // });
 
 AXIOS.interceptors.response.use((response) => {
-    console.log("intercepted");
+    // console.log("intercepted");
     store.commit("loading/setLoading", false);
   if(response.status < 500) {
-    console.log("Good Server Response");
+    // console.log("Good Server Response");
     // if (response.status === 423) {
     //     console.log('Account Locked.')
     //     store.commit('IS_ACCOUNT_LOCKED', true)

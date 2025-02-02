@@ -22,7 +22,7 @@
             </v-toolbar>
         </template> -->
         <template v-slot:item.name="{ item, index }">
-            <v-hover v-slot="{ hover }" close-delay="200">
+            <v-hover v-slot="{ hover }" close-delay="500">
                 <p style="margin: 0 auto; vertical-align: middle; height: 40px;" :id="'topMostElement' + index">
                     <span style="margin-top: 20px;">{{ item.name }}</span><span style="font-size: 20px;">&nbsp;</span>
                     <v-btn
@@ -75,6 +75,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data: ()=>({
+        currentPosition: null,
         onEdit: {
             status: false,
         },
@@ -94,7 +95,7 @@ export default {
     }),
     props: ['show', 'headers', 'items'],
     computed: {
-        ...mapGetters(['permissionData']),
+        ...mapGetters(['permissionData', 'rolePermissionPutData']),
         showTbl() {
             if (this.permissionData && this.permissionData.DATA)
                 this.setTbl()
@@ -102,6 +103,12 @@ export default {
         }
     },
     watch: {
+        rolePermissionPutData() {
+            this.role()
+            this.expanded = []
+            this.expanded.push(this.tblItems[this.currentPosition])
+            this.originalItem = this.tblItems
+        },
         expanded: {
             handler(newVal) {
                 if (newVal) {
@@ -122,11 +129,12 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['role', 'permission']),
+        ...mapActions(['role', 'permission', 'rolePermissionPut']),
         updateRole(item) {
-            console.log('updateRole item: ', item)
+            this.rolePermissionPut(item)
         },
-        triggerEdit(item, action, currentPosition) {
+        triggerEdit(item, action, itemPosition) {
+            this.currentPosition = itemPosition
             const index = this.expanded.indexOf(item);
             if (index === -1) {
                 this.expanded = []
@@ -138,7 +146,7 @@ export default {
             if (action === 'close') {
                 this.role()
                 this.expanded = []
-                this.expanded.push(this.tblItems[currentPosition])
+                this.expanded.push(this.tblItems[itemPosition])
             }
 
             return item.edit = action === 'close'
@@ -149,19 +157,35 @@ export default {
             }
         },
         setTbl() {
+            console.log('RELOAD ROLE PERMISSION')
             let rolesWithPermission = structuredClone(this.items)
-
             let newItem = []
+            let temp = []
             if (this.permissionData) {
                 const keys = Object.keys(rolesWithPermission)
                 for (let i=0; i<keys.length; i++) {
-                    rolesWithPermission[keys[i]] = {permissions: this.permissionData.DATA.map(item => ({permission_id: item.permission_id, name: item.name, action: item.name.split(':'), value: rolesWithPermission[keys[i]].some(roleItem => roleItem.permission_id == item.permission_id)}))}
-                    newItem[newItem.length] =  {name: keys[i], ...rolesWithPermission[keys[i]], edit: true, hasChangePermission: false}
+                    temp[keys[i]] = {
+                        permissions: this.permissionData.DATA.map(item => ({
+                            permission_id: item.permission_id,
+                            name: item.name,
+                            action: item.name.split(':'),
+                            value: rolesWithPermission[keys[i]].some(roleItem => roleItem.permission_id == item.permission_id),
+                        }))
+                    }
+                    newItem[newItem.length] =  {
+                        ...temp[keys[i]],
+                        name: keys[i],
+                        role_id: rolesWithPermission[keys[i]][0].role_id,
+                        edit: true,
+                        hasChangePermission: false
+                    }
                 }
             }
             this.tblItems = newItem
-            if (this.originalItem === null)
+            if (this.originalItem === null) {
+                console.log('INIT ORIGINAL ITEM')
                 this.originalItem = structuredClone(this.tblItems)
+            }
         },
         groupedPermissions(permission) {
             return permission.reduce((groups, item) => {

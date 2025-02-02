@@ -7,6 +7,9 @@ export default {
     rolePut(data) {
         return API.put(`/role/${data.role_id}`, data)
     },
+    rolePermissionPut(data) {
+        return API.put(`/role/${data.role_id}/permissions`, data)
+    },
     role() {
         return API.get('/role/')
     },
