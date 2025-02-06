@@ -106,7 +106,7 @@ export default {
         transactions: [],
         show: {
             payment: false,
-            change: false,
+            change: true,
             error: false,
             editItem: false,
         },
@@ -235,7 +235,7 @@ export default {
 }
 </script>
 
-<style scoped lang="css">
+<style scoped>
 .title1 {
     font-size: 25px;
 }

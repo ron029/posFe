@@ -10,4 +10,7 @@ export default {
     employee() {
         return API.get('/employee/')
     },
+    findUserRolePermission(data) {
+        return API.get(`/employee/${data.employee_id}/permissions`)
+    }
 };

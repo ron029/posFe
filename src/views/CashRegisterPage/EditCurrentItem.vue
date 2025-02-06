@@ -33,6 +33,7 @@
                         label="Unit"
                     ></v-text-field>
                     <v-text-field
+                        :disabled="!isUserCanEditPrice"
                         v-model="edit.selling_price_placeholder"
                         label="Selling Price"
                         :placeholder="`Original selling price is ${currentTransaction.selling_price}`"
@@ -60,6 +61,7 @@
 
 <script>
 import Vue from 'vue';
+import { mapGetters } from 'vuex';
 export default {
     data: () => ({
         valid: true,
@@ -73,6 +75,12 @@ export default {
     }),
     props: [ 'show', 'currentTransaction'],
     computed: {
+        ...mapGetters(['findUserRolePermissionData']),
+        isUserCanEditPrice() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'price:update')
+            return false
+        },
         amount() {
             const quantity = Number(this.edit.quantity_placeholder ?? 0);
             const price = Number(this.edit.selling_price_placeholder ?? 0);

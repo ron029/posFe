@@ -48,6 +48,8 @@
   </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
   export default {
     data: () => ({
         mainValue: null,
@@ -62,7 +64,11 @@
             ['', '', ''],
         ],
     }),
+    computed: {
+        ...mapGetters(['findUserRolePermissionData']),
+    },
     methods: {
+        ...mapActions(['findUserRolePermission']),
         showCashRegisterRecorder() {
             this.$eventBus.$emit('showCashRegisterRecorder', true)
         },
@@ -78,6 +84,7 @@
                 if (this.$route.path !== '/pos') this.$router.push('/pos')
             }
             if (event.altKey && event.key === "s" || event.altKey && event.key === "S") {
+                console.log('SALES')
                 event.preventDefault()
                 if (this.$route.path !== '/pos/sales') this.$router.push('/pos/sales')
             }
@@ -92,7 +99,8 @@
         },
     },
     mounted() {
-        window.addEventListener("keydown", this.handleKeyPress);
+        // const permissions = window.$cookies.get('permissions')
+        // console.log('permissions: ', JSON.parse(permissions.slice(2, permissions.length)))
     },
     beforeUnmount() {
         window.removeEventListener("keydown", this.handleKeyPress);
