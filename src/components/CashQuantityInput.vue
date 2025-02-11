@@ -53,7 +53,7 @@ export default {
     methods: {
         submitForm() {
             if (this.$refs.form.validate()) {
-                console.log('form is valid')
+                // console.log('form is valid')
             }
         }
     }

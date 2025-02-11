@@ -58,7 +58,7 @@ export default {
     methods: {
         ...mapActions(['getExistingCashFlow', 'fetchSalesBySession']),
         closeDialog() {
-            console.log('Please log in again.')
+            // console.log('Please log in again.')
         },
         forceLogin() {
             this.showDialog = false
