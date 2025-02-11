@@ -1,7 +1,7 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="2">
+            <!-- <v-col cols="2">
                 <span>Quantity:</span>
                 <v-text-field
                     readonly
@@ -12,8 +12,8 @@
                     class="quantity-color"
                     style="background-color: blue;"
                 ></v-text-field>
-            </v-col>
-            <v-col cols="7">
+            </v-col> -->
+            <v-col cols="9">
                 <v-form
                     ref="searchBarcode"
                     @submit.prevent="searchBarcode"
@@ -57,7 +57,7 @@
                             outlined
                             :rules="[
                                 v => !!v || 'Quantity is required',
-                                v => !isNaN(v) || 'Quantity must be a nu',
+                                v => !isNaN(v) || 'Quantity must be a number',
                                 v => v >= 1 || 'Quantity must be greater than or equal to 1',
                                 // Add more rules as needed, e.g., maximum quantity
                                 // v => v <= 10 || 'Quantity cannot exceed 10'
