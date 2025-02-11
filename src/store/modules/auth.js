@@ -7,7 +7,7 @@ const getCookie = (name) => {
     for (let i=0; i<cookieArr.length; i++) {
         let cookiePair = cookieArr[i].split('=')
         if (name == cookiePair[0].trim()) {
-            console.log(name, cookiePair[0])
+            // console.log(name, cookiePair[0])
             return decodeURIComponent(cookieArr[i])
         }
     }
