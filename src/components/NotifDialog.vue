@@ -14,6 +14,7 @@
                     style="margin-top: 20px;"
                     color="success"
                 >Relog in</v-btn>
+                <slot name="action"></slot>
             </v-card-text>
         </v-card>
     </v-dialog>
