@@ -3,7 +3,7 @@
         v-model="editItem"
         width="500"
     >
-        <v-card>
+        <v-card v-if="edit">
             <v-form
                 ref="form"
                 v-model="valid"
