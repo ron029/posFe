@@ -104,7 +104,7 @@ export default {
             if (event.key === "F5") {
                 event.preventDefault()
             }
-            if (event.key === "Escape" && this.show.payment && !this.valid) {
+            if (event.key === "Escape" && this.show.payment) {
                 event.preventDefault()
                 this.show.payment = false
             }
@@ -113,7 +113,7 @@ export default {
                 this.show.error = false
                 this.$emit('focusToBarcode')
             }
-             if (event.key === "F8") {
+            if (event.key === "F8") {
                 event.preventDefault()
                 if (this.data.transactions.length > 0) {
                     this.cash = null;
