@@ -6,6 +6,8 @@
         <v-btn @click="show.category = true">Categories</v-btn>
         <v-btn @click="show.brand = true">Brands</v-btn>
         <v-btn @click="show.supplier = true">Suppliers</v-btn>
+        <v-btn @click="show.import = true">Import</v-btn>
+        <v-btn @click="productExport">Export</v-btn>
         <v-card>
             <v-data-table
                 :headers="productHeaders"
@@ -89,6 +91,8 @@ export default {
                 edit: false,
                 data: [],
             },
+            import: false,
+            export: false,
             unit: false,
             category: false,
             brand: false,
@@ -128,9 +132,32 @@ export default {
         productItems: [],
     }),
     computed: {
-        ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData'])
+        ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData', 'productExportData'])
     },
     watch: {
+        productExportData(newVal) {
+            if (newVal) {
+                try {
+                    const buffer = new Uint8Array(newVal.DATA.excel.data);
+                    const blob = new Blob([buffer], {
+                        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                    });
+
+                    // Create download link
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', `products-${new Date().toISOString().split('T')[0]}.xlsx`);
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    window.URL.revokeObjectURL(url);
+                } catch (err) {
+                    console.log('productExportData newVal: ', newVal)
+                }
+
+            }
+        },
         productData(newVal) {
             this.productItems = newVal.DATA
         },
@@ -148,7 +175,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getCsrfToken', 'units', 'categories', 'brands', 'suppliers', 'products', 'productPost']),
+        ...mapActions(['getCsrfToken', 'units', 'categories', 'brands', 'suppliers', 'products', 'productPost', 'productExport']),
         editItem(item) {
             let stageItem = item
             delete stageItem.unit
