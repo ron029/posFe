@@ -14,6 +14,9 @@ export default {
     productPut(data) {
         return API.put(`/dash/products/${data.product_id}`, data)
     },
+    productExport() {
+        return API.post('/dash/products/export')
+    },
 
     // suppliers
     suppliers() {
