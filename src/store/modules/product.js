@@ -7,6 +7,7 @@ export const product = {
     productData: null,
     productPutData: null,
     productDeleteData: null,
+    productExportData: null,
   },
   actions: {
     // products
@@ -66,6 +67,20 @@ export const product = {
             console.error(err)
         }
     },
+    productExport({commit}) {
+        try {
+            DASH_API
+            .productExport()
+            .then(res => {
+                if (res.status === 200) {
+                    commit('PRODUCT_EXPORT', res.data)
+                }
+            })
+        } catch (err) {
+            commit('PRODUCT_EXPORT', err.response)
+            console.error(err)
+        }
+    },
   },
   mutations: {
     // product
@@ -81,6 +96,9 @@ export const product = {
     PRODUCT_DELETE(state, productDeleteData) {
         state.productDeleteData = productDeleteData
     },
+    PRODUCT_EXPORT(state, productExportData) {
+        state.productExportData = productExportData
+    },
   },
   getters: {
     // products
@@ -95,6 +113,9 @@ export const product = {
     },
     productDeleteData(state) {
         return state.productDeleteData
+    },
+    productExportData(state) {
+        return state.productExportData
     },
   },
 };
