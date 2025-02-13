@@ -7,4 +7,10 @@ export default {
     findBarcode(data) {
         return API.post('/cash-reg/find-barcode', data)
     },
+    getNextSalesId() {
+        return API.get('/cash-reg/get-next-sales-id')
+    },
+    retriveTransaction(data) {
+        return API.post('/cash-reg/retrive-transaction', data)
+    },
 };
