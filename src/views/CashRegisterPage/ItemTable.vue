@@ -1,24 +1,46 @@
 <template>
     <div>
+        <div style="position: relative;">
+            <v-btn
+                icon
+                text
+                :ripple="false"
+                style="position: absolute; left: 40px; top: 113px;"
+                @click="retrieveTrans"
+            >
+                <v-icon style="font-size: 170px; background-color: transparent;">
+                    mdi-menu-left
+                </v-icon>
+            </v-btn>
+            <v-btn
+                icon
+                text
+                :ripple="false"
+                style="position: absolute; right: 40px; top: 113px;"
+                @click="test('right')"
+            >
+                <v-icon style="font-size: 170px; background-color: transparent;">
+                    mdi-menu-right
+                </v-icon>
+            </v-btn>
+        </div>
         <v-data-table
             :items="items"
-            :headers="headers.transactions"
-            style="height: 90vh; font: 20px; overflow-y: scroll; overflow-x: hidden;"
             hide-default-footer
             :item-class="getRowClass"
             :items-per-page="-1"
             dense
         >
             <template v-slot:body="{items}">
-                <div id="printableArea" style="width: 430px; margin: 0 auto;">
+                <div id="printableArea" style="width: 430px; height: 90vh; margin: 0 auto; overflow-y: scroll; overflow-x: hidden;">
                     <p>4-D CONVENIENCE STORE</p>
                     <p>B-HIVE STORE, BARANGAY BANAGO</p>
                     <p>NAGCARLAN, LAGUNA</p>
                     <p>-------------------------------</p>
                     <p>UNOFFICIAL RECEIPT</p>
                     <p>-------------------------------</p>
-                    <p>Transaction#: 67790</p>
-                    <p>Date & Time: {{ dateTimeVar }}</p>
+                    <p>Transaction#: {{ sales_id && sales_id.last && sales_id.status === 'history' ? sales_id.last : sales_id.value + 1 }}</p>
+                    <p>Date & Time: {{ salesDateTime ? salesDateTime : dateTimeVar }}</p>
                     <p>Cashier: SUSAN</p>
                     =======================================
                     <table style="width: 100%; border-collapse: collapse; border: none;">
@@ -66,22 +88,21 @@
 
 <script>
 import moment from 'moment';
+import { mapActions, mapGetters } from 'vuex';
 export default {
     data: () => ({
         dateTimeVar: moment().format('YYYY-M-D HH:mm:ss'),
-        headers: {
-            transactions: [
-                // { text: 'Description', value: 'name'},
-                // { text: 'Qty', value: 'itemQuantity'},
-                // // { text: 'Unit', value: 'unit'},
-                // { text: 'Selling Price', value: 'selling_price'},
-                // { text: 'Amount', value: 'amount'},
-            ],
-        },
         itemsBeforePrint: [],
-        items: []
+        items: [],
+        salesDateTime: null,
+        sales_id: {
+            status: 'current',
+            value: null,
+            last: null,
+        },
     }),
     computed: {
+        ...mapGetters(['getNextSalesIdData', 'retriveTransactionData']),
         changeAmount() {
             const changeVal = (Number(this.tendered) - this.overAllAmount)
             return changeVal > 0 ? changeVal : 0
@@ -104,9 +125,23 @@ export default {
     },
     props: ['transactions', 'tendered'],
     watch: {
+        retriveTransactionData(newVal) {
+            if (newVal.STATUS === 200) {
+                if (newVal && newVal.DATA && newVal.DATA.length > 0) {
+                    this.salesDateTime = moment(newVal.DATA[0].salesDateTime).format('YYYY-M-D HH:mm:ss')
+                    this.$emit('renderLastTrans', newVal && newVal.DATA)
+                    return
+                }
+            }
+            this.sales_id.status = 'current'
+            this.salesDateTime = null
+            this.$emit('renderLastTrans', [])
+        },
+        getNextSalesIdData(newVal) {
+            this.sales_id.value = newVal && newVal.DATA ? Number(newVal.DATA) : 1
+        },
         transactions: {
             handler(newVal) {
-                console.log('watch transactions newVal: ', newVal)
                 if (newVal) {
                     this.$nextTick(()=>{
                         const test = document.getElementById('topMost');
@@ -120,6 +155,16 @@ export default {
         }
     },
     methods: {
+        ...mapActions(['retriveTransaction']),
+        retrieveTrans() {
+            this.sales_id.last = this.sales_id.last ? this.sales_id.last - 1 : this.sales_id.value - 1
+            const newSales = {status:  'history', last: this.sales_id.last, value: this.sales_id.value}
+            this.sales_id = newSales
+            this.retriveTransaction({ sales_id: this.sales_id.last })
+        },
+        test(btn) {
+            console.log('methods test btn: ', btn)
+        },
         itemName(item) {
             return item.toUpperCase()
         },

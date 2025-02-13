@@ -26,14 +26,14 @@
                             <span style="font-size: 22px; color: blue">REF#</span>
                         </template>
                     </v-text-field> -->
-                    <div>
+                    <!-- <div>
                         <p class="title1 colorBlue" style="margin: 15px 0 0 0;">Product Information</p>
                         <ul style="list-style-type: none; padding-left: 0;">
                             <li>Barcode: <span class="colorBlue">{{ currentTransaction ? currentTransaction.barcode : '' }}</span></li>
                             <li>Description: <span class="colorBlue">{{ currentTransaction ? currentTransaction.name : '' }}</span></li>
                             <li>Selling Price: <span class="colorBlue">{{ currentTransaction && currentTransaction.selling_price ? `${Number(currentTransaction.selling_price).toFixed(2)} each` : null }}</span></li>
                         </ul>
-                    </div>
+                    </div> -->
                     <!-- <div>
                         Transaction Discount
                         <v-row>
@@ -47,7 +47,7 @@
                             </v-col>
                         </v-row>
                     </div> -->
-                    <p>Clerk: {{ cashierName }}</p>
+                    <!-- <p>Clerk: {{ cashierName }}</p> -->
                 </div>
             </v-col>
             <v-col lg="5" md="5" style="padding: 10px 10px 0 5px;">
@@ -55,6 +55,7 @@
                     <ItemTable
                         :transactions="transactions"
                         :tendered="tendered"
+                        @renderLastTrans="renderLastTrans"
                     />
                 </div>
             </v-col>
@@ -139,13 +140,12 @@ export default {
         }
     }),
     computed: {
-        ...mapGetters(['findBarcodeData', 'saveSalesData']),
+        ...mapGetters(['findBarcodeData', 'saveSalesData', 'retriveTransactionData']),
         currentTransaction() {
             if (this.transactions.length > 0) {
                 const existingProductIndex = this.transactions.findIndex(item => item.isCurrent === true)
-                if (existingProductIndex !== -1) {
+                if (existingProductIndex !== -1)
                     return this.transactions[existingProductIndex]
-                }
             }
             return { id: null, description: null, name: null, selling_price: null, amount: null, qty: null, unit: null, barcode: null }
         },
@@ -166,7 +166,16 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['saveSales', 'getCsrfToken']),
+        ...mapActions(['saveSales', 'getCsrfToken', 'getNextSalesId', 'retriveTransaction']),
+        renderLastTrans(newVal) {
+            if (newVal && newVal.length > 0) {
+                this.tendered = Number(newVal[0].tendered) + Number(newVal[0].total_amount)
+                this.transactions = newVal
+            } else {
+                this.transactions = []
+                this.tendered = 0
+            }
+        },
         cancelTransaction() {
             this.transactions = []
             this.show.cancel = false
@@ -179,6 +188,7 @@ export default {
             this.tendered = 0
             this.show.change = false
             this.transactions = []
+            this.getNextSalesId()
         },
         closeNotif() {
             this.show.error = false
@@ -267,6 +277,7 @@ export default {
         },
     },
     mounted() {
+        this.getNextSalesId()
         this.cashierName = window.$cookies.get('name')
         window.addEventListener("keydown", this.handleKeyPress);
     },
