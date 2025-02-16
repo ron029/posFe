@@ -119,14 +119,14 @@ export default {
             return test
         },
     },
-    props: ['transactions', 'tendered'],
+    props: ['isNewTransaction', 'transactions', 'tendered'],
     watch: {
         retriveTransactionData(newVal) {
             this.isLoading = false
             if (newVal.STATUS === 200) {
                 if (newVal && newVal.DATA && newVal.DATA.length > 0) {
                     this.salesDateTime = moment(newVal.DATA[0].salesDateTime).format('YYYY-M-D HH:mm:ss')
-                    this.$emit('renderLastTrans', newVal && newVal.DATA)
+                    this.$emit('renderLastTrans', newVal && newVal.DATA ? newVal.DATA : [])
                     return
                 }
             }
@@ -134,6 +134,7 @@ export default {
             this.salesDateTime = null
             this.sales_id.last = null
             this.$emit('renderLastTrans', [])
+            this.$emit('renderNewTrans')
         },
         getNextSalesIdData(newVal) {
             this.sales_id.value = newVal && newVal.DATA ? Number(newVal.DATA) : 1
@@ -156,7 +157,16 @@ export default {
         ...mapActions(['retriveTransaction', 'getNextSalesId']),
         retrieveTrans(direction) {
             this.isLoading = true
-            this.sales_id.last = this.sales_id.last ? (direction === 'left' ? this.sales_id.last - 1 : this.sales_id.last + 1) : (direction === 'left' ? this.sales_id.value - 1 : this.sales_id.value + 1)
+            if (!this.isNewTransaction) {
+                this.sales_id.last = this.sales_id.last
+                    ? this.sales_id.last + (direction === 'left' ? -1 : 1)
+                    : this.sales_id.value + (direction === 'left' ? -1 : 1);
+            } else {
+                this.sales_id.last = this.sales_id.last
+                    ? (direction === 'left' ? this.sales_id.last : this.sales_id.last + 1)
+                    : (direction === 'left' ? this.sales_id.value : this.sales_id.value + 1);
+            }
+
             const newSales = {status:  'history', last: this.sales_id.last, value: this.sales_id.value}
             this.sales_id = newSales
             this.retriveTransaction({ sales_id: this.sales_id.last, direction })

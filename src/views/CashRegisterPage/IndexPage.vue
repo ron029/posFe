@@ -20,9 +20,11 @@
             <v-col lg="5" md="5" style="padding: 10px 10px 0 5px;">
                 <div>
                     <ItemTable
+                        :isNewTransaction="isNewTransaction"
                         :transactions="transactions"
                         :tendered="tendered"
                         @renderLastTrans="renderLastTrans"
+                        @renderNewTrans="isNewTransaction = true"
                     />
                 </div>
             </v-col>
@@ -68,6 +70,7 @@
 </template>
 
 <script>
+import utils from './utils'
 import BtnShortcuts from './BtnShortcuts.vue';
 import EditCurrentItem from './EditCurrentItem.vue';
 import ItemTable from './ItemTable.vue';
@@ -87,6 +90,8 @@ export default {
         NotifDialog,
     },
     data: () => ({
+        isNewTransaction: true,
+        cashierMode: '',
         cashierName: null,
         changeAmount: 0,
         tendered: 0,
@@ -95,6 +100,7 @@ export default {
             quantity: 0
         },
         transactions: [],
+        transactionsLast: null,
         show: {
             cancel: false,
             payment: false,
@@ -109,7 +115,7 @@ export default {
     computed: {
         ...mapGetters(['findBarcodeData', 'saveSalesData']),
         currentTransaction() {
-            if (this.transactions.length > 0) {
+            if (this.transactions && this.transactions.length > 0) {
                 const existingProductIndex = this.transactions.findIndex(item => item.isCurrent === true)
                 if (existingProductIndex !== -1)
                     return this.transactions[existingProductIndex]
@@ -117,9 +123,12 @@ export default {
             return { id: null, description: null, name: null, selling_price: null, amount: null, qty: null, unit: null, barcode: null }
         },
         totalAmount() {
-            return this.transactions.reduce((total, transaction) => {
-                return total + parseFloat(transaction.selling_price) * transaction.itemQuantity;
-            }, 0);
+            if (this.transactions && this.transactions.length > 0)
+                return this.transactions.reduce((total, transaction) => {
+                    return total + parseFloat(transaction.selling_price) * transaction.itemQuantity;
+                }, 0);
+            else
+                return 0
         }
     },
     watch: {
@@ -127,6 +136,7 @@ export default {
             if (newVal.STATUS === 201) {
                 this.changeAmount = newVal.DATA.change
                 this.show.change = true
+                this.transactionsLast = []
             } else {
                 this.show.error
             }
@@ -135,13 +145,22 @@ export default {
     methods: {
         ...mapActions(['saveSales', 'getCsrfToken', 'getNextSalesId', 'retriveTransaction']),
         renderLastTrans(newVal) {
+            let transactions = null
+            let tendered = 0
             if (newVal && newVal.length > 0) {
-                this.tendered = Number(newVal[0].tendered) + Number(newVal[0].total_amount)
-                this.transactions = newVal
+                tendered = Number(newVal[0].tendered) + Number(newVal[0].total_amount)
+                transactions = newVal
             } else {
-                this.transactions = []
                 this.tendered = 0
+                this.transactions = structuredClone(this.transactionsLast ? this.transactionsLast : [])
+                this.transactionsLast = null
+                return
             }
+            if (this.transactionsLast === null)
+                this.transactionsLast = structuredClone(this.transactions)
+            this.tendered = tendered
+            this.transactions = transactions
+            this.isNewTransaction = false
         },
         cancelTransaction() {
             this.transactions = []
@@ -163,7 +182,14 @@ export default {
         async saveTransaction(data) {
             await this.getCsrfToken()
             this.tendered = data.tendered
-            this.saveSales({items: this.transactions, totalAmount: this.totalAmount, ...data, register_cash_flow_id: Number(window.$cookies.get('cash_register_recorded_id'))})
+            const isNewTransaction = this.transactionsLast.length > 0
+            const args = {totalAmount: this.totalAmount, ...data, register_cash_flow_id: Number(window.$cookies.get('cash_register_recorded_id'))}
+            if (isNewTransaction) {
+                this.saveSales({items: this.transactions, ...args})
+            } else {
+                const newArr = utils.getChanges(this.transactions, this.transactionsLast)
+                this.saveSalesModified({items: newArr, ...args})
+            }
         },
         focusToBarcode() {
             this.focus.barcode = true
@@ -243,9 +269,17 @@ export default {
                 event.preventDefault()
                 if (this.transactions.length > 0) {
                     const existingProductIndex = this.transactions.findIndex(item => item.isCurrent === true);
-                    if (existingProductIndex < this.transactions.length - 1) {
-                        this.transactions[existingProductIndex].isCurrent = false
-                        this.transactions[existingProductIndex + 1].isCurrent = true
+                    if (existingProductIndex > -1) {
+                        // Use Vue’s reactivity system by creating a new array reference
+                        this.transactions = this.transactions.map((item, index) => ({
+                            ...item,
+                            isCurrent: index === existingProductIndex + 1
+                        }));
+                    } else {
+                        const firstElement = { ...this.transactions[0], isCurrent: true, isPrinting: false };
+
+                        this.transactions.shift();
+                        this.transactions = [firstElement, ...this.transactions];
                     }
                 }
             }
