@@ -15,39 +15,6 @@
                         <p class="title1" style="margin: 0; padding: 0; position: absolute; left: 10px; top: 10px;">TOTAL</p>
                         <p class="text-right" style="font-size: 80px; font-weight: 700; color: red; padding: 0; margin: 0">{{ totalAmount.toFixed(2) }}</p>
                     </div>
-                    <!-- <v-text-field
-                        value="1002000000000205"
-                        outlined
-                        style="font-size: 20px;"
-                        readonly
-                        hide-details
-                    >
-                        <template slot="prepend-inner">
-                            <span style="font-size: 22px; color: blue">REF#</span>
-                        </template>
-                    </v-text-field> -->
-                    <!-- <div>
-                        <p class="title1 colorBlue" style="margin: 15px 0 0 0;">Product Information</p>
-                        <ul style="list-style-type: none; padding-left: 0;">
-                            <li>Barcode: <span class="colorBlue">{{ currentTransaction ? currentTransaction.barcode : '' }}</span></li>
-                            <li>Description: <span class="colorBlue">{{ currentTransaction ? currentTransaction.name : '' }}</span></li>
-                            <li>Selling Price: <span class="colorBlue">{{ currentTransaction && currentTransaction.selling_price ? `${Number(currentTransaction.selling_price).toFixed(2)} each` : null }}</span></li>
-                        </ul>
-                    </div> -->
-                    <!-- <div>
-                        Transaction Discount
-                        <v-row>
-                            <v-col>
-                                <p>Member Discount: 0.00</p>
-                                <p>Pos Promo: 0.00</p>
-                            </v-col>
-                            <v-col>
-                                <p>Adjustments: 0.00</p>
-                                <p>Other Discount: 0.00</p>
-                            </v-col>
-                        </v-row>
-                    </div> -->
-                    <!-- <p>Clerk: {{ cashierName }}</p> -->
                 </div>
             </v-col>
             <v-col lg="5" md="5" style="padding: 10px 10px 0 5px;">
@@ -140,7 +107,7 @@ export default {
         }
     }),
     computed: {
-        ...mapGetters(['findBarcodeData', 'saveSalesData', 'retriveTransactionData']),
+        ...mapGetters(['findBarcodeData', 'saveSalesData']),
         currentTransaction() {
             if (this.transactions.length > 0) {
                 const existingProductIndex = this.transactions.findIndex(item => item.isCurrent === true)
@@ -258,9 +225,17 @@ export default {
                 event.preventDefault()
                 if (this.transactions.length > 0) {
                     const existingProductIndex = this.transactions.findIndex(item => item.isCurrent === true);
-                    if (existingProductIndex >= 1) {
-                        this.transactions[existingProductIndex].isCurrent = false
-                        this.transactions[existingProductIndex - 1].isCurrent = true
+                    if (existingProductIndex > -1) {
+                        // Use Vue’s reactivity system by creating a new array reference
+                        this.transactions = this.transactions.map((item, index) => ({
+                            ...item,
+                            isCurrent: index === existingProductIndex - 1
+                        }));
+                    } else {
+                        const lastTransElement = { ...this.transactions[this.transactions.length - 1], isCurrent: true, isPrinting: false };
+
+                        this.transactions.pop();
+                        this.transactions = [...this.transactions, lastTransElement];
                     }
                 }
             }

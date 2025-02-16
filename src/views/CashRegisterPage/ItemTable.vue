@@ -2,22 +2,24 @@
     <div>
         <div style="position: relative;">
             <v-btn
+                :disabled="isLoading"
                 icon
                 text
                 :ripple="false"
                 style="position: absolute; left: 40px; top: 113px;"
-                @click="retrieveTrans"
+                @click="retrieveTrans('left')"
             >
                 <v-icon style="font-size: 170px; background-color: transparent;">
                     mdi-menu-left
                 </v-icon>
             </v-btn>
             <v-btn
+                :disabled="isLoading"
                 icon
                 text
                 :ripple="false"
                 style="position: absolute; right: 40px; top: 113px;"
-                @click="test('right')"
+                @click="retrieveTrans('right')"
             >
                 <v-icon style="font-size: 170px; background-color: transparent;">
                     mdi-menu-right
@@ -59,7 +61,6 @@
                                     <td style="text-align: right; width: 35px; border: none;">{{ item.itemQuantity }}</td>
                                     <td style="width: 343px">&nbsp;{{ itemName(item.name) }}</td>
                                     <td style="text-align: right; width: 84px">{{ amountEachItem(item) }}</td>
-                                    <!-- <td style="text-align: right;">{{ item.selling_price }}</td> -->
                                 </tr>
                                 <tr v-if="item.itemQuantity > 1" :style="{backgroundColor: item.isCurrent && !item.isPrinting ? 'blue' : index % 2 == 0 ? '#ddd' : 'white' , color: item.isCurrent && !item.isPrinting ? 'white' : 'black'}">
                                     <td colspan="3" style="text-align: right; padding-right: 180px; border: none">@{{ Number(item.selling_price).toFixed(2) }}</td>
@@ -76,12 +77,6 @@
                     <p>Thank you ... Please come again ...</p>
                 </div>
             </template>
-            <!-- <template slot="item.name" slot-scope="{ item }">
-                <span style="text-wrap: nowrap;">{{ item.name }}</span>
-            </template>
-            <template slot="item.amount" slot-scope="{ item }">
-                <span style="text-wrap: nowrap;">{{ amountEachItem(item) }}</span>
-            </template> -->
         </v-data-table>
     </div>
 </template>
@@ -91,6 +86,7 @@ import moment from 'moment';
 import { mapActions, mapGetters } from 'vuex';
 export default {
     data: () => ({
+        isLoading: false,
         dateTimeVar: moment().format('YYYY-M-D HH:mm:ss'),
         itemsBeforePrint: [],
         items: [],
@@ -126,6 +122,7 @@ export default {
     props: ['transactions', 'tendered'],
     watch: {
         retriveTransactionData(newVal) {
+            this.isLoading = false
             if (newVal.STATUS === 200) {
                 if (newVal && newVal.DATA && newVal.DATA.length > 0) {
                     this.salesDateTime = moment(newVal.DATA[0].salesDateTime).format('YYYY-M-D HH:mm:ss')
@@ -135,6 +132,7 @@ export default {
             }
             this.sales_id.status = 'current'
             this.salesDateTime = null
+            this.sales_id.last = null
             this.$emit('renderLastTrans', [])
         },
         getNextSalesIdData(newVal) {
@@ -155,15 +153,13 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['retriveTransaction']),
-        retrieveTrans() {
-            this.sales_id.last = this.sales_id.last ? this.sales_id.last - 1 : this.sales_id.value - 1
+        ...mapActions(['retriveTransaction', 'getNextSalesId']),
+        retrieveTrans(direction) {
+            this.isLoading = true
+            this.sales_id.last = this.sales_id.last ? (direction === 'left' ? this.sales_id.last - 1 : this.sales_id.last + 1) : (direction === 'left' ? this.sales_id.value - 1 : this.sales_id.value + 1)
             const newSales = {status:  'history', last: this.sales_id.last, value: this.sales_id.value}
             this.sales_id = newSales
-            this.retriveTransaction({ sales_id: this.sales_id.last })
-        },
-        test(btn) {
-            console.log('methods test btn: ', btn)
+            this.retriveTransaction({ sales_id: this.sales_id.last, direction })
         },
         itemName(item) {
             return item.toUpperCase()
@@ -190,8 +186,6 @@ export default {
             if (event.key === "p" || event.key === "P") {
                 this.$nextTick(()=>{
                     event.preventDefault()
-                    // Listen for beforeprint and afterprint events
-                    // window.addEventListener("beforeprint", this.onBeforePrint);
                     this.items.forEach((item) => {
                         item.isPrinting = true
                     });
