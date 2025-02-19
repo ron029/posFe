@@ -6,9 +6,16 @@
  * @returns modified and deleted elements from oldArray.
  */
 exports.getChanges = (oldArray, newArray) => {
-    return oldArray
+    // Convert single object to array if necessary
+    const oldItems = Array.isArray(oldArray) ? oldArray : [oldArray];
+
+    return oldItems
         .map(oldItem => {
-            const matchingNewItem = newArray.find(newItem => this.deepEqual(newItem, oldItem));
+            // Find matching item based on key identifiers (product_id and sales_detail_id)
+            const matchingNewItem = newArray.find(newItem =>
+                newItem.product_id === oldItem.product_id &&
+                newItem.sales_detail_id === oldItem.sales_detail_id
+            );
 
             if (!matchingNewItem) {
                 // Deleted element (exists in oldArray but not in newArray)
@@ -40,13 +47,22 @@ exports.deepEqual = (a, b) => {
     }
 
     if (typeof a === 'object' && typeof b === 'object' && a !== null && b !== null) {
+        // Get common keys between both objects
         const keysA = Object.keys(a);
         const keysB = Object.keys(b);
-        if (keysA.length !== keysB.length) return false;
-        return keysA.every(key => this.deepEqual(a[key], b[key]));
+        const commonKeys = keysA.filter(key => keysB.includes(key));
+
+        // Compare only the common properties
+        return commonKeys.every(key => {
+            // Convert both values to strings for comparison
+            const valA = a[key]?.toString();
+            const valB = b[key]?.toString();
+            return valA === valB;
+        });
     }
 
-    return false;
+    // Convert to string for comparison if types are different
+    return a?.toString() === b?.toString();
 }
 
 /**
