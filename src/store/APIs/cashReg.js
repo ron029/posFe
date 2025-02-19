@@ -13,4 +13,7 @@ export default {
     retriveTransaction(data) {
         return API.post('/cash-reg/retrive-transaction', data)
     },
+    saveSalesModified(data) {
+        return API.post('/cash-reg/save-sales-modified', data)
+    },
 };

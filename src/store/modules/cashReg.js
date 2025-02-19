@@ -6,6 +6,7 @@ export const cashReg = {
     saveSalesData: null,
     findBarcodeData: null,
     retriveTransactionData: null,
+    saveSalesModifiedData: null,
   },
   actions: {
     getNextSalesId({commit}, args) {
@@ -56,6 +57,18 @@ export const cashReg = {
             console.error(err)
         }
     },
+    saveSalesModified({commit}, args) {
+        try {
+            CASH_REGISTER_API
+            .saveSalesModified(args)
+            .then(res => {
+                commit('SAVE_SALES_MODIFIED', res.data)
+            })
+        } catch (err) {
+            commit('SAVE_SALES_MODIFIED', err.response)
+            console.error(err)
+        }
+    },
   },
   mutations: {
     RETRIEVE_TRANSACTION(state, retriveTransactionData) {
@@ -69,6 +82,9 @@ export const cashReg = {
     },
     FIND_BARCODE(state, findBarcodeData) {
         state.findBarcodeData = findBarcodeData
+    },
+    SAVE_SALES_MODIFIED(state, saveSalesModifiedData) {
+        state.saveSalesModifiedData = saveSalesModifiedData
     },
   },
   getters: {
@@ -84,5 +100,8 @@ export const cashReg = {
     findBarcodeData(state) {
         return state.findBarcodeData
     },
+    saveSalesModifiedData(state) {
+        return state.saveSalesModifiedData
+    }
   },
 };
