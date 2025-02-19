@@ -14,7 +14,7 @@
                 </v-icon>
             </v-btn>
             <v-btn
-                :disabled="isLoading"
+                :disabled="isLoading || isNewTransaction"
                 icon
                 text
                 :ripple="false"
