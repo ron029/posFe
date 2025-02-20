@@ -221,7 +221,7 @@ export default {
             const args = { totalAmount: this.totalAmount, ...data, register_cash_flow_id: Number(window.$cookies.get('cash_register_recorded_id')), employee_id:  Number(window.$cookies.get('userId')) }
 
             if (this.isNewTransaction)
-                this.saveSales({items: this.transactions, ...args})
+                this.saveSales({items: this.transactions.value, ...args})
             else {
                 const newArr = utils.getChanges(this.transactions.history, this.transactions.value)
                 this.saveSalesModified({items: newArr, ...args})

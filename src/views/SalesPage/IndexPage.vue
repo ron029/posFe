@@ -41,7 +41,7 @@
                         <span style="text-wrap: nowrap; font-weight: 700;"><v-btn color="error" small><v-icon size="15">mdi-close</v-icon>&nbsp;cancel</v-btn>{{ item.actions }}</span>
                     </template>
                     <template slot="item.change_due" slot-scope="{ item }">
-                        <span style="text-wrap: nowrap; font-weight: 700;">{{ changeDue(item)?.toFixed(2) }}</span>
+                        <span style="text-wrap: nowrap; font-weight: 700;">{{ Number(item.change_due).toFixed(2) }}</span>
                     </template>
                 </v-data-table>
                 <p class="text-center">
