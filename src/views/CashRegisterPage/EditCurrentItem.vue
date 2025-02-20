@@ -48,6 +48,18 @@
                         disabled
                         label="Amount"
                     ></v-text-field>
+                    <v-select
+                        :items="adjustmentItems"
+                        v-model="edit.adjustment_type"
+                        label="Adjustment Type"
+                        :rules="[v => !!v || 'Adjustment type is required']"
+                        clearable
+                    ></v-select>
+                    <v-text-field
+                        v-show="!isNewTransaction"
+                        v-model="edit.reason"
+                        label="Reason"
+                    ></v-text-field>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -70,10 +82,12 @@ export default {
             selling_price_placeholder: 0,
             name: null,
             unit: null,
-            itemQuantity: 0
+            itemQuantity: 0,
+            adjustment_type: null,
         },
+        adjustmentItems: ['REFUND', 'CANCEL', 'TEST']
     }),
-    props: [ 'show', 'currentTransaction'],
+    props: [ 'show', 'currentTransaction', 'isNewTransaction' ],
     computed: {
         ...mapGetters(['findUserRolePermissionData']),
         isUserCanEditPrice() {
@@ -119,12 +133,16 @@ export default {
         },
         reassignEditable(data) {
             this.edit = data
+            const reason = this.edit.itemQuantity >= data.quantity ? 'FULL REFUND' : 'REFUND'
+            Vue.set(this.edit, 'reason', reason);
+            Vue.set(this.edit, 'adjustment_type', 'REFUND');
             Vue.set(this.edit, 'name', data.name);
             Vue.set(this.edit, 'unit', data.unit);
             Vue.set(this.edit, 'quantity_placeholder', data.itemQuantity);
             Vue.set(this.edit, 'selling_price_placeholder', data.selling_price);
         },
         submitForm() {
+            console.log('SUBMIT ADJUSTMENT')
             if (this.$refs.form.validate()) {
                 this.edit.amount = this.amount
                 this.edit.itemQuantity = Number(this.edit.quantity_placeholder)
@@ -132,6 +150,9 @@ export default {
                 this.editItem = false
             }
         },
+    },
+    mounted() {
+         this.edit.adjustment_type = 'REFUND'
     }
 }
 </script>

@@ -64,6 +64,7 @@
         <EditCurrentItem
             :show="show.editItem"
             :currentTransaction="currentTransaction"
+            :isNewTransaction="isNewTransaction"
             @closeEditCurrentItem="closeEditCurrentItem"
         />
     </div>
@@ -117,7 +118,7 @@ export default {
         }
     }),
     computed: {
-        ...mapGetters(['findBarcodeData', 'saveSalesData']),
+        ...mapGetters(['findBarcodeData', 'saveSalesData', 'saveSalesModifiedData']),
         currentTransaction() {
             if (this.transactions.value && this.transactions.value.length > 0) {
                 const existingProductIndex = this.transactions.value.findIndex(item => item.isCurrent === true)
@@ -136,6 +137,9 @@ export default {
         }
     },
     watch: {
+        saveSalesModifiedData(newVal) {
+            console.log('saveSalesModifiedData newVal: ', newVal)
+        },
         'transactions.value': {
             handler(newVal) {
                 console.log('transactions.value newVal: ', newVal)
@@ -155,7 +159,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['saveSales', 'getCsrfToken', 'getNextSalesId', 'retriveTransaction']),
+        ...mapActions(['saveSales', 'getCsrfToken', 'getNextSalesId', 'retriveTransaction', 'saveSalesModified']),
         renderLastTrans(newVal) {
             let t = null
             let tendered = 0
@@ -196,7 +200,7 @@ export default {
         async saveTransaction(data) {
             await this.getCsrfToken()
             this.tendered = data.tendered
-            const args = {totalAmount: this.totalAmount, ...data, register_cash_flow_id: Number(window.$cookies.get('cash_register_recorded_id'))}
+            const args = { totalAmount: this.totalAmount, ...data, register_cash_flow_id: Number(window.$cookies.get('cash_register_recorded_id')), employee_id:  Number(window.$cookies.get('userId')) }
 
             if (this.isNewTransaction)
                 this.saveSales({items: this.transactions, ...args})
@@ -246,7 +250,6 @@ export default {
                 event.preventDefault()
                 this.closeNotif()
             }
-
             if (event.key === "Enter" && this.show.change) {
                 event.preventDefault()
                 this.closechangeAmount()
