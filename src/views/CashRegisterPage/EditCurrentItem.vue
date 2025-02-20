@@ -25,7 +25,9 @@
                             v => v >= 1 || 'Quantity must be greater than or equal to 1',
                             v => v <= currentTransaction.quantity || `Only ${currentTransaction.quantity} items left`
                         ]"
-                        label="Quantity"
+                        :persistent-hint="!isNewTransaction"
+                        :hint="isNewTransaction ? '' : 'Type the final quantity after subtracting the returned items.'"
+                        :label="!isNewTransaction ? 'Items Remaining (After Return)' : 'Quantity'"
                     ></v-text-field>
                     <v-text-field
                         :value="edit.unit"

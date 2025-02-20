@@ -138,14 +138,10 @@ export default {
     },
     watch: {
         saveSalesModifiedData(newVal) {
-            console.log('saveSalesModifiedData newVal: ', newVal)
-        },
-        'transactions.value': {
-            handler(newVal) {
-                console.log('transactions.value newVal: ', newVal)
-            },
-            deep: true,
-            immediate: true,
+            if (newVal.STATUS === 201) {
+                this.show.error = true
+                this.show.errorData = { message: 'Refund save successfully' }
+            }
         },
         saveSalesData(newVal) {
             if (newVal.STATUS === 201) {
