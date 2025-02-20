@@ -94,7 +94,7 @@ import { mapActions, mapGetters } from 'vuex';
             }
             if (event.altKey && event.key === "i" || event.altKey && event.key === "I") {
                 event.preventDefault()
-                if (this.$route.path !== '/pos/inventory') this.$router.push('/pos/inventory')
+
             }
         },
     },

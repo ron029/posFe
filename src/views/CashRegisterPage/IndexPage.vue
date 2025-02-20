@@ -56,6 +56,23 @@
                 </p>
             </template>
         </NotifDialog>
+        <NotifDialog
+            :show="show.goToSales"
+            :data="{message: ''}"
+            @closeDialog="show.goToSales=false"
+        >
+            <template slot="action">
+                <p>Cancel this transaction then go to sales?</p>
+                <p>
+                    <v-btn color="error" @click="show.goToSales = false">cancel
+                        <v-chip x-small style="border-radius: 3px; width: 43px; padding: 0 0 0 2px; margin-left: 2px;">Enter</v-chip>
+                    </v-btn>
+                    <v-btn color="success" @click="goToSales()" style="margin-left: 6px;">proceed
+                        <v-chip x-small style="border-radius: 3px; width: 18px; padding: 0 0 0 2px; margin-left: 2px;">F1</v-chip>
+                    </v-btn>
+                </p>
+            </template>
+        </NotifDialog>
         <ChangeDialog
             :show="show.change"
             :change="changeAmount"
@@ -112,6 +129,7 @@ export default {
             error: false,
             errorData: { message: '' },
             editItem: false,
+            goToSales: false
         },
         focus: {
             barcode: false
@@ -178,6 +196,10 @@ export default {
         cancelTransaction() {
             this.transactions.value = []
             this.show.cancel = false
+        },
+        goToSales() {
+            this.show.goToSales = false
+            if (this.$route.path !== '/pos/sales') this.$router.push('/pos/sales')
         },
         closeEditCurrentItem(data) {
             this.show.editItem = false
@@ -251,6 +273,16 @@ export default {
                 this.closechangeAmount()
                 this.show.change = false
             }
+            if (event.key === "F1") {
+                event.preventDefault()
+                if (this.show.goToSales)
+                    this.show.goToSales = false
+                else if (this.transactions.value.length > 0)
+                    this.show.goToSales = true
+                else if (this.$route.path !== '/pos/sales') this.$router.push('/pos/sales')
+            }
+            if (event.key === 'F2')
+                if (this.$route.path !== '/pos/inventory') this.$router.push('/pos/inventory')
             if (event.key === "F7") {
                 event.preventDefault()
                 if (this.show.cancel)

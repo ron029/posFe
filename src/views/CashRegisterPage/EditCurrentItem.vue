@@ -51,6 +51,7 @@
                         label="Amount"
                     ></v-text-field>
                     <v-select
+                        v-show="!isNewTransaction"
                         :items="adjustmentItems"
                         v-model="edit.adjustment_type"
                         label="Adjustment Type"
