@@ -291,6 +291,11 @@ export default {
                 else if (this.transactions.value.length > 0)
                     this.show.cancel = true
             }
+            if (event.key === "F6") {
+                event.preventDefault()
+                console.log('F6')
+                if (this.$route.path !== '/pos') window.location.href = '/pos'
+            }
             if (event.altKey && event.key === "e" || event.altKey && event.key === "E") {
                 event.preventDefault()
                 if (this.transactions.value.length > 0) {

@@ -99,6 +99,10 @@ import { mapActions, mapGetters } from 'vuex';
         },
     },
     mounted() {
+        if (window.$cookies.get('admin')) {
+            const newElement = ['mdi-account-cash', 'Account Cash', 'account-cash']
+            this.items.splice(this.items.length - 1, 0, newElement);
+        }
         // const permissions = window.$cookies.get('permissions')
         // console.log('permissions: ', JSON.parse(permissions.slice(2, permissions.length)))
     },
