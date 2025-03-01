@@ -1,11 +1,12 @@
 <template>
-    <div>
-        <h1>Login Page</h1>
+    <div style="display: block; height: 100%;">
         <v-form
             ref="form"
             v-model="valid"
             @submit.prevent="submitForm"
+            style="width: 480px; margin: auto auto;  vertical-align: middle;"
         >
+            <h1>Login Page</h1>
             <v-text-field
                 v-model.trim="cred.user"
                 :rules="[v=>v && !!v.trim() || 'Username is required']"
@@ -21,7 +22,6 @@
                 type="submit"
             >submit</v-btn>
         </v-form>
-
     </div>
 
 </template>
