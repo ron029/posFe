@@ -8,6 +8,7 @@
                 <div>
                     <BarcodeQuantity
                         :focusToBarcode="focus.barcode"
+                        :isNewTransaction="isNewTransaction"
                         @saveBarcodeQuantity="saveBarcodeQuantity"
                         @offFocusToBarcode="focus.barcode = false"
                     />

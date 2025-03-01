@@ -20,9 +20,11 @@
                 >
                     Barcode:
                     <v-text-field
+                        :disabled="!isNewTransaction"
+                        :persistent-hint="!isNewTransaction"
+                        :hint="!isNewTransaction ? 'Scan is not allowed' : ''"
                         ref="barcode"
                         outlined
-                        hide-details
                         v-model="barcode"
                         :rules="[v => !!v || 'Barcode is required']"
                         autofocus
@@ -90,7 +92,7 @@ export default {
         showQuantity: false,
         quantity: 1,
     }),
-    props: ['focusToBarcode'],
+    props: ['focusToBarcode', 'isNewTransaction'],
     computed: {
         ...mapGetters(['findBarcodeData']),
         showDialog: {
@@ -109,6 +111,9 @@ export default {
         },
     },
     watch: {
+        isNewTransaction(newVal) {
+            if (!newVal) this.$refs.barcode.reset()
+        },
         focusToBarcode(newVal) {
             if (newVal) {
                 this.focusInBarcode()
