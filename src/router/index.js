@@ -68,14 +68,42 @@ const routes = [
                 meta: {
                     middleware: [ auth ]
                 },
+            },
+            {
+                path: 'account-cash',
+                name: 'account-cash',
+                component: () =>  { return import('@/views/AccountCash/IndexPage.vue') },
+                meta: {
+                    middleware: [ auth ]
+                },
             }
         ]
     },
 ]
 
+const isElectron = () => {
+    // Renderer process
+    if (typeof window !== 'undefined' && typeof window.process === 'object' && window.process.type === 'renderer') {
+      return true;
+    }
+
+    // Main process
+    if (typeof process !== 'undefined' && typeof process.versions === 'object' && !!process.versions.electron) {
+      return true;
+    }
+
+    // Detect the user agent when the `nodeIntegration` option is set to true
+    if (typeof navigator === 'object' && typeof navigator.userAgent === 'string' && navigator.userAgent.indexOf('Electron') >= 0) {
+      return true;
+    }
+
+    return false;
+  };
+
 const router = new VueRouter({
-    mode: "history",
-    base: process.env.BASE_URL,
+    // mode: isElectron ? "hash" : "history",
+    mode: 'history',
+    base: isElectron ? '' : process.env.BASE_URL,
     scrollBehavior(to) {
         if (to.hash) {
             return window.scrollTo({

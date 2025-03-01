@@ -10,4 +10,7 @@ export default {
     fetchSalesBySession(data) {
         return API.post('/cash-flow/fetch-sales-by-session', data)
     },
+    allCashFlow() {
+        return API.get('/cash-flow/')
+    }
 };

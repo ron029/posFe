@@ -2,11 +2,24 @@ import CASH_REGISTER_API from "../APIs/cashFlow";
 import store from "..";
 export const registerCashFlow = {
   state: {
+    allCashFlowData: null,
     fetchSalesBySessionData: null,
     getExistingCashFlowData: null,
     registerCashFlowData: null,
   },
   actions: {
+    allCashFlow({commit}) {
+        try {
+            CASH_REGISTER_API
+            .allCashFlow()
+            .then(res => {
+                commit('ALL_CASH_FLOW', res.data)
+                console.log('ALL CASH FLOW res.data: ', res.data)
+            })
+        } catch (err) {
+            console.error(err)
+        }
+    },
     fetchSalesBySession({commit}, data) {
         try {
             CASH_REGISTER_API
@@ -50,6 +63,9 @@ export const registerCashFlow = {
     },
   },
   mutations: {
+    ALL_CASH_FLOW(state, allCashFlowData) {
+        state.allCashFlowData = allCashFlowData
+    },
     FETCH_SALES_BY_SESSION(state, fetchSalesBySessionData) {
         state.fetchSalesBySessionData = fetchSalesBySessionData
     },
@@ -61,6 +77,9 @@ export const registerCashFlow = {
     },
   },
   getters: {
+    allCashFlowData(state) {
+        return state.allCashFlowData
+    },
     fetchSalesBySessionData(state) {
         return state.fetchSalesBySessionData
     },
