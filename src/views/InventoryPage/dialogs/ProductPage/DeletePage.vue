@@ -4,8 +4,8 @@
             <v-card-title color="error">Delete Product named "{{ data.item.name }}"?</v-card-title>
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn color="success" :loading="loading" @click="showDialog = false">cancel</v-btn>
-                <v-btn color="error" :loading="loading" @click="deleteProduct">procceed</v-btn>
+                <v-btn color="error" :loading="loading" @click="showDialog = false">cancel</v-btn>
+                <v-btn color="success" :loading="loading" @click="deleteProduct">proceed</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
