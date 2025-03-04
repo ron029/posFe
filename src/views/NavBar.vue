@@ -60,7 +60,6 @@ import { mapActions, mapGetters } from 'vuex';
             ['mdi-finance', 'Sales', 'sales'],
             ['mdi-warehouse', 'Inventory', `inventory`],
             ['mdi-reload-alert', 'Reorder Level', 'reorder'],
-            ['mdi-account-group', 'Staff', 'staff'],
             ['', '', ''],
         ],
     }),
@@ -99,7 +98,11 @@ import { mapActions, mapGetters } from 'vuex';
         },
     },
     mounted() {
-        if (window.$cookies.get('admin')) {
+        if (window.$cookies.get('admin') === '1') {
+            const newElement = ['mdi-account-group', 'Staff', 'staff']
+            this.items.splice(this.items.length - 1, 0, newElement);
+        }
+        if (window.$cookies.get('admin') === '1') {
             const newElement = ['mdi-account-cash', 'Account Cash', 'account-cash']
             this.items.splice(this.items.length - 1, 0, newElement);
         }
