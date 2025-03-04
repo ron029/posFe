@@ -40,8 +40,11 @@
                     <template slot="item.actions" slot-scope="{ item }">
                         <span style="text-wrap: nowrap; font-weight: 700;"><v-btn color="error" small><v-icon size="15">mdi-close</v-icon>&nbsp;cancel</v-btn>{{ item.actions }}</span>
                     </template>
+                    <template slot="item.subtotal" slot-scope="{ item }">
+                        <span style="text-wrap: nowrap; font-weight: 700;">{{ item.subtotal }}</span>
+                    </template>
                     <template slot="item.change_due" slot-scope="{ item }">
-                        <span style="text-wrap: nowrap; font-weight: 700;">{{ Number(item.change_due).toFixed(2) }}</span>
+                        <span style="text-wrap: nowrap;">{{ Number(item.change_due).toFixed(2) }}</span>
                     </template>
                 </v-data-table>
                 <p class="text-center">
@@ -73,7 +76,7 @@ export default {
         // { text: 'Total w/ Disc.', value: 'total_after_discount', align: 'right'},
         { text: 'Tendered', value: 'tendered', align: 'right'},
         { text: 'Change', value: 'change_due', align: 'right'},
-        { text: 'Actions', value: 'actions'},
+        // { text: 'Actions', value: 'actions'},
         ],
     }),
     computed: {
@@ -117,7 +120,7 @@ export default {
             return moment(date).format('MMM D, YYYY')
         },
         changeDue(item) {
-            return item.tendered - item.total_after_discount
+            return item.total_after_discount - item.tendered
         }
     },
     async mounted() {
