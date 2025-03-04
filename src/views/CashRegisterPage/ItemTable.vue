@@ -193,7 +193,7 @@ export default {
                             : this.items[indexOfTaret - 1].isCurrent = true
                 }
             }
-            if (event.key === "p" || event.key === "P") {
+            if (event.altKey && event.key === "p" || event.altKey && event.key === "P") {
                 this.$nextTick(()=>{
                     event.preventDefault()
                     this.items.forEach((item) => {
@@ -205,6 +205,22 @@ export default {
                             item.isPrinting = false
                         });
                     })
+                })
+            }
+            if (event.key === "p" || event.key === "P") {
+                this.$nextTick(()=>{
+                    if (this.show.payment) {
+                        event.preventDefault()
+                        this.items.forEach((item) => {
+                            item.isPrinting = true
+                        });
+                        this.$nextTick(()=>{
+                            window.print()
+                            this.items.forEach((item) => {
+                                item.isPrinting = false
+                            });
+                        })
+                    }
                 })
             }
         },
