@@ -9,7 +9,7 @@
                 v-model="valid"
                 @submit.prevent="submitForm"
             >
-                <v-card-title style="background-color: blue; color: white">Edit item: {{ edit.name }}</v-card-title>
+                <v-card-title style="background-color: blue; color: white">Edit item: {{ currentTransaction.quantity }} {{ edit.name }}</v-card-title>
                 <v-card-text style="padding-top: 20px;">
                     <v-text-field
                         :value="edit.name"
@@ -121,6 +121,11 @@ export default {
         },
     },
     watch: {
+        show(newVal) {
+            if (!newVal) {
+                this.edit = null
+            }
+        },
         currentTransaction: {
             handler(newTransaction) {
                 if (newTransaction) {

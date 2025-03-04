@@ -1,9 +1,6 @@
 <template>
     <div style="font-weight: 600;">
         <v-row no-gutters>
-            <v-col lg="1" md="1" style="padding: 10px 5px 0 10px;">
-                <BtnShortcuts />
-            </v-col>
             <v-col lg="6" md="6" style="padding: 10px 5px 0 10px;">
                 <div>
                     <BarcodeQuantity
@@ -16,14 +13,16 @@
                         <p class="title1" style="margin: 0; padding: 0; position: absolute; left: 10px; top: 10px;">TOTAL</p>
                         <p class="text-right" style="font-size: 80px; font-weight: 700; color: red; padding: 0; margin: 0">{{ totalAmount.toFixed(2) }}</p>
                     </div>
+                    <BtnShortcuts style="height: 300px; width: 100%;"/>
                 </div>
             </v-col>
-            <v-col lg="5" md="5" style="padding: 10px 10px 0 5px;">
+            <v-col lg="6" md="6" style="padding: 10px 10px 0 5px;">
                 <div>
                     <ItemTable
                         :isNewTransaction="isNewTransaction"
                         :transactions="transactions.value"
                         :tendered="tendered"
+                        :show="show"
                         @renderLastTrans="renderLastTrans"
                         @renderNewTrans="isNewTransaction = true"
                     />
