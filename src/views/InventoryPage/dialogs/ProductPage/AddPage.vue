@@ -5,10 +5,13 @@
     >
         <v-card>
             <div v-if="!productNum.custom&&!productNum.status">
-                <p>Add 1 product? <v-btn @click="addOneProduct">Yes</v-btn></p>
-                <v-btn @click="addCustomProduct">Custom</v-btn>
+                <v-card-title>New Product</v-card-title>
+                <v-card-text>
+                    <p>Add 1 product? <v-btn @click="addOneProduct">Yes</v-btn><v-btn @click="addCustomProduct">Custom</v-btn></p>
+                </v-card-text>
             </div>
             <div v-if="productNum.custom">
+                <v-card-title>New Product</v-card-title>
                 <v-card-text>
                     <v-select
                         :items="[1, 5, 10, 15, 20]"
@@ -111,7 +114,12 @@
                             item-value="supplier_id"
                             label="Supplier's Name"
                             :rules="rule.supplier"
-                        ></v-autocomplete>
+                            :search-input.sync="add[0].supplier.value"
+                        >
+                            <template v-slot:no-data>
+                                <span style="margin-left: 10px;">{{ add[0].supplier.value }} <v-btn :loading="loading.supplier" @click="handleAddSupplier(add[0].supplier.value)">Add Supplier?</v-btn></span>
+                            </template>
+                        </v-autocomplete>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
@@ -240,7 +248,12 @@
                                 item-value="supplier_id"
                                 label="Supplier's Name"
                                 :rules="rule.supplier"
-                            ></v-autocomplete>
+                                :search-input.sync="add[index].supplier.value"
+                            >
+                                <template v-slot:no-data>
+                                    <span style="margin-left: 10px;">{{ add[index].supplier.value }} <v-btn :loading="loading.supplier" @click="handleAddSupplier(add[index].supplier.value)">Add Supplier?</v-btn></span>
+                                </template>
+                            </v-autocomplete>
                             <v-btn icon style="margin-top: 5px; color: red" @click="handleRemoveOneItem(index, item.length)"><v-icon>mdi-trash-can</v-icon></v-btn>
                         </div>
                     </v-card-text>
@@ -274,17 +287,20 @@ export default {
             category: {  value: null },
             brand: {  value: null },
             unit: {  value: null },
+            supplier: {  value: null },
         }],
         addTemplate: {
             category: {  value: null },
             brand: {  value: null },
             unit: {  value: null },
+            supplier: {  value: null },
         },
         loading: {
             newProduct: false,
             category: false,
             brand: false,
             unit: false,
+            supplier: false,
         },
         select: {},
         valid: false,
@@ -329,7 +345,7 @@ export default {
     }),
     props: ['data', 'show'],
     computed: {
-        ...mapGetters(['productPostData', 'categoryPostData', 'brandPostData']),
+        ...mapGetters(['productPostData', 'categoryPostData', 'brandPostData', 'supplierPostData']),
         showDialog: {
             get() {
                 return this.show
@@ -340,6 +356,14 @@ export default {
         }
     },
     watch: {
+        'supplierPostData'(newVal) {
+            if (newVal && newVal.STATUS === 200) {
+                this.$nextTick(() => {
+                    this.loading.supplier = false
+                    this.suppliers()
+                })
+            }
+        },
         'unitPostData'(newVal) {
             if (newVal && newVal.STATUS === 200) {
                 this.$nextTick(() => {
@@ -403,7 +427,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['productPost', 'products', 'getCsrfToken', 'categoryPost', 'categories', 'brandPost', 'brands', 'unitPost', 'units']),
+        ...mapActions(['productPost', 'products', 'getCsrfToken', 'categoryPost', 'categories', 'brandPost', 'brands', 'unitPost', 'units', 'supplierPost', 'suppliers']),
+        handleAddSupplier(name) {
+            this.loading.supplier = true
+            this.supplierPost({ name })
+        },
         handleRemoveOneItem(index, itemCount) {
             if (itemCount === 1) {
                 this.productNum.status = false

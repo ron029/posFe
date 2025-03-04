@@ -1,7 +1,7 @@
 <template>
     <v-dialog
         v-model="showDialog"
-        width="400px"
+        width="405px"
     >
         <v-card>
             <v-data-table
@@ -62,8 +62,8 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="success" @click="showDialogEdit=false">cancel</v-btn>
-                        <v-btn color="error" type="submit" :disabled="!valid.edit">procceed</v-btn>
+                        <v-btn color="error" @click="showDialogEdit=false">cancel</v-btn>
+                        <v-btn color="success" type="submit" :disabled="!valid.edit">proceed</v-btn>
                     </v-card-actions>
                 </v-card>
             </v-form>
@@ -107,8 +107,8 @@
                 <v-card-title color="error">Delete Unit named {{ this.currentItem?.name }}?</v-card-title>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="success" @click="showDialogDelete=false">cancel</v-btn>
-                    <v-btn color="error" @click="deleteUnit">procceed</v-btn>
+                    <v-btn color="error" @click="showDialogDelete=false">cancel</v-btn>
+                    <v-btn color="success" @click="deleteUnit">proceed</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
