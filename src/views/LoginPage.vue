@@ -1,29 +1,35 @@
 <template>
-    <div style="display: block; height: 100%;">
+    <div style="display: flex; align-items: center; height: 100vh;">
         <v-form
             ref="form"
             v-model="valid"
             @submit.prevent="submitForm"
-            style="width: 480px; margin: auto auto;  vertical-align: middle;"
+            style="width: 380px; margin: auto auto; vertical-align: middle;"
+            class="elevation-10"
         >
-            <h1>Login Page</h1>
-            <v-text-field
-                v-model.trim="cred.user"
-                :rules="[v=>v && !!v.trim() || 'Username is required']"
-                label="Username"
-            ></v-text-field>
-            <v-text-field
-                type="password"
-                v-model.trim="cred.pass"
-                :rules="[v=>!!v || 'Password is required']"
-                label="Password"
-            ></v-text-field>
-            <v-btn
-                type="submit"
-            >submit</v-btn>
+            <v-card style="padding: 20px 40px">
+                <h1>Login Page</h1>
+                <p>{{ errMsg }}</p>
+                <v-text-field
+                    v-model.trim="cred.user"
+                    :rules="[v=>v && !!v.trim() || 'Username is required']"
+                    label="Username"
+                ></v-text-field>
+                <v-text-field
+                    type="password"
+                    v-model.trim="cred.pass"
+                    :rules="[v=>!!v || 'Password is required']"
+                    label="Password"
+                ></v-text-field>
+                <v-btn
+                    class="submitBtn"
+                    rounded
+                    style="width: 100%; height: 55px;"
+                    type="submit"
+                >submit</v-btn>
+            </v-card>
         </v-form>
     </div>
-
 </template>
 
 <script>
@@ -31,6 +37,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data: ()=>({
+        errMsg: '',
         cred: {
             user: null,
             pass: null,
@@ -45,6 +52,11 @@ export default {
             if (newVal) {
                 if (newVal.STATUS === 200) {
                     if (this.$route.path !== '/pos') window.location.href = '/pos'
+                } else {
+                    this.errMsg = 'Invalid username or password'
+                    setTimeout(()=>{
+                        this.errMsg = ""
+                    }, 5000)
                 }
             }
         }
@@ -62,3 +74,18 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.submitBtn {
+    margin-bottom: 20px;
+}
+p {
+    text-align: center;
+    height: 40px;
+    color: red;
+}
+</style>
