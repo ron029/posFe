@@ -12,12 +12,12 @@
             >
                 <v-card-title style="background-color: blue; color: white">Cash Register
                     <v-spacer></v-spacer>
-                    <v-btn
+                    <!-- <v-btn
                         outlined
                         @click="$emit('closeCashRegisterTransactions')"
                         small
                         color="white"
-                    >ESC</v-btn>
+                    >ESC</v-btn> -->
                 </v-card-title>
                 <v-card-text>
                     <v-row>
