@@ -76,6 +76,14 @@ const routes = [
                 meta: {
                     middleware: [ auth ]
                 },
+            },
+            {
+                path: 'company-profile',
+                name: 'company-profile',
+                component: () =>  { return import('@/views/CompanyPage/IndexPage.vue') },
+                meta: {
+                    middleware: [ auth ]
+                },
             }
         ]
     },
