@@ -14,6 +14,7 @@ import { registerCashFlow } from './modules/cashFlow';
 import { reorder } from './modules/reorder';
 import { role } from './modules/role';
 import { permission } from './modules/permission';
+import { companyProfile } from "./modules/companyProfile";
 
 import loading from "./modules/loading";
 
@@ -35,5 +36,6 @@ export default new Vuex.Store({
     sales,
     registerCashFlow,
     reorder,
+    companyProfile,
   }
 });
