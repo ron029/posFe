@@ -64,7 +64,7 @@ export default {
     components: {
         NotifDialog,
     },
-    props: ['data'],
+    props: ['data', 'isNewTransaction'],
     data: () => ({
         valid: false,
         cash: null,
@@ -115,7 +115,7 @@ export default {
             }
             if (event.key === "F8") {
                 event.preventDefault()
-                if (this.data.transactions.length > 0) {
+                if (this.data.transactions.length > 0 || !this.isNewTransaction) {
                     this.cash = null;
                     this.show.payment = true;
                     this.$nextTick(()=>{

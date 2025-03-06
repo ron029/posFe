@@ -33,6 +33,7 @@
         </v-row>
         <PaymentPage
             :data="{ totalAmount, transactions: transactions.value }"
+            :isNewTransaction="isNewTransaction"
             @focusToBarcode="focusToBarcode"
             @saveTransaction="saveTransaction"
         />

@@ -27,7 +27,7 @@
             </v-btn>
         </div>
         <v-data-table
-            :items="items"
+            :items="items.filter(item => item.itemQuantity > 0)"
             hide-default-footer
             :item-class="getRowClass"
             :items-per-page="-1"
@@ -165,15 +165,20 @@ export default {
     methods: {
         ...mapActions(['retriveTransaction', 'getNextSalesId']),
         retrieveTrans(direction) {
-            this.isLoading = true
+            // Set loading state to true
+            this.isLoading = true;
+
+            // Determine if it's a new or existing transaction
             if (!this.isNewTransaction) {
+                // For existing transactions, increment or decrement 'last' based on direction
                 this.sales_id.last = this.sales_id.last
-                    ? this.sales_id.last + (direction === 'left' ? -1 : 1)
-                    : this.sales_id.value + (direction === 'left' ? -1 : 1);
+                    ? this.sales_id.last + (direction === 'left' ? -1 : 1)  // Increment or decrement the 'last' value
+                    : this.sales_id.value + (direction === 'left' ? -1 : 1);  // If 'last' is undefined, use 'value' and adjust
             } else {
+                // For new transactions, adjust 'last' value with the direction
                 this.sales_id.last = this.sales_id.last
-                    ? (direction === 'left' ? this.sales_id.last : this.sales_id.last + 1)
-                    : (direction === 'left' ? this.sales_id.value : this.sales_id.value + 1);
+                    ? (direction === 'left' ? this.sales_id.last : this.sales_id.last + 1)  // Only increment if direction is right
+                    : (direction === 'left' ? this.sales_id.value : this.sales_id.value + 1);  // If 'last' is undefined, use 'value'
             }
 
             const newSales = {status:  'history', last: this.sales_id.last, value: this.sales_id.value}
