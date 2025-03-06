@@ -18,7 +18,7 @@
                     ref="searchBarcode"
                     @submit.prevent="searchBarcode"
                 >
-                    Barcode: <pre>{{ searchInputSync }}</pre>
+                    Barcode:
                     <v-combobox
                         @change="submitForm"
                         :items="productItemsToSearch"
