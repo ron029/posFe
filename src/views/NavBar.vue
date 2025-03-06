@@ -32,7 +32,7 @@
                     <v-btn value="log-out" color="#D5B07E" @click="showCashRegisterRecorder">
                         <v-icon style="margin-left: 15px;">mdi-power</v-icon>
                     </v-btn>
-                    <v-btn value="settings" color="#D5B07E">
+                    <v-btn value="settings" color="#D5B07E" @click="redirectToCompanyProfile">
                         <v-icon style="margin-left: 15px;">mdi-cog</v-icon>
                     </v-btn>
                     <v-btn value="account-settings" color="#D5B07E">
@@ -68,6 +68,10 @@ import { mapActions, mapGetters } from 'vuex';
     },
     methods: {
         ...mapActions(['findUserRolePermission']),
+        redirectToCompanyProfile() {
+            if (this.$route.path !== '/pos/company-profile')
+                this.$router.push({name: 'company-profile'})
+        },
         showCashRegisterRecorder() {
             this.$eventBus.$emit('showCashRegisterRecorder', true)
         },
