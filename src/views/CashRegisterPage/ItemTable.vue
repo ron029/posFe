@@ -35,15 +35,15 @@
         >
             <template v-slot:body="{items}">
                 <div id="printableArea" style="width: 430px; height: 90vh; margin: 0 auto; overflow-y: scroll; overflow-x: hidden;">
-                    <p>4-D CONVENIENCE STORE</p>
-                    <p>B-HIVE STORE, BARANGAY BANAGO</p>
-                    <p>NAGCARLAN, LAGUNA</p>
+                    <p>{{ companyProfilesData && companyProfilesData.DATA[0].name }}</p>
+                    <p v-if="address1">{{ address1 }}</p>
+                    <p v-if="address2">{{ address2 }}</p>
                     <p>-------------------------------</p>
                     <p>UNOFFICIAL RECEIPT</p>
                     <p>-------------------------------</p>
                     <p>Transaction#: {{ sales_id && sales_id.last && sales_id.status === 'history' ? sales_id.last : sales_id.value + 1 }}</p>
                     <p>Date & Time: {{ salesDateTime ? salesDateTime : dateTimeVar }}</p>
-                    <p>Cashier: SUSAN</p>
+                    <p>Cashier: {{ cashierName }}</p>
                     =======================================
                     <table style="width: 100%; border-collapse: collapse; border: none;">
                         <thead>
@@ -98,7 +98,13 @@ export default {
         },
     }),
     computed: {
-        ...mapGetters(['getNextSalesIdData', 'retriveTransactionData']),
+        ...mapGetters(['getNextSalesIdData', 'retriveTransactionData', 'companyProfilesData']),
+        address2() {
+            return this.companyProfilesData && this.companyProfilesData.DATA[0].address2
+        },
+        address1() {
+            return this.companyProfilesData && this.companyProfilesData.DATA[0].address1
+        },
         changeAmount() {
             const changeVal = (Number(this.tendered) - this.overAllAmount)
             return changeVal > 0 ? changeVal : 0
@@ -118,6 +124,9 @@ export default {
             }, 0)
             return test
         },
+        cashierName() {
+            return window.$cookies.get('name').toUpperCase()
+        }
     },
     props: ['isNewTransaction', 'transactions', 'tendered'],
     watch: {

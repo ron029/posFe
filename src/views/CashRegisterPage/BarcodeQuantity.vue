@@ -18,17 +18,30 @@
                     ref="searchBarcode"
                     @submit.prevent="searchBarcode"
                 >
-                    Barcode:
-                    <v-text-field
+                    Barcode: <pre>{{ searchInputSync }}</pre>
+                    <v-combobox
+                        @change="submitForm"
+                        :items="productItemsToSearch"
                         :disabled="!isNewTransaction"
                         :persistent-hint="!isNewTransaction"
                         :hint="!isNewTransaction ? 'Scan is not allowed' : ''"
                         ref="barcode"
                         outlined
+                        item-text="displayName"
+                        item-value="barcode"
+                        :return-object="false"
                         v-model="barcode"
                         :rules="[v => !!v || 'Barcode is required']"
                         autofocus
-                    ></v-text-field>
+                        clearable
+                        :search-input.sync="searchInputSync"
+                    >
+                        <template v-slot:item="{ item }">
+                            <p style="text-align: right; width: 100%; position: relative; height: 20px; padding-top: 5px;">
+                                <span style="position: absolute; left: 0; font-weight: 700;">{{ item.barcode }}</span> {{ String(item.name).toUpperCase() }} @ {{ item.selling_price }}
+                            </p>
+                        </template>
+                    </v-combobox>
                     <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
             </v-col>
@@ -86,15 +99,21 @@ export default {
         NotifDialog,
     },
     data: () => ({
+        searchInputSync: null,
         isDialogOpen: false,
         barcode: null,
         isBarcodeNotFound : false,
         showQuantity: false,
         quantity: 1,
     }),
-    props: ['focusToBarcode', 'isNewTransaction'],
+    props: ['focusToBarcode', 'isNewTransaction', 'triggerBlurBarcode'],
     computed: {
-        ...mapGetters(['findBarcodeData']),
+        ...mapGetters(['findBarcodeData', 'productData']),
+        productItemsToSearch() {
+            return this.productData && this.productData.DATA && this.productData.DATA.length > 0
+                ? this.productData.DATA.map(item => ({name: item.name, barcode: item.barcode, selling_price: item.selling_price, displayName: `${item.barcode} ${item.name} ${item.selling_price}`}))
+                : []
+        },
         showDialog: {
             get() {
                 return this.showQuantity
@@ -111,6 +130,18 @@ export default {
         },
     },
     watch: {
+        triggerBlurBarcode() {
+            this.$nextTick(()=>{
+                if (this.$refs && this.$refs.barcode) {
+                    this.$nextTick(()=>{
+                        this.$refs.barcode.blur()
+                    })
+                }
+            })
+        },
+        searchInputSync(newVal) {
+            this.$emit('isSearchIsEmpty', newVal === null)
+        },
         isNewTransaction(newVal) {
             if (!newVal) this.$refs.barcode.reset()
         },
@@ -126,6 +157,7 @@ export default {
                     this.$emit('saveBarcodeQuantity', {itemQuantity: this.quantity, ...newVal.DATA[0]})
                     this.barcode = ''
                     this.quantity = 1
+                    if (this.$refs && this.$refs.searchBarcode) this.$refs.searchBarcode.reset()
                 } else if (newVal.STATUS === 404) {
                     this.isBarcodeNotFound = true
                 }
@@ -133,7 +165,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['findBarcode', 'getCsrfToken']),
+        ...mapActions(['findBarcode', 'getCsrfToken', 'products']),
+        submitForm() {
+            if (this.$refs && this.$refs.searchBarcode)
+                this.$refs.searchBarcode.$el.querySelector('.v-btn').click()
+        },
         async searchBarcode() {
             if (!this.isBarcodeNotFound && this.$refs.searchBarcode.validate()) {
                 await this.getCsrfToken()
@@ -146,7 +182,6 @@ export default {
             this.focusInBarcode()
         },
         handleKeyPress(event) {
-            console.log('handleKeyPress event.key: ', event.key)
             if (this.isBarcodeNotFound === true) {
                 this.barcode = ''
                 this.isBarcodeNotFound = false
@@ -187,7 +222,9 @@ export default {
         this.$eventBus.$on('isDialogOpen', (data) => {
             this.isDialogOpen = data.status
         });
-
+        if (!this.productData) {
+            this.products()
+        }
     },
     beforeUnmount() {
         window.removeEventListener("keydown", this.handleKeyPress);

@@ -6,8 +6,10 @@
                     <BarcodeQuantity
                         :focusToBarcode="focus.barcode"
                         :isNewTransaction="isNewTransaction"
+                        :triggerBlurBarcode="triggerBlurBarcode"
                         @saveBarcodeQuantity="saveBarcodeQuantity"
                         @offFocusToBarcode="focus.barcode = false"
+                        @isSearchIsEmpty="isSearchIsEmpty"
                     />
                     <div style="border: 1px solid black; padding: 10px; margin-top: 10px; position: relative;">
                         <p class="title1" style="margin: 0; padding: 0; position: absolute; left: 10px; top: 10px;">TOTAL</p>
@@ -108,6 +110,7 @@ export default {
         NotifDialog,
     },
     data: () => ({
+        triggerBlurBarcode: 0,
         isNewTransaction: true,
         cashierMode: '',
         cashierName: null,
@@ -131,6 +134,7 @@ export default {
             editItem: false,
             goToSales: false
         },
+        isSearchIsEmptyVar: true,
         focus: {
             barcode: false
         }
@@ -173,7 +177,10 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['saveSales', 'getCsrfToken', 'getNextSalesId', 'retriveTransaction', 'saveSalesModified']),
+        ...mapActions(['saveSales', 'getCsrfToken', 'getNextSalesId', 'retriveTransaction', 'saveSalesModified', 'companyProfiles']),
+        isSearchIsEmpty(newVal) {
+            this.isSearchIsEmptyVar = newVal
+        },
         renderLastTrans(newVal) {
             let t = null
             let tendered = 0
@@ -201,9 +208,8 @@ export default {
             this.show.goToSales = false
             if (this.$route.path !== '/pos/sales') this.$router.push('/pos/sales')
         },
-        closeEditCurrentItem(data) {
+        closeEditCurrentItem() {
             this.show.editItem = false
-            console.log('closeEditCurrentItem data: ', data)
         },
         closechangeAmount() {
             this.tendered = 0
@@ -231,8 +237,6 @@ export default {
             this.focus.barcode = true
         },
         saveBarcodeQuantity(data) {
-            console.log('saveBarcodeQuantity data: ', data);
-
             // Add "currentTransaction" class to the new item and remove it from others
             this.transactions.value.forEach((item) => {
                 item.isCurrent = false; // Remove class from others
@@ -292,7 +296,6 @@ export default {
             }
             if (event.key === "F6") {
                 event.preventDefault()
-                console.log('F6')
                 if (this.$route.path !== '/pos') window.location.href = '/pos'
             }
             if (event.altKey && event.key === "e" || event.altKey && event.key === "E") {
@@ -309,8 +312,9 @@ export default {
 
                 }
             }
-            if (event.key === "ArrowUp") {
+            if (event.key === "ArrowUp" && this.isSearchIsEmptyVar) {
                 event.preventDefault()
+                this.triggerBlurBarcode++
                 if (this.transactions.value.length > 0) {
                     const existingProductIndex = this.transactions.value.findIndex(item => item.isCurrent === true)
                     if (existingProductIndex > -1) {
@@ -327,8 +331,9 @@ export default {
                     }
                 }
             }
-            if (event.key === "ArrowDown") {
+            if (event.key === "ArrowDown" && this.isSearchIsEmptyVar) {
                 event.preventDefault()
+                this.triggerBlurBarcode++
                 if (this.transactions.value.length > 0) {
                     const existingProductIndex = this.transactions.value.findIndex(item => item.isCurrent === true);
                     if (existingProductIndex > -1) {
@@ -349,6 +354,7 @@ export default {
     },
     mounted() {
         this.getNextSalesId()
+        this.companyProfiles()
         this.cashierName = window.$cookies.get('name')
         window.addEventListener("keydown", this.handleKeyPress);
     },
