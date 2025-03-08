@@ -56,7 +56,13 @@
                         <v-text-field
                             label="Category Name"
                             v-model="newItem.name"
-                            :rules="rules.edit"
+                            :rules="[v=>v && !!v.trim()||'Category Name is required']"
+                            clearable
+                        ></v-text-field>
+                        <v-text-field
+                            label="Abbr"
+                            v-model="newItem.abbr"
+                            :rules="[v=>v && !!v.trim()||'Abbr is required']"
                             clearable
                         ></v-text-field>
                     </v-card-text>
@@ -85,7 +91,13 @@
                         <v-text-field
                             v-model="newItem.name"
                             label="Category Name"
-                            :rules="rules.new"
+                            :rules="[v=>v && !!v.trim()||'Category Name is required']"
+                            clearable
+                        ></v-text-field>
+                        <v-text-field
+                            v-model="newItem.abbr"
+                            label="Abbr"
+                            :rules="[v=>v && !!v.trim()||'Abbr Name is required']"
                             clearable
                         ></v-text-field>
                     </v-card-text>
@@ -130,10 +142,6 @@ export default {
             edit: false,
             new: false,
         },
-        rules: {
-            new: [v=>v && !!v.trim()||'Category Name is required'],
-            edit: [v=>v && !!v.trim()||'Category Name is required']
-        },
         action: {
             edit: false,
             delete: false,
@@ -141,10 +149,12 @@ export default {
         },
         currentItem: null,
         newItem: {
-            name: null
+            name: null,
+            abbr: null,
         },
         headers: [
             { text: 'Category Name', value: 'name' },
+            { text: 'Abbr', value: 'abbr' },
             { text: 'Actions', value: 'actions' },
         ],
         tblItems: [],

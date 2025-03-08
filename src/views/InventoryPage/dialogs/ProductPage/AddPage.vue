@@ -3,7 +3,7 @@
         v-model="showDialog"
         :width="productNum.status && productNum.value > 1 ? '100%' : '600px'"
     >
-        <v-card>
+        <v-card style="width: 100%">
             <div v-if="!productNum.custom&&!productNum.status">
                 <v-card-title>New Product</v-card-title>
                 <v-card-text>
@@ -40,7 +40,23 @@
                             :search-input.sync="add[0].category.value"
                         >
                             <template v-slot:no-data>
-                                <span style="margin-left: 10px;">{{ add[0].category.value }} <v-btn :loading="loading.category" @click="handleAddCategory(add[0].category.value)">Add Category?</v-btn></span>
+                                <v-form
+                                    ref="category10"
+                                    style="margin-left: 10px;"
+                                    @submit.prevent="handleAddCategory(add[0].category.value, 'category10')"
+                                >
+                                    {{ add[0].category.value }}
+                                    <v-text-field
+                                        :rules="[v=>!!v||'Abbr is required']"
+                                        placeholder="Category Abbr"
+                                        v-model="tempAbbr.category"
+                                    ></v-text-field>
+                                    <v-btn
+                                        :loading="loading.category"
+                                        type="submit"
+                                    >Add Category?
+                                    </v-btn>
+                                </v-form>
                             </template>
                         </v-autocomplete>
                         <v-autocomplete
@@ -141,120 +157,277 @@
                 >
                     <v-card-title>New Product <v-spacer></v-spacer><v-btn @click="handleSelectProductCount">back</v-btn></v-card-title>
                     <v-card-text>
-                        <div v-for="(productItem, index) in item" :key="index" style="display: flex; width: 100%;">
-                            <v-autocomplete
-                                outlined
-                                style="display: inline-block; width: 100px;"
-                                v-model.trim="productItem.category_id"
-                                :items="select.categories"
-                                item-text="name"
-                                item-value="category_id"
-                                label="Category Name"
-                                :rules="rule.category"
-                                :search-input.sync="add[index].category.value"
-                            >
-                                <template v-slot:no-data>
-                                    <span style="margin-left: 10px;">{{ add[index].category.value }} <v-btn :loading="loading.category" @click="handleAddCategory(add[index].category.value)">Add Category?</v-btn></span>
-                                </template>
-                            </v-autocomplete>
-                            <v-autocomplete
-                                outlined
-                                style="display: inline-block; width: 100px;"
-                                v-model.trim="productItem.brand_id"
-                                :items="select.brands"
-                                item-text="name"
-                                item-value="brand_id"
-                                label="Brand Name"
-                                :rules="rule.brand"
-                                :search-input.sync="add[index].brand.value"
-                            >
-                                <template v-slot:no-data>
-                                    <span style="margin-left: 10px;">{{ add[index].brand.value }} <v-btn :loading="loading.brand" @click="handleAddBrand(add[index].brand.value)">Add Brand?</v-btn></span>
-                                </template>
-                            </v-autocomplete>
-                            <v-autocomplete
-                                outlined
-                                style="display: inline-block; width: 100px;"
-                                v-model.trim="productItem.unit_id"
-                                :items="select.units"
-                                item-text="name"
-                                item-value="unit_id"
-                                label="Measurements"
-                                :rules="rule.unit"
-                                :search-input.sync="add[index].unit.value"
-                            >
-                                <template v-slot:no-data>
-                                    <span style="margin-left: 10px;">{{ add[index].unit.value }} <v-btn :loading="loading.unit" @click="handleAddUnit(add[index].unit.value)">Add Unit?</v-btn></span>
-                                </template>
-                            </v-autocomplete>
-                            <v-text-field
-                                outlined
-                                style="display: inline-block; width: 100px;"
-                                label="Product Name"
-                                v-model.trim="productItem.name"
-                                :rules="rule.name"
-                            ></v-text-field>
-                            <v-text-field
-                                outlined
-                                style="display: inline-block; width: 100px;"
-                                label="Barcode"
-                                v-model.trim="productItem.barcode"
-                                @keydown.enter.prevent
-                                @keyup.enter.prevent
-                                :rules="rule.barcode"
-                            ></v-text-field>
-                            <v-text-field
-                                outlined
-                                style="display: inline-block; width: 30px;"
-                                label="Quantity"
-                                type="number"
-                                v-model.trim=productItem.quantity
-                                :rules="rule.quantity"
-                            ></v-text-field>
-                            <v-text-field
-                                outlined
-                                style="display: inline-block; width: 30px;"
-                                label="Reorder Level"
-                                v-model.trim="productItem.reorder_level"
-                                type="number"
-                                :rules="rule.reorder_level"
-                            ></v-text-field>
-                            <v-text-field
-                                outlined
-                                style="display: inline-block; width: 30px;"
-                                label="Cost Price"
-                                v-model.trim="productItem.cost_price"
-                                type="number"
-                                step="0.01"
-                                @input="validateDecimalCost"
-                                :rules="rule.cost_price"
-                            ></v-text-field>
-                            <v-text-field
-                                outlined
-                                style="display: inline-block; width: 30px;"
-                                label="Selling Price"
-                                v-model.trim="productItem.selling_price"
-                                type="number"
-                                step="0.01"
-                                @input="validateDecimalSelling"
-                                :rules="rule.selling_price"
-                            ></v-text-field>
-                            <v-autocomplete
-                                outlined
-                                style="display: inline-block; width: 30px;"
-                                v-model.trim="productItem.supplier_id"
-                                :items="select.suppliers"
-                                item-text="name"
-                                item-value="supplier_id"
-                                label="Supplier's Name"
-                                :rules="rule.supplier"
-                                :search-input.sync="add[index].supplier.value"
-                            >
-                                <template v-slot:no-data>
-                                    <span style="margin-left: 10px;">{{ add[index].supplier.value }} <v-btn :loading="loading.supplier" @click="handleAddSupplier(add[index].supplier.value)">Add Supplier?</v-btn></span>
-                                </template>
-                            </v-autocomplete>
-                            <v-btn icon style="margin-top: 5px; color: red" @click="handleRemoveOneItem(index, item.length)"><v-icon>mdi-trash-can</v-icon></v-btn>
+                        <div
+                            v-for="(productItem, index) in item"
+                            :key="index"
+                            :style="`background-color: ${index % 2 == 0 ? '#ddd' : 'white'}; display: flex; width: 100%;`"
+                        >
+                            <!-- category -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('category_id', productItem.category_id, index)"
+                                >Apply to all</v-btn>
+                                <v-autocomplete
+                                    outlined
+                                    style="width: 150px"
+                                    v-model.trim="productItem.category_id"
+                                    :items="select.categories"
+                                    item-text="name"
+                                    item-value="category_id"
+                                    label="Category Name"
+                                    :rules="rule.category"
+                                    :search-input.sync="add[index].category.value"
+                                    dense
+                                >
+                                    <template v-slot:no-data>
+                                        <v-form
+                                            :ref="`category${index}`"
+                                            style="margin-left: 10px;"
+                                            v-model="valid"
+                                            @submit.prevent="handleAddCategory(add[index].category.value, `category${index}`)"
+                                        >
+                                            {{ add[index].category.value }}
+                                            <v-text-field
+                                                :rules="[v=>!!v||'Abbr is required']"
+                                                placeholder="Category Abbr"
+                                                v-model="tempAbbr.category"
+                                            ></v-text-field>
+                                            <v-btn
+                                                :loading="loading.category"
+                                                type="submit"
+                                            >Add Category?
+                                            </v-btn>
+                                        </v-form>
+                                    </template>
+                                </v-autocomplete>
+                            </div>
+
+                            <!-- brand -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('brand_id', productItem.brand_id, index)"
+                                >Apply to all</v-btn>
+                                <v-autocomplete
+                                    style="width: 150px"
+                                    outlined
+                                    v-model.trim="productItem.brand_id"
+                                    :items="select.brands"
+                                    item-text="name"
+                                    item-value="brand_id"
+                                    label="Brand Name"
+                                    :rules="rule.brand"
+                                    :search-input.sync="add[index].brand.value"
+                                    dense
+                                >
+                                    <template v-slot:no-data>
+                                        <v-form
+                                            :ref="`brand${index}`"
+                                            style="margin-left: 10px;"
+                                            v-model="valid"
+                                            @submit.prevent="handleAddBrand(add[index].brand.value, `brand${index}`)"
+                                        >
+                                            {{ add[index].brand.value }}
+                                            <v-text-field
+                                                :rules="[v=>!!v||'Abbr is required']"
+                                                placeholder="Brand Abbr"
+                                                v-model="tempAbbr.brand"
+                                            ></v-text-field>
+                                            <v-btn
+                                                :loading="loading.brand"
+                                                type="submit"
+                                            >Add Brand?
+                                            </v-btn>
+                                        </v-form>
+                                    </template>
+                                </v-autocomplete>
+                            </div>
+
+                            <!-- unit -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('unit_id', productItem.unit_id, index)"
+                                >Apply to all</v-btn>
+                                <v-autocomplete
+                                    style="width: 150px"
+                                    outlined
+                                    v-model.trim="productItem.unit_id"
+                                    :items="select.units"
+                                    item-text="name"
+                                    item-value="unit_id"
+                                    label="Measurements"
+                                    :rules="rule.unit"
+                                    :search-input.sync="add[index].unit.value"
+                                    dense
+                                >
+                                    <template v-slot:no-data>
+                                        <v-form
+                                            :ref="`unit${index}`"
+                                            style="margin-left: 10px;"
+                                            v-model="valid"
+                                            @submit.prevent="handleAddUnit(add[index].unit.value, `unit${index}`)"
+                                        >
+                                            {{ add[index].unit.value }}
+                                            <v-text-field
+                                                :rules="[v=>!!v||'Abbr is required']"
+                                                placeholder="Unit Abbr"
+                                                v-model="tempAbbr.unit"
+                                            ></v-text-field>
+                                            <v-btn
+                                                :loading="loading.unit"
+                                                type="submit"
+                                            >Add Unit?
+                                            </v-btn>
+                                        </v-form>
+                                    </template>
+                                </v-autocomplete>
+                            </div>
+
+                            <!-- product name -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('name', productItem.name, index)"
+                                >Apply to all</v-btn>
+                                <v-text-field
+                                    style="width: 286px"
+                                    outlined
+                                    label="Product Name"
+                                    v-model.trim="productItem.name"
+                                    :rules="rule.name"
+                                    dense
+                                ></v-text-field>
+                            </div>
+
+                            <!-- barcode -->
+                            <div>
+                                <v-checkbox
+                                    style="height: 23px !important; padding: 0; margin: 0"
+                                    outlined
+                                    hide-details
+                                    label="Auto Generate"
+                                    v-model.trim="productItem.barcode_exist"
+                                    @keydown.enter.prevent
+                                    @keyup.enter.prevent
+                                    :rules="rule.barcode"
+                                    @change="productItem.barcode_exist ? productItem.barcode = null : ''"
+                                    dense
+                                ></v-checkbox>
+                                <v-text-field
+                                    style="width: 150px"
+                                    outlined
+                                    label="Barcode"
+                                    v-model.trim="productItem.barcode"
+                                    @keydown.enter.prevent
+                                    @keyup.enter.prevent
+                                    :rules="rule.barcode"
+                                    :disabled="productItem.barcode_exist"
+                                    dense
+                                ></v-text-field>
+                            </div>
+
+                            <!-- quantity -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('quantity', productItem.quantity, index)"
+                                >Apply to all</v-btn>
+                                <v-text-field
+                                    outlined
+                                    label="Quantity"
+                                    type="number"
+                                    v-model.trim=productItem.quantity
+                                    :rules="rule.quantity"
+                                    dense
+                                ></v-text-field>
+                            </div>
+
+                            <!-- reorder_level -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('reorder_level', productItem.reorder_level, index)"
+                                >Apply to all</v-btn>
+                                <v-text-field
+                                    outlined
+                                    label="Reorder Level"
+                                    v-model.trim="productItem.reorder_level"
+                                    type="number"
+                                    :rules="rule.reorder_level"
+                                    dense
+                                ></v-text-field>
+                            </div>
+
+                            <!-- cost_price -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('cost_price', productItem.cost_price, index)"
+                                >Apply to all</v-btn>
+                                <v-text-field
+                                    outlined
+                                    label="Cost Price"
+                                    v-model.trim="productItem.cost_price"
+                                    type="number"
+                                    step="0.01"
+                                    @input="validateDecimalCost"
+                                    :rules="rule.cost_price"
+                                    dense
+                                ></v-text-field>
+                            </div>
+
+                            <!-- selling_price -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('selling_price', productItem.selling_price, index)"
+                                >Apply to all</v-btn>
+                                <v-text-field
+                                    outlined
+                                    label="Selling Price"
+                                    v-model.trim="productItem.selling_price"
+                                    type="number"
+                                    step="0.01"
+                                    @input="validateDecimalSelling"
+                                    :rules="rule.selling_price"
+                                    dense
+                                ></v-text-field>
+                            </div>
+
+                            <!-- supplier_id -->
+                            <div>
+                                <v-btn
+                                    x-small
+                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    @click="applyAll('supplier_id', productItem.supplier_id, index)"
+                                >Apply to all</v-btn>
+                                <v-autocomplete
+                                    outlined
+                                    v-model.trim="productItem.supplier_id"
+                                    :items="select.suppliers"
+                                    item-text="name"
+                                    item-value="supplier_id"
+                                    label="Supplier's Name"
+                                    :rules="rule.supplier"
+                                    :search-input.sync="add[index].supplier.value"
+                                    dense
+                                >
+                                    <template v-slot:no-data>
+                                        <span style="margin-left: 10px;">{{ add[index].supplier.value }} <v-btn :loading="loading.supplier" @click="handleAddSupplier(add[index].supplier.value)">Add Supplier?</v-btn></span>
+                                    </template>
+                                </v-autocomplete>
+                            </div>
+                            <v-btn icon style="margin-top: 28px; color: red" @click="handleRemoveOneItem(index, item.length)"><v-icon>mdi-trash-can</v-icon></v-btn>
                         </div>
                     </v-card-text>
                     <v-card-actions>
@@ -278,6 +451,11 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data: () => ({
+        tempAbbr: {
+            category: null,
+            brand: null,
+            unit: null,
+        },
         productNum: {
             status: false,
             value: 1,
@@ -310,7 +488,7 @@ export default {
             category: [ v => !!v || 'Category Name is required' ],
             barcode: [ () => true ],
             supplier: [ v => !!v || 'Supplier Name is required' ],
-            name: [ v => v && !!v.trim() || 'Product Name is required' ],
+            name: [ v => v && !!v.trim() || 'Product Name is required', v => v && v.length <= 26 || 'Not more then 26 char' ],
             quantity: [ v => v && !!v.trim() || 'quantity is required' ],
             cost_price: [ v => !!v || 'Cost Price is required' ],
             selling_price: [ v => !!v || 'Selling Price is required' ],
@@ -328,6 +506,7 @@ export default {
                 cost_price: null,
                 quantity: null,
                 reorder_level: null,
+                barcode_exist: false,
             }
         ],
         itemTemplate: {
@@ -341,6 +520,7 @@ export default {
             cost_price: null,
             quantity: null,
             reorder_level: null,
+            barcode_exist: false,
         }
     }),
     props: ['data', 'show'],
@@ -399,6 +579,7 @@ export default {
 
                 let newArrAdd = []
                 for (let index = 0; index < newVal; index++) {
+                    this.addTemplate
                     newArrAdd.push(structuredClone(this.addTemplate))
                 }
                 this.add = newArrAdd
@@ -428,9 +609,10 @@ export default {
     },
     methods: {
         ...mapActions(['productPost', 'products', 'getCsrfToken', 'categoryPost', 'categories', 'brandPost', 'brands', 'unitPost', 'units', 'supplierPost', 'suppliers']),
-        handleAddSupplier(name) {
-            this.loading.supplier = true
-            this.supplierPost({ name })
+        applyAll(field, category_id, index) {
+            for (let i=index; i<this.item.length; i++) {
+                this.item[i][field] = category_id
+            }
         },
         handleRemoveOneItem(index, itemCount) {
             if (itemCount === 1) {
@@ -450,17 +632,39 @@ export default {
         handleClickProductNumValue() {
             this.productNum.value = null
         },
-        handleAddUnit(name) {
-            this.loading.unit = true
-            this.unitPost({ name })
+        handleAddSupplier(name) {
+            this.loading.supplier = true
+            this.supplierPost({ name })
         },
-        handleAddBrand(name) {
-            this.loading.brand = true
-            this.brandPost({ name })
+        handleAddUnit(name, ref) {
+            this.$nextTick(()=>{
+                if (this.$refs && this.$refs[ref]) {
+                    if (this.$refs[ref][0].validate()) {
+                        this.loading.unit = true
+                        this.unitPost({ name })
+                    }
+                }
+            })
         },
-        handleAddCategory(name) {
-            this.loading.category = true
-            this.categoryPost({ name })
+        handleAddBrand(name, ref) {
+            this.$nextTick(()=>{
+                if (this.$refs && this.$refs[ref]) {
+                    if (this.$refs[ref][0].validate()) {
+                        this.loading.brand = true
+                        this.brandPost({ name })
+                    }
+                }
+            })
+        },
+        handleAddCategory(name, ref) {
+            this.$nextTick(()=>{
+                if (this.$refs && this.$refs[ref]) {
+                    if (this.$refs[ref][0].validate()) {
+                        this.loading.category = true
+                        this.categoryPost({ name })
+                    }
+                }
+            })
         },
         addCustomProduct() {
             this.productNum = {
@@ -491,7 +695,7 @@ export default {
                 this.loading.newProduct = true
                 await this.getCsrfToken()
                 for (let index = 0; index < this.item.length; index++) {
-                    this.productPost(this.item[index])
+                    await this.productPost(this.item[index])
                 }
             }
         }
