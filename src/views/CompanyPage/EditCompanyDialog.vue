@@ -4,7 +4,6 @@
         width="600px"
     >
         <v-card v-if="editCompany">
-            <pre>{{ editCompany }}</pre>
             <v-form
                 v-model="valid"
                 @submit.prevent="submitEditCompany"
