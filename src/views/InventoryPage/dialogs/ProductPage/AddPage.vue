@@ -45,13 +45,15 @@
                                     style="margin-left: 10px;"
                                     @submit.prevent="handleAddCategory(add[0].category.value, 'category10')"
                                 >
-                                    {{ add[0].category.value }}
                                     <v-text-field
-                                        :rules="[v=>!!v||'Abbr is required']"
-                                        placeholder="Category Abbr"
-                                        v-model="tempAbbr.category"
+                                        dense
+                                        hide-details
+                                        outlined
+                                        style="display: inline-block; margin-left: 10px"
+                                        v-model="add[0].category.value"
                                     ></v-text-field>
                                     <v-btn
+                                        style="display: inline-block;"
                                         :loading="loading.category"
                                         type="submit"
                                     >Add Category?
@@ -164,14 +166,14 @@
                         >
                             <!-- category -->
                             <div>
-                                <v-btn
+                                <span
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('category_id', productItem.category_id, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-autocomplete
                                     outlined
-                                    style="width: 150px"
+                                    style="width: 150px; margin-top: 5px"
                                     v-model.trim="productItem.category_id"
                                     :items="select.categories"
                                     item-text="name"
@@ -184,17 +186,19 @@
                                     <template v-slot:no-data>
                                         <v-form
                                             :ref="`category${index}`"
-                                            style="margin-left: 10px;"
+                                            style="margin-left: 10px; width: 100%"
                                             v-model="valid"
                                             @submit.prevent="handleAddCategory(add[index].category.value, `category${index}`)"
                                         >
-                                            {{ add[index].category.value }}
                                             <v-text-field
-                                                :rules="[v=>!!v||'Abbr is required']"
-                                                placeholder="Category Abbr"
-                                                v-model="tempAbbr.category"
+                                                dense
+                                                hide-details
+                                                outlined
+                                                style="display: inline-block; margin-left: 10px"
+                                                v-model="add[index].category.value"
                                             ></v-text-field>
                                             <v-btn
+                                                style="display: inline-block"
                                                 :loading="loading.category"
                                                 type="submit"
                                             >Add Category?
@@ -206,13 +210,13 @@
 
                             <!-- brand -->
                             <div>
-                                <v-btn
+                                <span
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('brand_id', productItem.brand_id, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-autocomplete
-                                    style="width: 150px"
+                                   style="width: 150px; margin-top: 5px"
                                     outlined
                                     v-model.trim="productItem.brand_id"
                                     :items="select.brands"
@@ -230,11 +234,12 @@
                                             v-model="valid"
                                             @submit.prevent="handleAddBrand(add[index].brand.value, `brand${index}`)"
                                         >
-                                            {{ add[index].brand.value }}
                                             <v-text-field
-                                                :rules="[v=>!!v||'Abbr is required']"
-                                                placeholder="Brand Abbr"
-                                                v-model="tempAbbr.brand"
+                                                dense
+                                                hide-details
+                                                outlined
+                                                style="display: inline-block; margin-left: 10px"
+                                                v-model="add[index].brand.value"
                                             ></v-text-field>
                                             <v-btn
                                                 :loading="loading.brand"
@@ -246,15 +251,32 @@
                                 </v-autocomplete>
                             </div>
 
+                            <!-- product name -->
+                            <div>
+                                <span
+                                    x-small
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                    @click="applyAll('name', productItem.name, index)"
+                                >Fill below</span>
+                                <v-text-field
+                                    style="width: 150px; margin-top: 5px;"
+                                    outlined
+                                    label="Product Name"
+                                    v-model.trim="productItem.name"
+                                    :rules="rule.name"
+                                    dense
+                                ></v-text-field>
+                            </div>
+
                             <!-- unit -->
                             <div>
-                                <v-btn
+                                <span
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('unit_id', productItem.unit_id, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-autocomplete
-                                    style="width: 150px"
+                                    style="width: 150px; margin-top: 5px"
                                     outlined
                                     v-model.trim="productItem.unit_id"
                                     :items="select.units"
@@ -272,11 +294,12 @@
                                             v-model="valid"
                                             @submit.prevent="handleAddUnit(add[index].unit.value, `unit${index}`)"
                                         >
-                                            {{ add[index].unit.value }}
                                             <v-text-field
-                                                :rules="[v=>!!v||'Abbr is required']"
-                                                placeholder="Unit Abbr"
-                                                v-model="tempAbbr.unit"
+                                                dense
+                                                hide-details
+                                                outlined
+                                                style="display: inline-block; margin-left: 10px"
+                                                v-model="add[index].unit.value"
                                             ></v-text-field>
                                             <v-btn
                                                 :loading="loading.unit"
@@ -290,17 +313,18 @@
 
                             <!-- product name -->
                             <div>
-                                <v-btn
+                                <span
+                                    v-show="false"
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('name', productItem.name, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-text-field
-                                    style="width: 286px"
+                                    disabled
+                                    style="width: 286px; margin-top: 27px;"
                                     outlined
                                     label="Product Name"
-                                    v-model.trim="productItem.name"
-                                    :rules="rule.name"
+                                    :value="formatName(select.brands.filter(item=>item.brand_id==productItem.brand_id)[0]?.name, productItem.name, select.units.filter(item=>item.unit_id==productItem.unit_id)[0]?.name)"
                                     dense
                                 ></v-text-field>
                             </div>
@@ -320,7 +344,7 @@
                                     dense
                                 ></v-checkbox>
                                 <v-text-field
-                                    style="width: 150px"
+                                    style="width: 150px; margin-top: 5px"
                                     outlined
                                     label="Barcode"
                                     v-model.trim="productItem.barcode"
@@ -334,12 +358,13 @@
 
                             <!-- quantity -->
                             <div>
-                                <v-btn
+                                <span
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('quantity', productItem.quantity, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-text-field
+                                    style="margin-top: 5px"
                                     outlined
                                     label="Quantity"
                                     type="number"
@@ -351,12 +376,13 @@
 
                             <!-- reorder_level -->
                             <div>
-                                <v-btn
+                                <span
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('reorder_level', productItem.reorder_level, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-text-field
+                                    style="margin-top: 5px"
                                     outlined
                                     label="Reorder Level"
                                     v-model.trim="productItem.reorder_level"
@@ -368,12 +394,13 @@
 
                             <!-- cost_price -->
                             <div>
-                                <v-btn
+                                <span
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('cost_price', productItem.cost_price, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-text-field
+                                    style="margin-top: 5px"
                                     outlined
                                     label="Cost Price"
                                     v-model.trim="productItem.cost_price"
@@ -387,12 +414,13 @@
 
                             <!-- selling_price -->
                             <div>
-                                <v-btn
+                                <span
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('selling_price', productItem.selling_price, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-text-field
+                                    style="margin-top: 5px"
                                     outlined
                                     label="Selling Price"
                                     v-model.trim="productItem.selling_price"
@@ -406,12 +434,13 @@
 
                             <!-- supplier_id -->
                             <div>
-                                <v-btn
+                                <span
                                     x-small
-                                    style="color: white; background-color: green; margin-bottom: 5px;"
+                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                     @click="applyAll('supplier_id', productItem.supplier_id, index)"
-                                >Apply to all</v-btn>
+                                >Fill below</span>
                                 <v-autocomplete
+                                    style="margin-top: 5px"
                                     outlined
                                     v-model.trim="productItem.supplier_id"
                                     :items="select.suppliers"
@@ -423,7 +452,15 @@
                                     dense
                                 >
                                     <template v-slot:no-data>
-                                        <span style="margin-left: 10px;">{{ add[index].supplier.value }} <v-btn :loading="loading.supplier" @click="handleAddSupplier(add[index].supplier.value)">Add Supplier?</v-btn></span>
+                                        <span style="margin-left: 10px;">
+                                            <v-text-field
+                                                dense
+                                                hide-details
+                                                outlined
+                                                style="display: inline-block; margin-left: 10px"
+                                                v-model="add[index].supplier.value"
+                                            ></v-text-field>
+                                            <v-btn :loading="loading.supplier" @click="handleAddSupplier(add[index].supplier.value)">Add Supplier?</v-btn></span>
                                     </template>
                                 </v-autocomplete>
                             </div>
@@ -451,11 +488,6 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data: () => ({
-        tempAbbr: {
-            category: null,
-            brand: null,
-            unit: null,
-        },
         productNum: {
             status: false,
             value: 1,
@@ -525,7 +557,7 @@ export default {
     }),
     props: ['data', 'show'],
     computed: {
-        ...mapGetters(['productPostData', 'categoryPostData', 'brandPostData', 'supplierPostData']),
+        ...mapGetters(['productPostData', 'categoryPostData', 'brandPostData', 'supplierPostData', 'unitPostData']),
         showDialog: {
             get() {
                 return this.show
@@ -609,6 +641,9 @@ export default {
     },
     methods: {
         ...mapActions(['productPost', 'products', 'getCsrfToken', 'categoryPost', 'categories', 'brandPost', 'brands', 'unitPost', 'units', 'supplierPost', 'suppliers']),
+        formatName(brand, name, measurement) {
+            return `${brand ? brand : ''} ${name ? name : ''} ${measurement ? measurement : ''}`
+        },
         applyAll(field, category_id, index) {
             for (let i=index; i<this.item.length; i++) {
                 this.item[i][field] = category_id
@@ -639,7 +674,10 @@ export default {
         handleAddUnit(name, ref) {
             this.$nextTick(()=>{
                 if (this.$refs && this.$refs[ref]) {
-                    if (this.$refs[ref][0].validate()) {
+                    if (this.$refs[ref]?.[0]?.validate()) {
+                        this.loading.unit = true
+                        this.unitPost({ name })
+                    } else if (this.$refs[ref]?.validate()) {
                         this.loading.unit = true
                         this.unitPost({ name })
                     }
@@ -649,7 +687,10 @@ export default {
         handleAddBrand(name, ref) {
             this.$nextTick(()=>{
                 if (this.$refs && this.$refs[ref]) {
-                    if (this.$refs[ref][0].validate()) {
+                    if (this.$refs[ref]?.[0]?.validate()) {
+                        this.loading.brand = true
+                        this.brandPost({ name })
+                    } else if (this.$refs[ref]?.validate()) {
                         this.loading.brand = true
                         this.brandPost({ name })
                     }
@@ -659,7 +700,10 @@ export default {
         handleAddCategory(name, ref) {
             this.$nextTick(()=>{
                 if (this.$refs && this.$refs[ref]) {
-                    if (this.$refs[ref][0].validate()) {
+                    if (this.$refs[ref]?.[0]?.validate()) {
+                        this.loading.category = true
+                        this.categoryPost({ name })
+                    } else if (this.$refs[ref]?.validate()) {
                         this.loading.category = true
                         this.categoryPost({ name })
                     }
