@@ -196,6 +196,7 @@
                                                 outlined
                                                 style="display: inline-block; margin-left: 10px"
                                                 v-model="add[index].category.value"
+                                                :rules="[v=>!!v || 'Name is required.']"
                                             ></v-text-field>
                                             <v-btn
                                                 style="display: inline-block"
@@ -240,6 +241,7 @@
                                                 outlined
                                                 style="display: inline-block; margin-left: 10px"
                                                 v-model="add[index].brand.value"
+                                                :rules="[v=>!!v || 'Name is required.']"
                                             ></v-text-field>
                                             <v-btn
                                                 :loading="loading.brand"
@@ -263,7 +265,7 @@
                                     outlined
                                     label="Product Name"
                                     v-model.trim="productItem.name"
-                                    :rules="rule.name"
+                                    :rules="[v=>!!v || 'Name is required.']"
                                     dense
                                 ></v-text-field>
                             </div>
@@ -300,6 +302,7 @@
                                                 outlined
                                                 style="display: inline-block; margin-left: 10px"
                                                 v-model="add[index].unit.value"
+                                                :rules="[v=>!!v || 'Name is required.']"
                                             ></v-text-field>
                                             <v-btn
                                                 :loading="loading.unit"
@@ -326,6 +329,7 @@
                                     label="Product Name"
                                     :value="formatName(select.brands.filter(item=>item.brand_id==productItem.brand_id)[0]?.name, productItem.name, select.units.filter(item=>item.unit_id==productItem.unit_id)[0]?.name)"
                                     dense
+                                    :rules="[v=>!!v || 'Name is required.']"
                                 ></v-text-field>
                             </div>
 
@@ -350,7 +354,6 @@
                                     v-model.trim="productItem.barcode"
                                     @keydown.enter.prevent
                                     @keyup.enter.prevent
-                                    :rules="rule.barcode"
                                     :disabled="productItem.barcode_exist"
                                     dense
                                 ></v-text-field>
