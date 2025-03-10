@@ -34,47 +34,50 @@
             dense
         >
             <template v-slot:body="{items}">
-                <div id="printableArea" style="width: 430px; height: 90vh; margin: 0 auto; overflow-y: scroll; overflow-x: hidden;">
-                    <p>{{ companyProfilesData && companyProfilesData.DATA[0].name }}</p>
-                    <p v-if="address1">{{ address1 }}</p>
-                    <p v-if="address2">{{ address2 }}</p>
-                    <p>-------------------------------</p>
-                    <p>UNOFFICIAL RECEIPT</p>
-                    <p>-------------------------------</p>
-                    <p>Transaction#: {{ sales_id && sales_id.last && sales_id.status === 'history' ? sales_id.last : sales_id.value + 1 }}</p>
-                    <p>Date & Time: {{ salesDateTime ? salesDateTime : dateTimeVar }}</p>
-                    <p>Cashier: {{ cashierName }}</p>
-                    =======================================
-                    <table style="width: 100%; border-collapse: collapse; border: none;">
-                        <thead>
-                            <div class="parent-div">
-                                <tr>
-                                    <td style="text-align: right; width: 35px">QTY</td>
-                                    <td style="width: 343px;">&nbsp;DESCRIPTION</td>
-                                    <td style="text-align: right; width: 84px;">AMOUNT</td>
-                                </tr>
-                            </div>
-                        </thead>
-                        <tbody>
-                            <div v-for="(item, index) in items" :key="index">
-                                <tr :id="item.isCurrent && !item.isPrinting ? 'topMost' : ''" :style="{backgroundColor: item.isCurrent && !item.isPrinting ? 'blue' : index % 2 == 0 ? '#ddd' : 'white' , color: item.isCurrent && !item.isPrinting ? 'white' : 'black'}">
-                                    <td style="text-align: right; width: 35px; border: none;">{{ item.itemQuantity }}</td>
-                                    <td style="width: 343px">&nbsp;{{ itemName(item.name) }}</td>
-                                    <td style="text-align: right; width: 84px">{{ amountEachItem(item) }}</td>
-                                </tr>
-                                <tr v-if="item.itemQuantity > 1" :style="{backgroundColor: item.isCurrent && !item.isPrinting ? 'blue' : index % 2 == 0 ? '#ddd' : 'white' , color: item.isCurrent && !item.isPrinting ? 'white' : 'black'}">
-                                    <td colspan="3" style="text-align: right; padding-right: 180px; border: none">@{{ Number(item.selling_price).toFixed(2) }}</td>
-                                </tr>
-                            </div>
-                        </tbody>
-                    </table>
-                    =======================================
-                    <p style="text-align: left; position: relative;">Total QTY: <span style="position: absolute; right: 0;">{{ overAllQuantity }}</span></p>
-                    <p style="text-align: left; position: relative; font-size: 27px;">AMOUNT DUE: <span style="position: absolute; right: 0;">{{ overAllAmount }}</span></p>
-                    <p style="text-align: left; position: relative;">Cash <span style="position: absolute; right: 0;">{{ cashAmount }}</span></p>
-                    <p style="text-align: left; position: relative;">Change: <span style="position: absolute; right: 0;">{{ changeAmount.toFixed(2) }}</span></p>
-                    <p>***</p>
-                    <p>Thank you ... Please come again ...</p>
+                <div style="width: 350px; height: 90vh; margin: 0 auto; overflow-y: scroll; overflow-x: hidden;">
+                    <div id="printableArea">
+                        <p>{{ companyProfilesData && companyProfilesData.DATA[0].name }}</p>
+                        <p v-if="address1">{{ address1 }}</p>
+                        <p v-if="address2">{{ address2 }}</p>
+                        <p>--------------------------</p>
+                        <p>UNOFFICIAL RECEIPT</p>
+                        <p>--------------------------</p>
+                        <p>Transaction#: {{ sales_id && sales_id.last && sales_id.status === 'history' ? sales_id.last : sales_id.value + 1 }}</p>
+                        <p>Date & Time: {{ salesDateTime ? salesDateTime : dateTimeVar }}</p>
+                        <p>Cashier: {{ cashierName }}</p>
+                        ==========================================
+                        <table style="width: 100%; border-collapse: collapse; border: none;">
+                            <thead>
+                                <div class="parent-div">
+                                    <tr>
+                                        <td style="text-align: right; width: 35px">QTY</td>
+                                        <td style="width: 343px;">&nbsp;DESCRIPTION</td>
+                                        <td style="text-align: right; width: 84px;">AMOUNT</td>
+                                    </tr>
+                                </div>
+                            </thead>
+                            <tbody>
+                                <div v-for="(item, index) in items" :key="index">
+                                    <tr :id="item.isCurrent && !item.isPrinting ? 'topMost' : ''" :style="{backgroundColor: item.isCurrent && !item.isPrinting ? 'blue' : index % 2 == 0 ? '#ddd' : 'white' , color: item.isCurrent && !item.isPrinting ? 'white' : 'black'}">
+                                        <td style="text-align: left; width: 35px; border: none;">{{ item.itemQuantity }}</td>
+                                        <td style="width: 343px; padding-right: 5px;">{{ itemName(`${item.brand} ${item.name} ${item.unit}`) }}</td>
+                                        <td style="text-align: right; width: 84px">{{ amountEachItem(item) }}</td>
+                                    </tr>
+                                    <tr v-if="item.itemQuantity > 1" :style="{backgroundColor: item.isCurrent && !item.isPrinting ? 'blue' : index % 2 == 0 ? '#ddd' : 'white' , color: item.isCurrent && !item.isPrinting ? 'white' : 'black'}">
+                                        <td colspan="3" style="border: none" class="sellingPrice">@{{ Number(item.selling_price).toFixed(2) }}</td>
+                                    </tr>
+                                </div>
+                            </tbody>
+                        </table>
+                        ==========================================
+                        <p style="text-align: left; position: relative;">Total QTY: <span style="position: absolute; right: 0;">{{ overAllQuantity }}</span></p>
+                        <p id="amountDue" style="text-align: left; position: relative;" >AMOUNT DUE: <span style="position: absolute; right: 0;">{{ overAllAmount }}</span></p>
+                        <p style="text-align: left; position: relative;">Cash <span style="position: absolute; right: 0;">{{ cashAmount }}</span></p>
+                        <p style="text-align: left; position: relative;">Change: <span style="position: absolute; right: 0;">{{ changeAmount.toFixed(2) }}</span></p>
+                        <p>***</p>
+                        <p style="text-align: center">Thank you ... </p>
+                        <p style="text-align: center">Please come again ...</p>
+                    </div>
                 </div>
             </template>
         </v-data-table>
@@ -261,7 +264,15 @@ export default {
         position: absolute;
         left: 0;
         top: 0;
+        font-size: 17px;
+        margin: 15px 5px;
+        width: 260px;
     }
+
+        #printableArea .sellingPrice {
+            /* padding-right: 0; */
+            /* text-align: right; */
+        }
 }
 /* .v-data-table > .v-data-table__wrapper > table > thead > tr > th, span
 .v-data-table > .v-data-table__wrapper > table > tbody > tr > td, span {
@@ -283,6 +294,13 @@ export default {
 }
 #printableArea {
     font-family: monospace;
+}
+#printableArea #amountDue {
+    font-size: 24px;
+}
+#printableArea .sellingPrice {
+    text-align: right;
+    padding-right: 130px;
 }
 #printableArea p {
     text-align: center;
