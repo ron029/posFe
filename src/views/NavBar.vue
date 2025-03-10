@@ -27,15 +27,14 @@
                     absolute
                     hide-on-scroll
                     horizontal
-                    >
-                    <!-- scroll-target="#hide-on-scroll-example" -->
-                    <v-btn value="log-out" color="#D5B07E" @click="showCashRegisterRecorder">
+                >
+                    <v-btn style="width: 100%;" value="log-out" color="#D5B07E" @click="showCashRegisterRecorder">
                         <v-icon style="margin-left: 15px;">mdi-power</v-icon>
                     </v-btn>
-                    <v-btn value="settings" color="#D5B07E" @click="redirectToCompanyProfile">
+                    <v-btn style="width: 100%;" value="settings" color="#D5B07E" @click="redirectToCompanyProfile">
                         <v-icon style="margin-left: 15px;">mdi-cog</v-icon>
                     </v-btn>
-                    <v-btn value="account-settings" color="#D5B07E">
+                    <v-btn v-show="false" value="account-settings" color="#D5B07E">
                         <v-icon style="margin-left: 15px;">mdi-account-cog</v-icon>
                     </v-btn>
                 </v-bottom-navigation>
@@ -77,8 +76,11 @@ import { mapActions, mapGetters } from 'vuex';
         },
         handleRoute(url) {
             if (url) {
-                if (this.$route.path !== `/pos/${url}`)
+                if (url === 'cash-register') {
+                    window.location.href = '/pos/cash-register'
+                } else if (this.$route.path !== `/pos/${url}`) {
                     this.$router.push({name: url})
+                }
             }
         },
         handleKeyPress(event) {
