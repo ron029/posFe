@@ -568,6 +568,13 @@ export default {
         }
     },
     watch: {
+        async 'loading.newProduct'(newVal) {
+            if (!newVal) {
+                this.$emit('closeAddProduct')
+                await this.getCsrfToken()
+                this.products()
+            }
+        },
         'supplierPostData'(newVal) {
             if (newVal && newVal.STATUS === 200) {
                 this.$nextTick(() => {
@@ -623,14 +630,6 @@ export default {
             }
             this.item = [structuredClone(this.itemTemplate)]
             this.add = [structuredClone(this.addTemplate)]
-        },
-        async productPostData(newVal) {
-            this.loading.newProduct = false
-            this.$emit('closeAddProduct')
-            if (newVal) {
-                await this.getCsrfToken()
-                this.products()
-            }
         },
         data: {
             handler(newVal) {
@@ -741,6 +740,7 @@ export default {
                 for (let index = 0; index < this.item.length; index++) {
                     await this.productPost(this.item[index])
                 }
+                this.loading.newProduct = false
             }
         }
     },
