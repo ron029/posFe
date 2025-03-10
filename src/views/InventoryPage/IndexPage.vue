@@ -1,6 +1,6 @@
 <template>
-    <div style="width: 100%;">
-        <h1>Inventory Page</h1>
+    <div style="padding: 0 20px">
+        <h1>Inventory</h1>
         <v-btn @click="showProductForm">Add Products</v-btn>
         <v-btn @click="show.unit = true">Measurement</v-btn>
         <v-btn @click="show.category = true">Categories</v-btn>

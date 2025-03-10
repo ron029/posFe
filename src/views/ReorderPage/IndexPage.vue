@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="padding: 0 20px">
         <h1>Reorder Level</h1>
         <MainPage
             :reorders="reorders"
