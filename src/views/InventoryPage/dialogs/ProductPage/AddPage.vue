@@ -41,23 +41,24 @@
                         >
                             <template v-slot:no-data>
                                 <v-form
-                                    ref="category10"
+                                    v-model="valid"
+                                    ref="category30"
                                     style="margin-left: 10px;"
-                                    @submit.prevent="handleAddCategory(add[0].category.value, 'category10')"
+                                    @submit.prevent="handleAddCategory(add[0].category.value, 'category30')"
                                 >
                                     <v-text-field
                                         dense
                                         hide-details
                                         outlined
                                         style="display: inline-block; margin-left: 10px"
-                                        v-model="add[0].category.value"
+                                        v-model.trim="add[0].category.value"
+                                        :rules="[v=>!!v||'Name is required.']"
                                     ></v-text-field>
                                     <v-btn
                                         style="display: inline-block;"
                                         :loading="loading.category"
                                         type="submit"
-                                    >Add Category?
-                                    </v-btn>
+                                    >Add Category?</v-btn>
                                 </v-form>
                             </template>
                         </v-autocomplete>
@@ -69,11 +70,36 @@
                             label="Brand Name"
                             :rules="rule.brand"
                             :search-input.sync="add[0].brand.value"
+                            ref="brand30"
                         >
                             <template v-slot:no-data>
-                                <span style="margin-left: 10px;">{{ add[0].brand.value }} <v-btn :loading="loading.brand" @click="handleAddBrand(add[0].brand.value)">Add Brand?</v-btn></span>
+                                <v-form
+                                    v-model="valid"
+                                    ref="brand30"
+                                    style="margin-left: 10px;"
+                                    @submit.prevent="handleAddBrand(add[0].brand.value, 'brand30')"
+                                >
+                                    <v-text-field
+                                        dense
+                                        hide-details
+                                        outlined
+                                        style="display: inline-block; margin-left: 10px"
+                                        v-model="add[0].brand.value"
+                                        :rules="[v=>!!v||'Name is required.']"
+                                    ></v-text-field>
+                                    <v-btn
+                                        style="display: inline-block;"
+                                        :loading="loading.brand"
+                                        type="submit"
+                                    >Add Brand?</v-btn>
+                                </v-form>
                             </template>
                         </v-autocomplete>
+                        <v-text-field
+                            label="Product Name"
+                            v-model.trim="item[0].name"
+                            :rules="rule.name"
+                        ></v-text-field>
                         <v-autocomplete
                             v-model.trim="item[0].unit_id"
                             :items="select.units"
@@ -84,18 +110,40 @@
                             :search-input.sync="add[0].unit.value"
                         >
                             <template v-slot:no-data>
-                                <span style="margin-left: 10px;">{{ add[0].unit.value }} <v-btn :loading="loading.unit" @click="handleAddUnit(add[0].unit.value)">Add Unit?</v-btn></span>
+                                <v-form
+                                    v-model="valid"
+                                    ref="unit30"
+                                    style="margin-left: 10px;"
+                                    @submit.prevent="handleAddUnit(add[0].unit.value, 'unit30')"
+                                >
+                                    <v-text-field
+                                        dense
+                                        hide-details
+                                        outlined
+                                        style="display: inline-block; margin-left: 10px"
+                                        v-model.trim="add[0].unit.value"
+                                        :rules="[v=>!!v||'Name is required.']"
+                                    ></v-text-field>
+                                    <v-btn
+                                        style="display: inline-block;"
+                                        :loading="loading.unit"
+                                        type="submit"
+                                    >Add Unit?</v-btn>
+                                </v-form>
                             </template>
                         </v-autocomplete>
+                        <v-checkbox
+                            label="Auto Generate"
+                            v-model="isProductExistingBarcode"
+                            @change="isProductExistingBarcode ? item[0].barcode = null : null"
+                        ></v-checkbox>
                         <v-text-field
-                            label="Product Name"
-                            v-model.trim="item[0].name"
-                            :rules="rule.name"
-                        ></v-text-field>
-                        <v-text-field
+                            :disabled="isProductExistingBarcode"
                             label="Barcode"
                             v-model.trim="item[0].barcode"
                             :rules="rule.barcode"
+                            @keyup.enter.prevent
+                            @keydown.enter.prevent
                         ></v-text-field>
                         <v-text-field
                             label="Quantity"
@@ -135,7 +183,26 @@
                             :search-input.sync="add[0].supplier.value"
                         >
                             <template v-slot:no-data>
-                                <span style="margin-left: 10px;">{{ add[0].supplier.value }} <v-btn :loading="loading.supplier" @click="handleAddSupplier(add[0].supplier.value)">Add Supplier?</v-btn></span>
+                                <v-form
+                                    v-model="valid"
+                                    ref="supplier30"
+                                    style="margin-left: 10px;"
+                                    @submit.prevent="handleAddSupplier(add[0].supplier.value, 'supplier30')"
+                                >
+                                    <v-text-field
+                                        dense
+                                        hide-details
+                                        outlined
+                                        style="display: inline-block; margin-left: 10px"
+                                        v-model.trim="add[0].supplier.value"
+                                        :rules="[v=>!!v||'Name is required.']"
+                                    ></v-text-field>
+                                    <v-btn
+                                        style="display: inline-block;"
+                                        :loading="loading.supplier"
+                                        type="submit"
+                                    >Add Supplier?</v-btn>
+                                </v-form>
                             </template>
                         </v-autocomplete>
                     </v-card-text>
@@ -327,7 +394,7 @@
                                     style="width: 286px; margin-top: 27px;"
                                     outlined
                                     label="Product Name"
-                                    :value="formatName(select.brands.filter(item=>item.brand_id==productItem.brand_id)[0]?.name, productItem.name, select.units.filter(item=>item.unit_id==productItem.unit_id)[0]?.name)"
+                                    :value="formatName(select?.brands?.filter(item => item.brand_id == item[0].brand_id)[0]?.name, productItem.name, select?.units?.filter(item => item.unit_id == item[0].unit_id)[0]?.name)"
                                     dense
                                     :rules="[v=>!!v || 'Name is required.']"
                                 ></v-text-field>
@@ -502,6 +569,7 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data: () => ({
+        isProductExistingBarcode: false,
         productNum: {
             status: false,
             value: 1,

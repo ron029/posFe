@@ -1,13 +1,13 @@
 <template>
-    <v-dialog v-model="showDialog">
-        <v-card>
-            <v-card-title>Edit Product</v-card-title>
-            <v-card-text>
-                <v-form
-                    ref="editProduct"
-                    v-model="valid"
-                    @submit.prevent="submitForm"
-                >
+    <v-dialog v-model="showDialog" width="600px">
+        <v-card style="width: 600px">
+            <v-form
+                ref="editProduct"
+                v-model="valid"
+                @submit.prevent="submitForm"
+            >
+                <v-card-title>Edit Product</v-card-title>
+                <v-card-text>
                     <v-autocomplete
                         v-model="item.category_id"
                         :items="select.categories"
@@ -78,14 +78,17 @@
                         label="Supplier's Name"
                         :rules="rule.supplier"
                     ></v-autocomplete>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
                     <v-btn
                         color="success"
                         type="submit"
                         :disabled="!valid"
                         :loading="loading"
                     >submit</v-btn>
-                </v-form>
-            </v-card-text>
+                </v-card-actions>
+            </v-form>
         </v-card>
     </v-dialog>
 </template>

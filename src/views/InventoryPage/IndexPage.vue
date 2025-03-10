@@ -1,22 +1,36 @@
 <template>
     <div style="padding: 0 20px">
         <h1>Inventory</h1>
-        <v-btn @click="showProductForm">Add Products</v-btn>
-        <v-btn @click="show.unit = true">Measurement</v-btn>
-        <v-btn @click="show.category = true">Categories</v-btn>
-        <v-btn @click="show.brand = true">Brands</v-btn>
-        <v-btn @click="show.supplier = true">Suppliers</v-btn>
-        <v-btn @click="show.import = true">Import</v-btn>
-        <v-btn @click="productExport">Export</v-btn>
+        <v-card style="margin-bottom: 5px">
+            <v-card-text>
+                <v-btn @click="showProductForm">Add Products</v-btn>
+                <v-btn @click="show.unit = true">Measurement</v-btn>
+                <v-btn @click="show.category = true">Categories</v-btn>
+                <v-btn @click="show.brand = true">Brands</v-btn>
+                <v-btn @click="show.supplier = true">Suppliers</v-btn>
+                <v-btn v-show="false" @click="show.import = true">Import</v-btn>
+                <v-btn v-show="false" @click="productExport">Export</v-btn>
+            </v-card-text>
+        </v-card>
+        <v-text-field
+            label="Search"
+            append-icon="mdi-magnify"
+            v-model="search"
+            :hide-details="true"
+            single-line
+            clearable
+            @keydown.enter.prevent="search = searchQuery"
+        ></v-text-field>
         <v-card>
             <v-data-table
                 :headers="productHeaders"
                 :items="productItems"
                 dense
+                :search="searchQuery"
             >
                 <template slot="item.actions" slot-scope="{ item }">
                     <v-icon @click="editItem(item)" color="warning">mdi-pencil</v-icon>
-                    <v-icon @click="deleteItem(item)" color="error">mdi-trash-can</v-icon>
+                    <v-icon disabled @click="deleteItem(item)" color="error">mdi-trash-can</v-icon>
                 </template>
             </v-data-table>
         </v-card>
@@ -130,11 +144,17 @@ export default {
             { text: 'Actions', value: 'actions' }
         ],
         productItems: [],
+        search: null,
+        searchQuery: null,
     }),
     computed: {
         ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData', 'productExportData'])
     },
     watch: {
+        searchQuery(newVal) {
+            if (newVal === null || newVal === '')
+                this.search = null
+        },
         productExportData(newVal) {
             if (newVal) {
                 try {
