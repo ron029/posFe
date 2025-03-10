@@ -38,7 +38,7 @@
                     >
                         <template v-slot:item="{ item }">
                             <p style="text-align: right; width: 100%; position: relative; height: 20px; padding-top: 5px;">
-                                <span style="position: absolute; left: 0; font-weight: 700;">{{ item.barcode }}</span> {{ String(item.name).toUpperCase() }} @ {{ item.selling_price }}
+                                <span style="position: absolute; left: 0; font-weight: 700;">{{ item.barcode }}</span> {{ String(item.brand).toUpperCase() }} {{ String(item.name).toUpperCase() }} {{ String(item.unit).toUpperCase() }} @ {{ item.selling_price }}
                             </p>
                         </template>
                     </v-combobox>
@@ -111,7 +111,7 @@ export default {
         ...mapGetters(['findBarcodeData', 'productData']),
         productItemsToSearch() {
             return this.productData && this.productData.DATA && this.productData.DATA.length > 0
-                ? this.productData.DATA.map(item => ({name: item.name, barcode: item.barcode, selling_price: item.selling_price, displayName: `${item.barcode} ${item.name} ${item.selling_price}`}))
+                ? this.productData.DATA.map(item => ({brand: item.brand, unit: item.unit, name: item.name, barcode: item.barcode, selling_price: item.selling_price, displayName: `${item.barcode} ${item.category} ${item.brand} ${item.name} ${item.unit} ${item.selling_price}`}))
                 : []
         },
         showDialog: {
