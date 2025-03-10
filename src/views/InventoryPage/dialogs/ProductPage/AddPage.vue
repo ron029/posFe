@@ -394,7 +394,7 @@
                                     style="width: 286px; margin-top: 27px;"
                                     outlined
                                     label="Product Name"
-                                    :value="formatName(select?.brands?.filter(item => item.brand_id == item[0].brand_id)[0]?.name, productItem.name, select?.units?.filter(item => item.unit_id == item[0].unit_id)[0]?.name)"
+                                    :value="formatName(select?.brands?.filter(item => item.brand_id == productItem.brand_id)[0]?.name, productItem.name, select?.units?.filter(item => item.unit_id == productItem.unit_id)[0]?.name)"
                                     dense
                                     :rules="[v=>!!v || 'Name is required.']"
                                 ></v-text-field>
