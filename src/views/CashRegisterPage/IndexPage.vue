@@ -68,10 +68,10 @@
                 <p>Cancel this transaction then go to sales?</p>
                 <p>
                     <v-btn color="error" @click="show.goToSales = false">cancel
-                        <v-chip x-small style="border-radius: 3px; width: 43px; padding: 0 0 0 2px; margin-left: 2px;">Enter</v-chip>
+                        <!-- <v-chip x-small style="border-radius: 3px; width: 43px; padding: 0 0 0 2px; margin-left: 2px;">Enter</v-chip> -->
                     </v-btn>
                     <v-btn color="success" @click="goToSales()" style="margin-left: 6px;">proceed
-                        <v-chip x-small style="border-radius: 3px; width: 18px; padding: 0 0 0 2px; margin-left: 2px;">F1</v-chip>
+                        <!-- <v-chip x-small style="border-radius: 3px; width: 18px; padding: 0 0 0 2px; margin-left: 2px;">F1</v-chip> -->
                     </v-btn>
                 </p>
             </template>

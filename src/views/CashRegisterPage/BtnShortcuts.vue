@@ -9,7 +9,7 @@
         <div style="height: 100px; width: 100px; background-color: blue; color: white; margin: 10px; display: inline-block; vertical-align: top;"><span>ALT + E</span>Edit Item</div>
         <div style="height: 100px; width: 100px; background-color: blue; color: white; margin: 10px; display: inline-block; vertical-align: top;"><span>ALT + D</span> DLT Item</div>
         <div style="height: 100px; width: 100px; background-color: blue; color: white; margin: 10px; display: inline-block; vertical-align: top;"><span>ALT + Q</span>Edit QTY</div>
-        <div style="height: 100px; width: 100px; background-color: blue; color: white; margin: 10px; display: inline-block; vertical-align: top;"><span>ALT + P / P</span>Print</div>
+        <div style="height: 100px; width: 100px; background-color: blue; color: white; margin: 10px; display: inline-block; vertical-align: top;"><span>ALT + P</span>Print</div>
     </div>
 </template>
 
