@@ -11,6 +11,7 @@
                 :color="displayPage.role ? 'primary' : ''"
             ><v-icon>mdi-account-multiple</v-icon>roles</v-btn>
             <v-btn
+                disabled
                 v-if="displayPage.staff"
                 absolute
                 right
@@ -18,6 +19,7 @@
                 color="success"
             ><v-icon>mdi-account-plus</v-icon>&nbsp;New</v-btn>
             <v-btn
+                disabled
                 v-if="displayPage.role"
                 absolute
                 right
