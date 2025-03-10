@@ -5,7 +5,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="error" :loading="loading" @click="showDialog = false">cancel</v-btn>
-                <v-btn color="success" :loading="loading" @click="deleteProduct">proceed</v-btn>
+                <v-btn color="success" disabled :loading="loading" @click="deleteProduct">proceed</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

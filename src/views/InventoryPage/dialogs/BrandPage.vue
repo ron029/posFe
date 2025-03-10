@@ -34,7 +34,7 @@
                 </template>
                 <template slot="item.actions" slot-scope="{ item }">
                     <v-icon @click="editItem(item)" color="warning">mdi-pencil</v-icon>
-                    <v-icon @click="deleteItem(item)" color="error">mdi-trash-can</v-icon>
+                    <v-icon disabled @click="deleteItem(item)" color="error">mdi-trash-can</v-icon>
                 </template>
             </v-data-table>
         </v-card>
@@ -120,7 +120,7 @@
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn color="error" @click="showDialogDelete=false">cancel</v-btn>
-                    <v-btn color="success" @click="deleteBrand">proceed</v-btn>
+                    <v-btn disabled color="success" @click="deleteBrand">proceed</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>

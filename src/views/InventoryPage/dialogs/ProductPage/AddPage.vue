@@ -455,15 +455,26 @@
                                     dense
                                 >
                                     <template v-slot:no-data>
-                                        <span style="margin-left: 10px;">
+                                        <v-form
+                                            :ref="`supplier${index}`"
+                                            style="margin-left: 10px;"
+                                            v-model="valid"
+                                            @submit.prevent="handleAddSupplier(add[index].supplier.value, `supplier${index}`)"
+                                        >
                                             <v-text-field
                                                 dense
                                                 hide-details
                                                 outlined
                                                 style="display: inline-block; margin-left: 10px"
                                                 v-model="add[index].supplier.value"
+                                                :rules="[v=>!!v || 'Name is required.']"
                                             ></v-text-field>
-                                            <v-btn :loading="loading.supplier" @click="handleAddSupplier(add[index].supplier.value)">Add Supplier?</v-btn></span>
+                                            <v-btn
+                                                :loading="loading.supplier"
+                                                type="submit"
+                                            >Add Supplier?
+                                            </v-btn>
+                                        </v-form>
                                     </template>
                                 </v-autocomplete>
                             </div>
@@ -669,9 +680,18 @@ export default {
         handleClickProductNumValue() {
             this.productNum.value = null
         },
-        handleAddSupplier(name) {
-            this.loading.supplier = true
-            this.supplierPost({ name })
+        handleAddSupplier(name, ref) {
+            this.$nextTick(()=>{
+                if (this.$refs && this.$refs[ref]) {
+                    if (this.$refs[ref]?.[0]?.validate()) {
+                        this.loading.supplier = true
+                        this.supplierPost({ name })
+                    } else if (this.$refs[ref]?.validate()) {
+                        this.loading.supplier = true
+                        this.supplierPost({ name })
+                    }
+                }
+            })
         },
         handleAddUnit(name, ref) {
             this.$nextTick(()=>{
@@ -702,12 +722,14 @@ export default {
         handleAddCategory(name, ref) {
             this.$nextTick(()=>{
                 if (this.$refs && this.$refs[ref]) {
-                    if (this.$refs[ref]?.[0]?.validate()) {
-                        this.loading.category = true
-                        this.categoryPost({ name })
+                    if (Array.isArray(this.$refs[ref])) {
+                        if (this.$refs[ref][0]?.validate()) {
+                            this.loading.category = true;
+                            this.categoryPost({ name });
+                        }
                     } else if (this.$refs[ref]?.validate()) {
-                        this.loading.category = true
-                        this.categoryPost({ name })
+                        this.loading.category = true;
+                        this.categoryPost({ name });
                     }
                 }
             })
