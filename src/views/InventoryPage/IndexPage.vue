@@ -10,6 +10,7 @@
                 <v-btn @click="show.supplier = true">Suppliers</v-btn>
                 <v-btn v-show="false" @click="show.import = true">Import</v-btn>
                 <v-btn v-show="false" @click="productExport">Export</v-btn>
+                <v-btn @click="show.productExpire = true">Product Expiry Dates</v-btn>
             </v-card-text>
         </v-card>
         <v-text-field
@@ -77,10 +78,16 @@
             :show="show.product.delete"
             @closeDeleteDialog="show.product.delete = false"
         />
+        <PrductExpirationPage 
+            v-if="show.productExpire"
+            :show="show.productExpire"
+            @closeDialog="show.productExpire = false"
+        />
     </div>
 </template>
 
 <script>
+import PrductExpirationPage from './ProductExpirationPage/';
 import deletePage from './dialogs/ProductPage/DeletePage.vue';
 import addPage from './dialogs/ProductPage/AddPage.vue';
 import showBrand from './dialogs/BrandPage.vue';
@@ -91,13 +98,7 @@ import { mapActions, mapGetters } from 'vuex';
 import editPage from './dialogs/ProductPage/EditPage.vue';
 export default {
     components: {
-        deletePage,
-        addPage,
-        editPage,
-        showBrand,
-        showSupplier,
-        showUnit,
-        showCategory,
+        deletePage, addPage, editPage, showBrand, showSupplier, showUnit, showCategory, PrductExpirationPage,
     },
     data: ()=>({
         show: {
@@ -113,6 +114,7 @@ export default {
             category: false,
             brand: false,
             supplier: false,
+            productExpire: false,
         },
         valid: false,
         select: {
@@ -153,6 +155,9 @@ export default {
         ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData', 'productExportData'])
     },
     watch: {
+        'show.productExpire'(newVal) {
+            console.log('show.productExpire newVal: ', newVal)
+        },
         searchQuery(newVal) {
             if (newVal === null || newVal === '')
                 this.search = null
@@ -226,3 +231,9 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+.v-card__text button {
+    margin-right: 10px;
+}
+</style>
