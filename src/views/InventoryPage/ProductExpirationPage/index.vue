@@ -4,7 +4,7 @@
         width="900px"
     >
         <v-card>
-            <v-card-title>PRODUCT EXPIRATION PAGE <v-spacer></v-spacer><v-btn @click="view.create = true">New</v-btn></v-card-title>
+            <v-card-title>PRODUCT EXPIRATION PAGE <v-spacer></v-spacer><v-btn disabled @click="view.create = true">New</v-btn></v-card-title>
             <v-card-text>
                 <v-data-table
                     :items="[]"
