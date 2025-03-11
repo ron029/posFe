@@ -13,20 +13,22 @@
             </v-card-text>
         </v-card>
         <v-text-field
+            style="margin-bottom: 10px"
             label="Search"
             append-icon="mdi-magnify"
-            v-model="search"
             :hide-details="true"
             single-line
             clearable
+            v-model="searchQuery"
             @keydown.enter.prevent="search = searchQuery"
+            @click:append="search = searchQuery"
         ></v-text-field>
         <v-card>
             <v-data-table
                 :headers="productHeaders"
                 :items="productItems"
                 dense
-                :search="searchQuery"
+                :search="search"
             >
                 <template slot="item.actions" slot-scope="{ item }">
                     <v-icon @click="editItem(item)" color="warning">mdi-pencil</v-icon>
