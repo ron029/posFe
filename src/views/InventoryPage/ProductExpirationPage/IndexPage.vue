@@ -126,11 +126,24 @@ export default {
         displayProductExpiryFilterByStatus() {
             if (this.productExpirationData && this.productExpirationData.DATA) {
                 let data = this.productExpirationData.DATA
-                data = data.filter(item =>
-                    moment(item.notif_date).utcOffset('+0800').isSameOrAfter(this.filter.date.start) &&
-                    moment(item.notif_date).utcOffset('+0800').isSameOrBefore(this.filter.date.end) ||
-                    moment(item.expiration_date).utcOffset('+0800').isSameOrAfter(this.filter.date.start) &&
-                    moment(item.expiration_date).utcOffset('+0800').isSameOrBefore(this.filter.date.end)).map(item => ({...item, days_remaining: this.daysRemaining(item.expiration_date)}))
+                data = data
+                .filter(item =>
+                    // Check if notification date is within range
+                    (moment(item.notif_date).utcOffset('+0800').isSameOrAfter(this.filter.date.start) &&
+                    moment(item.notif_date).utcOffset('+0800').isSameOrBefore(this.filter.date.end))
+                    ||
+                    // OR check if expiration date is within range
+                    (moment(item.expiration_date).utcOffset('+0800').isSameOrAfter(this.filter.date.start) &&
+                    moment(item.expiration_date).utcOffset('+0800').isSameOrBefore(this.filter.date.end))
+                    ||
+                    // OR check if date range is completely within notification and expiration period
+                    (moment(item.notif_date).utcOffset('+0800').isSameOrBefore(this.filter.date.start) &&
+                    moment(item.expiration_date).utcOffset('+0800').isSameOrAfter(this.filter.date.end))
+                )
+                .map(item => ({
+                    ...item,
+                    days_remaining: this.daysRemaining(item.expiration_date)
+                }));
                 if (this.filter.val === null) return data
                 else return data.filter(item => item.muted !== this.filter.val)
             } else {
