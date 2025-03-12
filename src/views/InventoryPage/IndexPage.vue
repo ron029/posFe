@@ -78,7 +78,7 @@
             :show="show.product.delete"
             @closeDeleteDialog="show.product.delete = false"
         />
-        <PrductExpirationPage 
+        <PrductExpirationPage
             v-if="show.productExpire"
             :show="show.productExpire"
             @closeDialog="show.productExpire = false"
@@ -87,7 +87,7 @@
 </template>
 
 <script>
-import PrductExpirationPage from './ProductExpirationPage/';
+import PrductExpirationPage from './ProductExpirationPage/IndexPage.vue';
 import deletePage from './dialogs/ProductPage/DeletePage.vue';
 import addPage from './dialogs/ProductPage/AddPage.vue';
 import showBrand from './dialogs/BrandPage.vue';
