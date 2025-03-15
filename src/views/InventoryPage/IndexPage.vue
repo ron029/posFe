@@ -82,7 +82,7 @@
             :show="show.product.delete"
             @closeDeleteDialog="show.product.delete = false"
         />
-        <PrductExpirationPage 
+        <PrductExpirationPage
             v-if="show.productExpire"
             :show="show.productExpire"
             @closeDialog="show.productExpire = false"
@@ -157,6 +157,26 @@ export default {
     }),
     computed: {
         ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData', 'productExportData', 'findUserRolePermissionData']),
+        isUserCanReadSuppliers() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'supplier:read')
+            return false
+        },
+        isUserCanReadBrands() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'brand:read')
+            return false
+        },
+        isUserCanReadCategories() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'category:read')
+            return false
+        },
+        isUserCanReadUnits() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'unit:read')
+            return false
+        },
         isUserCanReadProducts() {
             const permissions = this.findUserRolePermissionData
             if (permissions) return permissions.some(item => item.name === 'product:read')
@@ -242,11 +262,14 @@ export default {
     },
     async mounted() {
         await this.getCsrfToken()
-        // if (this.isUserCanReadUnits)
-        //     this.units()
-        // this.categories()
-        // this.brands()
-        // this.suppliers()
+        if (this.isUserCanReadUnits)
+            this.units()
+        if (this.isUserCanReadCategories)
+            this.categories()
+        if (this.isUserCanReadBrands)
+            this.brands()
+        if (this.isUserCanReadSuppliers)
+            this.suppliers()
         if (this.isUserCanReadProducts)
             this.products()
     }
