@@ -40,7 +40,8 @@
                         <p v-if="address1">{{ address1 }}</p>
                         <p v-if="address2">{{ address2 }}</p>
                         <p>--------------------------</p>
-                        <p>UNOFFICIAL RECEIPT</p>
+                        <p>ORDER SLIP ONLY</p>
+                        <p>(Unofficial Receipt)</p>
                         <p>--------------------------</p>
                         <p>Transaction#: {{ sales_id && sales_id.last && sales_id.status === 'history' ? sales_id.last : sales_id.value + 1 }}</p>
                         <p>Date & Time: {{ salesDateTime ? salesDateTime : dateTimeVar }}</p>
@@ -199,7 +200,7 @@ export default {
             return amount ? amount.toFixed(2) : null
         },
         handleKeyPress(event) {
-            if (event.altKey && event.key === "d" || event.altKey && event.key === "D") {
+            if (event.key === "F6") {
                 event.preventDefault(); // Prevent default browser behavior
                 const indexOfTaret = this.items.findIndex(item => item.isCurrent === true)
                 if (indexOfTaret !== -1) {
@@ -210,7 +211,7 @@ export default {
                             : this.items[indexOfTaret - 1].isCurrent = true
                 }
             }
-            if (event.altKey && event.key === "p" || event.altKey && event.key === "P") {
+            if (event.key === "F4") {
                 this.$nextTick(()=>{
                     event.preventDefault()
                     this.items.forEach((item) => {

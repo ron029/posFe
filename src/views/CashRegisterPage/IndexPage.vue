@@ -1,5 +1,5 @@
 <template>
-    <div style="font-weight: 600;">
+    <div style="font-weight: 600;" class="poppins-regular">
         <v-row no-gutters>
             <v-col lg="6" md="6" style="padding: 10px 5px 0 10px;">
                 <div>
@@ -12,23 +12,26 @@
                         @isSearchIsEmpty="isSearchIsEmpty"
                         @showNoItemsLeft="showNoItemsLeft"
                     />
-                    <div style="border: 1px solid black; padding: 10px; margin-top: 10px; position: relative;">
-                        <p class="title1" style="margin: 0; padding: 0; position: absolute; left: 10px; top: 10px;">TOTAL</p>
-                        <p class="text-right" style="font-size: 80px; font-weight: 700; color: red; padding: 0; margin: 0">{{ totalAmount.toFixed(2) }}</p>
+                    <div style="border: 1px solid black; padding: 10px; margin-top: 10px; position: relative; border-radius: 5px;">
+                        <p class="title1" style="margin: 0; padding: 0; position: absolute; left: 10px; top: 10px;">Step 3: Complete Payment (F9)</p>
+                        <p class="text-right" style="font-size: 80px; font-weight: 700; color: green; padding: 0; margin: 0">{{ totalAmount.toFixed(2) }}</p>
                     </div>
                     <BtnShortcuts style="height: 300px; width: 100%;"/>
                 </div>
             </v-col>
             <v-col lg="6" md="6" style="padding: 10px 10px 0 5px;">
                 <div>
-                    <ItemTable
-                        :isNewTransaction="isNewTransaction"
-                        :transactions="transactions.value"
-                        :tendered="tendered"
-                        :show="show"
-                        @renderLastTrans="renderLastTrans"
-                        @renderNewTrans="isNewTransaction = true"
-                    />
+                    Step 4: Print Order Slip (F4)
+                    <v-card style="padding-top: 20px; margin-top: 10px;" :elevation="20">
+                        <ItemTable
+                            :isNewTransaction="isNewTransaction"
+                            :transactions="transactions.value"
+                            :tendered="tendered"
+                            :show="show"
+                            @renderLastTrans="renderLastTrans"
+                            @renderNewTrans="isNewTransaction = true"
+                        />
+                    </v-card>
                 </div>
             </v-col>
         </v-row>
@@ -305,11 +308,11 @@ export default {
                 else if (this.transactions.value.length > 0)
                     this.show.cancel = true
             }
-            if (event.key === "F6") {
-                event.preventDefault()
-                if (this.$route.path !== '/pos') window.location.href = '/pos'
-            }
-            if (event.altKey && event.key === "e" || event.altKey && event.key === "E") {
+            // if (event.key === "F6") {
+            //     event.preventDefault()
+            //     if (this.$route.path !== '/pos') window.location.href = '/pos'
+            // }
+            if (event.key === "F11") {
                 event.preventDefault()
                 if (this.transactions.value.length > 0) {
                     const isItemSelected = this.transactions.value.some(item => item.isCurrent === true)
@@ -376,7 +379,14 @@ export default {
 </script>
 
 <style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
 .title1 {
-    font-size: 25px;
+    font-size: 21px;
 }
 </style>

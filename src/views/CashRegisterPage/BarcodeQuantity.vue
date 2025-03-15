@@ -13,12 +13,23 @@
                     style="background-color: blue;"
                 ></v-text-field>
             </v-col> -->
-            <v-col cols="9">
+            <div style="display: block; margin-left: 12px;">
+                <span style="font-size: 20px;">Step 1: Input Quantity (F12)</span>
+                <v-text-field
+                    outlined
+                    readonly
+                    hide-details
+                    :value="this.quantity"
+                    class="text-center"
+                    style="font-size: 25px; text-align: center;"
+                ></v-text-field>
+            </div>
+            <div style="width: 100%; margin: 5px 12px 0 12px">
                 <v-form
                     ref="searchBarcode"
                     @submit.prevent="searchBarcode"
                 >
-                    Barcode:
+                    <span style="font-size: 20px;">Step 2: Barcode (Scan or Search)</span>
                     <v-combobox
                         @change="submitForm"
                         :items="productItemsToSearch"
@@ -44,18 +55,7 @@
                     </v-combobox>
                     <v-btn v-show="false" type="submit"></v-btn>
                 </v-form>
-            </v-col>
-            <v-col cols="3">
-                Total Quantity:
-                <v-text-field
-                    outlined
-                    readonly
-                    hide-details
-                    :value="this.quantity"
-                    class="text-center"
-                    style="font-size: 25px; text-align: center;"
-                ></v-text-field>
-            </v-col>
+            </div>
         </v-row>
         <v-dialog
             v-model=showDialog
@@ -199,7 +199,7 @@ export default {
                     this.quantity = 1
                 }
             }
-            if (event.altKey && event.key === "q" || event.altKey && event.key === "Q") {
+            if (event.key === "F12") {
                 event.preventDefault(); // Prevent default browser behavior
                 this.quantity = null
                 this.$nextTick(()=>{

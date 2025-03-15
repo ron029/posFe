@@ -45,7 +45,6 @@
                             </v-text-field>
                             <v-btn v-show="false" type="submit"></v-btn>
                         </v-form>
-
                     </p>
                     </v-card-text>
             </v-card>
@@ -113,7 +112,7 @@ export default {
                 this.show.error = false
                 this.$emit('focusToBarcode')
             }
-            if (event.key === "F8") {
+            if (event.key === "F9") {
                 event.preventDefault()
                 if (this.data.transactions.length > 0 || !this.isNewTransaction) {
                     this.cash = null;
