@@ -6,7 +6,10 @@
     >
         <v-card style="width: 100%">
             <div v-if="!productNum.custom&&!productNum.status">
-                <v-card-title>New Product <v-spacer><v-spacer><v-btn @click="showDialog = false">Close</v-btn></v-card-title>
+                <v-card-title>New Product 
+                    <v-spacer></v-spacer>
+                    <v-btn @click="showDialog = false">Close</v-btn>
+                </v-card-title>
                 <v-card-text>
                     <p>Add 1 product? <v-btn @click="addOneProduct">Yes</v-btn><v-btn @click="addCustomProduct">Custom</v-btn></p>
                 </v-card-text>
