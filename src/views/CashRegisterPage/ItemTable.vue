@@ -39,14 +39,13 @@
                         <p>{{ companyProfilesData && companyProfilesData.DATA[0].name }}</p>
                         <p v-if="address1">{{ address1 }}</p>
                         <p v-if="address2">{{ address2 }}</p>
-                        <p>--------------------------</p>
+                        <p class="text--center">-----------------------</p>
                         <p>ORDER SLIP ONLY</p>
-                        <p>(Unofficial Receipt)</p>
-                        <p>--------------------------</p>
+                        <p>(Unofficial Receipt)</p><p class="text--center">-----------------------</p>
                         <p>Transaction#: {{ sales_id && sales_id.last && sales_id.status === 'history' ? sales_id.last : sales_id.value + 1 }}</p>
                         <p>Date & Time: {{ salesDateTime ? salesDateTime : dateTimeVar }}</p>
                         <p>Cashier: {{ cashierName }}</p>
-                        ==========================================
+                        <p class="text--center">=======================</p>
                         <table style="width: 100%; border-collapse: collapse; border: none;">
                             <thead>
                                 <div class="parent-div">
@@ -70,7 +69,7 @@
                                 </div>
                             </tbody>
                         </table>
-                        ==========================================
+                        <p class="text--center">=======================</p>
                         <p style="text-align: left; position: relative;">Total QTY: <span style="position: absolute; right: 0;">{{ overAllQuantity }}</span></p>
                         <p id="amountDue" style="text-align: left; position: relative;" >AMOUNT DUE: <span style="position: absolute; right: 0;">{{ overAllAmount }}</span></p>
                         <p style="text-align: left; position: relative;">Cash <span style="position: absolute; right: 0;">{{ cashAmount }}</span></p>
@@ -263,11 +262,10 @@ export default {
     #printableArea {
         visibility: visible;
         position: absolute;
-        left: 0;
-        top: 0;
+        left: 0px;
+        top: -700px;
         font-size: 17px;
-        margin: 15px 5px;
-        width: 260px;
+        width: 220px;
     }
 
         #printableArea .sellingPrice {

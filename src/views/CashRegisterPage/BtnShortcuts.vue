@@ -1,27 +1,27 @@
 <template>
     <div style="vertical-align: top" class="btnContainer">
-        <div style="height: 200px; width: 200px; background-color: yellow; color: black; margin: 10px; display: inline-block; vertical-align: top; text-shadow: 2px 2px 5px white;">
+        <div style="height: 190px; width: 200px; background-color: yellow; color: black; margin: 10px; display: inline-block; vertical-align: top; text-shadow: 2px 2px 5px white;">
             <img src="./../../assets/buy_8305477-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F12</span>Input Quantity
         </div>
-        <div style="height: 200px; width: 200px; background-color: #00ff00 ; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div style="height: 190px; width: 200px; background-color: #00ff00 ; color: black; margin: 10px; display: inline-block; vertical-align: top;">
             <img src="./../../assets/wallet_10630192-removebg-preview.png" alt="test" height="100px" width="100px">
-            <span>F9</span>Complete Payment
+            <span>F9</span>Finish Payment
         </div>
-        <div style="height: 200px; width: 200px; background-color: gray; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div style="height: 190px; width: 200px; background-color: gray; color: black; margin: 10px; display: inline-block; vertical-align: top;">
             <img src="./../../assets/printer_12142397-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F4</span>Print Order Slip
         </div>
         <br>
-        <div style="height: 200px; width: 200px; background-color: red; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div style="height: 190px; width: 200px; background-color: red; color: black; margin: 10px; display: inline-block; vertical-align: top;">
             <img src="./../../assets/dustbin_8305532-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F6</span>Remove Item
         </div>
-        <div style="height: 200px; width: 200px; background-color: orange; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div style="height: 190px; width: 200px; background-color: orange; color: black; margin: 10px; display: inline-block; vertical-align: top;">
             <img src="./../../assets/brain_7650331-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F11</span>Revise Order
         </div>
-        <div style="height: 200px; width: 200px; background-color: #1e90ff ; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div style="height: 190px; width: 200px; background-color: #1e90ff ; color: black; margin: 10px; display: inline-block; vertical-align: top;">
             <img src="./../../assets/printer_10134828-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F2</span>Start/End Shift
         </div>

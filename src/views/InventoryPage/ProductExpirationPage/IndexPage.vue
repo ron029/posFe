@@ -5,7 +5,7 @@
     >
         <v-card>
             <v-card-title>
-                <v-card style="width: 550px; padding: 10px">
+                <v-card style="width: 570px; padding: 10px">
                     <div style="width: 170px; display: inline-block; margin-right: 10px;">
                         <v-select
                             outlined

@@ -4,6 +4,7 @@
             <v-col lg="6" md="6" style="padding: 10px 5px 0 10px;">
                 <div>
                     <BarcodeQuantity
+                        style="padding-top: 10px;"
                         :focusToBarcode="focus.barcode"
                         :isNewTransaction="isNewTransaction"
                         :triggerBlurBarcode="triggerBlurBarcode"
@@ -300,7 +301,7 @@ export default {
                 else if (this.$route.path !== '/pos/sales') this.$router.push('/pos/sales')
             }
             if (event.key === 'F2')
-                if (this.$route.path !== '/pos/inventory') this.$router.push('/pos/inventory')
+                if (this.$route.path !== '/pos') this.$router.push('/pos')
             if (event.key === "F7") {
                 event.preventDefault()
                 if (this.show.cancel)
