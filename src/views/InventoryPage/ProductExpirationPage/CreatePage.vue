@@ -39,7 +39,7 @@
                                 v-model="counter.product_id"
                                 :rules="[v=>!!v||'Product name is required']"
                             >
-                                <template v-slot:item="{ item }">
+                                <template v-slot="{ item }">
                                     <p style="text-align: right; width: 600px; position: relative; height: 20px; padding-top: 5px;">
                                         <span style="position: absolute; left: 0; font-weight: 700;">{{ item.barcode }}</span> {{ String(item.brand).toUpperCase() }} {{ String(item.name).toUpperCase() }} {{ String(item.unit).toUpperCase() }} @ {{ item.selling_price }}
                                     </p>
@@ -140,12 +140,11 @@ export default {
         },
     },
     watch: {
-        productExpirationData(newVal) {
-            if (this.loading = false) {
+        loading(newVal, oldVal) {
+            if (oldVal === true && newVal === false) {
                 this.productExpiration()
                 this.showDialog = false
             }
-            console.log('watch productExirationData newVal: ', newVal)
         }
     },
     methods: {

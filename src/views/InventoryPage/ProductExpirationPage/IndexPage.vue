@@ -4,8 +4,7 @@
         width="100%"
     >
         <v-card>
-            <v-card-title>PRODUCT EXPIRATION PAGE&nbsp;
-
+            <v-card-title>
                 <v-card style="width: 550px; padding: 10px">
                     <div style="width: 170px; display: inline-block; margin-right: 10px;">
                         <v-select
@@ -20,28 +19,34 @@
                             item-key="name"
                         ></v-select>
                     </div>
-                    <v-text-field
-                        style="display: inline-block;"
-                        v-model="filter.date.start"
-                        label="Start Date"
-                        type="date"
-                        outlined
-                        dense
-                        hide-details
-                    ></v-text-field> ~
-                    <v-text-field
-                        style="display: inline-block;"
-                        v-model="filter.date.end"
-                        label="End Date"
-                        type="date"
-                        outlined
-                        dense
-                        hide-details
-                    ></v-text-field>
+                    <v-form
+                        v-model="valid"
+                        style="width: fit-content; display: inline-block;"
+                    >
+                        <v-text-field
+                            style="display: inline-block;"
+                            v-model="filter.date.start"
+                            label="Start Date"
+                            type="date"
+                            outlined
+                            dense
+                            hide-details
+                        ></v-text-field> ~
+                        <v-text-field
+                            style="display: inline-block;"
+                            v-model="filter.date.end"
+                            label="End Date"
+                            type="date"
+                            outlined
+                            dense
+                            hide-details
+                            :rules="[v=>!!v||'Notif date is required'].concat(notifRule(filter.date.start, filter.date.end))"
+                        ></v-text-field>
+                    </v-form>
                 </v-card>
                 <v-spacer></v-spacer>
-                <v-btn v-if="selected.length > 0" @click="handleShowMultipleEdit">Edit</v-btn>
-                <v-btn @click="view.create = true">New</v-btn>
+                <v-btn v-if="selected.length > 0" @click="handleShowMultipleEdit" :disabled="!isUserCanUpdateProductExpire">{{selected.length > 1 ? 'bulk edit' : 'edit'}}</v-btn>
+                <v-btn @click="view.create = true" :disabled="!isUserCanCreateProductExpire">New</v-btn>
             </v-card-title>
             <v-card-text>
                 <v-card>
@@ -55,29 +60,49 @@
                         :show-select="true"
                         item-key="product_expiration_id"
                     >
-                        <template v-slot:item.name="{ item }">
+                        <template slot="item.name" slot-scope="{ item }">
                             {{ item.brand }} {{ item.name }} {{ item.unit }}
                         </template>
-                        <template v-slot:item.notif_date="{ item }">
+                        <template slot="item.notif_date" slot-scope="{ item }">
                             {{ formatDate(item.notif_date) }}
                         </template>
-                        <template v-slot:item.expiration_date="{ item }">
+                        <template slot="item.expiration_date" slot-scope="{ item }">
                             {{ formatDate(item.expiration_date) }}
                         </template>
-                        <template v-slot:item.muted="{ item }">
+                        <template slot="item.muted" slot-scope="{ item }">
                             <v-icon :color="item.muted === 0 ? 'green' : 'red'">{{ item.muted === 0 ? 'mdi-bell-ring' : 'mdi-bell-off' }}</v-icon>
+                            &nbsp;<span>{{ item.muted === 0 ? 'Active' : 'Inactive' }}</span>
                         </template>
-                        <template v-slot:item.actions="{ item }">
-                            <v-btn icon color="orange"><v-icon>mdi-pencil</v-icon></v-btn>
+                        <template slot="item.actions" slot-scope="{ item }">
+                            <v-btn
+                                icon
+                                color="orange"
+                                style="display: inline-block;"
+                                @click="editOne(item)"
+                                :disabled="!isUserCanUpdateProductExpire"
+                            ><v-icon>mdi-pencil</v-icon></v-btn>
+                            <v-btn
+                                icon
+                                :color="item.muted === 0 ? 'red' : 'green'"
+                                style="display: inline-block;"
+                                @click="muteUnmuteProductExpiration(item, item.muted === 0 ? 1 : 0)"
+                                :disabled="!isUserCanUpdateProductExpire"
+                            ><v-icon>{{ item.muted === 0 ? 'mdi-bell-off' : 'mdi-bell-ring' }}</v-icon></v-btn>
                         </template>
                     </v-data-table>
                 </v-card>
             </v-card-text>
         </v-card>
+        <EditPage
+            v-if="view.edit"
+            :show="view.edit"
+            :expiryData="selected"
+            @closeDialog="closeDialog('edit')"
+        />
         <CreatePage
             v-if="view.create"
             :show="view.create"
-            @closeDialog="view.create = false"
+            @closeDialog="closeDialog('create')"
         ></CreatePage>
     </v-dialog>
 </template>
@@ -85,13 +110,15 @@
 <script>
 import { mapActions, mapGetters } from 'vuex';
 import CreatePage from './CreatePage.vue';
+import EditPage from './EditPage.vue';
 import moment from 'moment';
 
 export default {
     components: {
-        CreatePage
+        CreatePage, EditPage
     },
     data: ()=>({
+        valid: true,
         selected: [],
         filter: {
             date: {
@@ -101,8 +128,8 @@ export default {
             val: 1,
             items: [
                 {name: 'All', value: null},
-                {name: 'Unmuted', value: 1},
-                {name: 'Muted', value: 0},
+                {name: 'Active', value: 1},
+                {name: 'Inactive', value: 0},
             ]
         },
         headers: [
@@ -112,7 +139,7 @@ export default {
             { text: 'Expiration Date', value: 'expiration_date' },
             { text: 'Days Remaining', value: 'days_remaining' },
             { text: 'Status', value: 'muted' },
-            { text: 'Comments', value: 'comments' },
+            { text: 'Comments', value: 'comment' },
             { text: 'Actions', value: 'actions' }
         ],
         view: {
@@ -122,9 +149,24 @@ export default {
     }),
     props: ['show'],
     computed: {
-        ...mapGetters(['productExpirationData']),
+        ...mapGetters(['productExpirationData', 'productExpirationPutData', 'findUserRolePermissionData']),
+        isUserCanReadProductExpire() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'product_exp:read')
+            return false
+        },
+        isUserCanCreateProductExpire() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'product_exp:create')
+            return false
+        },
+        isUserCanUpdateProductExpire() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'product_exp:update')
+            return false
+        },
         displayProductExpiryFilterByStatus() {
-            if (this.productExpirationData && this.productExpirationData.DATA) {
+            if (this.valid && this.productExpirationData && this.productExpirationData.DATA) {
                 let data = this.productExpirationData.DATA
                 data = data
                 .filter(item =>
@@ -161,24 +203,55 @@ export default {
         }
     },
     watch: {
+        productExpirationPutData(newVal) {
+            if (newVal.STATUS === 200)
+                this.productExpiration()
+        },
         productExpirationData(newVal) {
             console.log('watch productExpirationData newVal: ', newVal)
         }
     },
     methods: {
-        ...mapActions(['productExpiration']),
+        ...mapActions(['productExpiration', 'productExpirationPut']),
+        closeDialog(action) {
+            this.view[action] = false
+            this.selected = []
+        },
+        editOne(item) {
+            this.selected.push(structuredClone(item))
+            delete this.selected.name
+            delete this.selected.brand
+            delete this.selected.unit
+            delete this.selected.days_remaining
+            this.view.edit = true
+        },
+        muteUnmuteProductExpiration(item, status) {
+            const data = structuredClone(item)
+            delete data.name
+            delete data.brand
+            delete data.unit
+            delete data.days_remaining
+            data.muted = status
+            data.notif_date = moment(data.notif_date).format('YYYY-MM-DD')
+            data.expiration_date = moment(data.expiration_date).format('YYYY-MM-DD')
+            this.productExpirationPut(data)
+        },
+        notifRule(notif_date, expDate) {
+            return [moment(notif_date).utcOffset('+0800').isSameOrBefore(moment(expDate).utcOffset('+0800')) || 'End Date should not after Start Date']
+        },
         handleShowMultipleEdit() {
             this.view.edit = true
         },
         daysRemaining(endDate) {
-            return moment(endDate).diff(moment(), 'days')
+            return moment(endDate).utcOffset('+0800').startOf('day').diff(moment(), 'days')
         },
         formatDate(date) {
             return moment(date).utcOffset('+0800').format('MMMM D, YYYY')
         }
     },
     created() {
-        this.productExpiration()
+        if (this.isUserCanReadProductExpire)
+            this.productExpiration()
     }
 }
 </script>

@@ -26,7 +26,6 @@
                 <p style="margin: 0 auto; vertical-align: middle; height: 40px;" :id="'topMostElement' + index">
                     <span style="margin-top: 20px;">{{ item.name }}</span><span style="font-size: 20px;">&nbsp;</span>
                     <v-btn
-                        disabled
                         :style="'background-color: orange; color: white; vertical-align: middle;'"
                         small
                         v-show="hover && item.edit"

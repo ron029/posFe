@@ -21,7 +21,12 @@ export default {
         ignoredReorders: []
     }),
     computed: {
-        ...mapGetters(['fetchReorderData', 'newReorderData', 'destroyReorderData'])
+        ...mapGetters(['fetchReorderData', 'newReorderData', 'destroyReorderData', 'findUserRolePermissionData']),
+        isUserCanReadReorder() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'reorder:read')
+            return false
+        },
     },
     watch: {
         fetchReorderData(newVal) {
@@ -46,7 +51,8 @@ export default {
     },
     async mounted() {
         await this.getCsrfToken()
-        this.fetchReorder()
+        if (this.isUserCanReadReorder)
+            this.fetchReorder()
     }
 }
 </script>

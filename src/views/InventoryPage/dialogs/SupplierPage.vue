@@ -19,7 +19,7 @@
                             vertical
                         ></v-divider>
                         <v-spacer></v-spacer>
-                        <v-btn @click="newSupplierItem" color="success"><v-icon>mdi-plus</v-icon>New</v-btn>
+                        <v-btn @click="newSupplierItem" :disabled="!isUserCanCreateSuppliers" color="success"><v-icon>mdi-plus</v-icon>New</v-btn>
                     </v-toolbar>
                     <v-text-field
                         style="margin: 0 17px"
@@ -33,8 +33,8 @@
                     ></v-text-field>
                 </template>
                 <template slot="item.actions" slot-scope="{ item }">
-                    <v-icon @click="editItem(item)" color="warning">mdi-pencil</v-icon>
-                    <v-icon disabled @click="deleteItem(item)" color="error">mdi-trash-can</v-icon>
+                    <v-icon @click="editItem(item)" :disabled="!isUserCanUpdateSuppliers" color="warning">mdi-pencil</v-icon>
+                    <v-icon @click="deleteItem(item)" disabled color="error">mdi-trash-can</v-icon>
                 </template>
             </v-data-table>
         </v-card>
@@ -151,7 +151,22 @@ export default {
     }),
     props: ['show'],
     computed: {
-        ...mapGetters(['supplierData', 'supplierPostData', 'supplierDeleteData', 'supplierPutData']),
+        ...mapGetters(['supplierData', 'supplierPostData', 'supplierDeleteData', 'supplierPutData', 'findUserRolePermissionData']),
+        isUserCanReadSuppliers() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'supplier:read')
+            return false
+        },
+        isUserCanCreateSuppliers() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'supplier:create')
+            return false
+        },
+        isUserCanUpdateSuppliers() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'supplier:update')
+            return false
+        },
         showDialog: {
             get() {
                 return this.show
@@ -219,7 +234,8 @@ export default {
         },
         async show() {
             await this.getCsrfToken()
-            this.suppliers()
+            if (this.isUserCanReadSuppliers)
+                this.suppliers()
         }
     },
     methods: {

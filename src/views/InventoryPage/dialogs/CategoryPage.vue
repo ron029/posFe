@@ -19,7 +19,7 @@
                             vertical
                         ></v-divider>
                         <v-spacer></v-spacer>
-                        <v-btn @click="newCatItem()" color="success"><v-icon>mdi-plus</v-icon>New</v-btn>
+                        <v-btn @click="newCatItem()" :disabled="!isUserCanCreateCategories" color="success"><v-icon>mdi-plus</v-icon>New</v-btn>
                     </v-toolbar>
                     <v-text-field
                         style="margin: 0 17px"
@@ -33,8 +33,8 @@
                     ></v-text-field>
                 </template>
                 <template slot="item.actions" slot-scope="{ item }">
-                    <v-icon @click="editItem(item)" color="warning">mdi-pencil</v-icon>
-                    <v-icon disabled @click="deleteItem(item)" color="error">mdi-trash-can</v-icon>
+                    <v-icon @click="editItem(item)" :disabled="!isUserCanUpdateCategories" color="warning">mdi-pencil</v-icon>
+                    <v-icon @click="deleteItem(item)" disabled color="error">mdi-trash-can</v-icon>
                 </template>
             </v-data-table>
         </v-card>
@@ -161,7 +161,22 @@ export default {
     }),
     props: ['show'],
     computed: {
-        ...mapGetters(['categoryData', 'categoryPostData', 'categoryDeleteData', 'categoryPutData']),
+        ...mapGetters(['categoryData', 'categoryPostData', 'categoryDeleteData', 'categoryPutData', 'findUserRolePermissionData']),
+        isUserCanReadCategories() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'category:read')
+            return false
+        },
+        isUserCanCreateCategories() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'category:create')
+            return false
+        },
+        isUserCanUpdateCategories() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'category:update')
+            return false
+        },
         showDialog: {
             get() {
                 return this.show
@@ -228,7 +243,8 @@ export default {
         },
         async show() {
             await this.getCsrfToken()
-            this.categories()
+            if (this.isUserCanReadCategories)
+                this.categories()
         }
     },
     methods: {

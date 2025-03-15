@@ -29,7 +29,7 @@ export default {
     methods: {
         formatDate(date) {
             if (date === null) return ''
-            return moment(date).format('MMMM D, YYYY')
+            return moment(date).utcOffset('+0800').format('MMMM D, YYYY')
         },
         getRoleName(role_id) {
             if (this.userRoleData && this.userRoleData.DATA) {

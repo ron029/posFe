@@ -34,7 +34,7 @@
                     <v-btn style="width: 100%;" value="settings" color="#D5B07E" @click="redirectToCompanyProfile">
                         <v-icon style="margin-left: 15px;">mdi-cog</v-icon>
                     </v-btn>
-                    <v-btn v-show="false" value="account-settings" color="#D5B07E">
+                    <v-btn v-show="true" value="account-settings" color="#D5B07E" @click="redirectManageAccount">
                         <v-icon style="margin-left: 15px;">mdi-account-cog</v-icon>
                     </v-btn>
                 </v-bottom-navigation>
@@ -63,10 +63,19 @@ import { mapActions, mapGetters } from 'vuex';
         ],
     }),
     computed: {
-        ...mapGetters(['findUserRolePermissionData']),
+        ...mapGetters(['findUserRolePermissionData', 'findUserRolePermissionData']),
+        isUserCanUpdatePassword() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'self_pass:update')
+            return false
+        },
     },
     methods: {
         ...mapActions(['findUserRolePermission']),
+        redirectManageAccount() {
+            if (this.$route.path !== '/pos/manage-account')
+                this.$router.push({name: 'manage-account'})
+        },
         redirectToCompanyProfile() {
             if (this.$route.path !== '/pos/company-profile')
                 this.$router.push({name: 'company-profile'})

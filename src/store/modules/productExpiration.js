@@ -4,8 +4,21 @@ export const productExpiration = {
   state: {
     productExpirationData: null,
     productExpirationsPostData: null,
+    productExpirationPutData: null,
   },
   actions: {
+    productExpirationPut({commit}, args) {
+        try {
+            PRODUCT_EXPIRATION_API
+                .productExpirationPut(args)
+                .then(res => {
+                    commit('PRODUCT_EXPIRATION_PUT', res.data)
+                })
+        } catch (err) {
+            commit('PRODUCT_EXPIRATION_PUT', err.response)
+            console.error(err)
+        }
+    },
     productExpiration({commit}) {
         try {
             PRODUCT_EXPIRATION_API
@@ -32,6 +45,9 @@ export const productExpiration = {
     },
   },
   mutations: {
+    PRODUCT_EXPIRATION_PUT(state, productExpirationPutData) {
+        state.productExpirationPutData = productExpirationPutData
+    },
     PRODUCT_EXPIRATION(state, productExpirationData) {
         state.productExpirationData = productExpirationData
     },
@@ -40,6 +56,9 @@ export const productExpiration = {
     },
   },
   getters: {
+    productExpirationPutData(state) {
+        return state.productExpirationPutData
+    },
     productExpirationData(state) {
         return state.productExpirationData
     },
