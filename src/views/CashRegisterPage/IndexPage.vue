@@ -10,6 +10,7 @@
                         @saveBarcodeQuantity="saveBarcodeQuantity"
                         @offFocusToBarcode="focus.barcode = false"
                         @isSearchIsEmpty="isSearchIsEmpty"
+                        @showNoItemsLeft="showNoItemsLeft"
                     />
                     <div style="border: 1px solid black; padding: 10px; margin-top: 10px; position: relative;">
                         <p class="title1" style="margin: 0; padding: 0; position: absolute; left: 10px; top: 10px;">TOTAL</p>
@@ -41,6 +42,11 @@
             :show="show.error"
             :data="show.errorData"
             @closeDialog="closeNotif"
+        />
+        <NotifDialog
+            :show="show.noItemsLeft"
+            :data="{message: 'No items left'}"
+            @closeDialog="show.noItemsLeft=false"
         />
         <NotifDialog
             :show="show.cancel"
@@ -133,7 +139,8 @@ export default {
             error: false,
             errorData: { message: '' },
             editItem: false,
-            goToSales: false
+            goToSales: false,
+            noItemsLeft: false,
         },
         isSearchIsEmptyVar: true,
         focus: {
@@ -179,6 +186,9 @@ export default {
     },
     methods: {
         ...mapActions(['saveSales', 'getCsrfToken', 'getNextSalesId', 'retriveTransaction', 'saveSalesModified', 'companyProfiles']),
+        showNoItemsLeft() {
+            this.show.noItemsLeft = true
+        },
         isSearchIsEmpty(newVal) {
             this.isSearchIsEmptyVar = newVal
         },

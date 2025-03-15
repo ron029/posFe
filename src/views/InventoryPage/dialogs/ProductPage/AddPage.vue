@@ -2,16 +2,17 @@
     <v-dialog
         v-model="showDialog"
         :width="productNum.status && productNum.value > 1 ? '100%' : '600px'"
+        persistent
     >
         <v-card style="width: 100%">
             <div v-if="!productNum.custom&&!productNum.status">
-                <v-card-title>New Product</v-card-title>
+                <v-card-title>New Product <v-spacer><v-spacer><v-btn @click="showDialog = false">Close</v-btn></v-card-title>
                 <v-card-text>
                     <p>Add 1 product? <v-btn @click="addOneProduct">Yes</v-btn><v-btn @click="addCustomProduct">Custom</v-btn></p>
                 </v-card-text>
             </div>
             <div v-if="productNum.custom">
-                <v-card-title>New Product</v-card-title>
+                <v-card-title>New Product <v-spacer></v-spacer><v-btn @click="productNum.custom=false">Close</v-btn></v-card-title>
                 <v-card-text>
                     <v-select
                         :items="[1, 5, 10, 15, 20]"
@@ -394,7 +395,7 @@
                                     style="width: 286px; margin-top: 27px;"
                                     outlined
                                     label="Product Name"
-                                    :value="formatName(select?.brands?.filter(item => item.brand_id == item[0].brand_id)[0]?.name, productItem.name, select?.units?.filter(item => item.unit_id == item[0].unit_id)[0]?.name)"
+                                    :value="formatName(select?.brands?.filter(item => item.brand_id == productItem.brand_id)[0]?.name, productItem.name, select?.units?.filter(item => item.unit_id == productItem.unit_id)[0]?.name)"
                                     dense
                                     :rules="[v=>!!v || 'Name is required.']"
                                 ></v-text-field>

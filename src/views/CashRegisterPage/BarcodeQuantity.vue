@@ -154,9 +154,14 @@ export default {
         findBarcodeData(newVal) {
             if (newVal) {
                 if (newVal.STATUS === 200) {
-                    this.$emit('saveBarcodeQuantity', {itemQuantity: this.quantity, ...newVal.DATA[0]})
-                    this.barcode = ''
-                    this.quantity = 1
+                    console.log('findBarcodeData newVal: ', newVal)
+                    if (newVal.DATA[0].quantity <= 0) {
+                        this.$emit('showNoItemsLeft')
+                    } else {
+                        this.$emit('saveBarcodeQuantity', {itemQuantity: this.quantity, ...newVal.DATA[0]})
+                        this.barcode = ''
+                        this.quantity = 1
+                    }
                     if (this.$refs && this.$refs.searchBarcode) this.$refs.searchBarcode.reset()
                 } else if (newVal.STATUS === 404) {
                     this.isBarcodeNotFound = true
