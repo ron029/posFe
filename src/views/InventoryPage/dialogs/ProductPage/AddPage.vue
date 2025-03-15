@@ -6,7 +6,7 @@
     >
         <v-card style="width: 100%">
             <div v-if="!productNum.custom&&!productNum.status">
-                <v-card-title>New Product 
+                <v-card-title>New Product
                     <v-spacer></v-spacer>
                     <v-btn @click="showDialog = false">Close</v-btn>
                 </v-card-title>
@@ -15,7 +15,7 @@
                 </v-card-text>
             </div>
             <div v-if="productNum.custom">
-                <v-card-title>New Product <v-spacer></v-spacer><v-btn @click="productNum.custom=false">Close</v-btn></v-card-title>
+                <v-card-title>New Product <v-spacer></v-spacer><v-btn @click="productNum.custom=false">Back</v-btn></v-card-title>
                 <v-card-text>
                     <v-select
                         :items="[1, 5, 10, 15, 20]"
@@ -235,164 +235,174 @@
                             :key="index"
                             :style="`background-color: ${index % 2 == 0 ? '#ddd' : 'white'}; display: flex; width: 100%;`"
                         >
-                            <!-- category -->
-                            <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('category_id', productItem.category_id, index)"
-                                >Fill below</span>
-                                <v-autocomplete
-                                    outlined
-                                    style="width: 150px; margin-top: 5px"
-                                    v-model.trim="productItem.category_id"
-                                    :items="select.categories"
-                                    item-text="name"
-                                    item-value="category_id"
-                                    label="Category Name"
-                                    :rules="rule.category"
-                                    :search-input.sync="add[index].category.value"
-                                    dense
-                                >
-                                    <template v-slot:no-data>
-                                        <v-form
-                                            :ref="`category${index}`"
-                                            style="margin-left: 10px; width: 100%"
-                                            v-model="valid"
-                                            @submit.prevent="handleAddCategory(add[index].category.value, `category${index}`)"
-                                        >
-                                            <v-text-field
-                                                dense
-                                                hide-details
-                                                outlined
-                                                style="display: inline-block; margin-left: 10px"
-                                                v-model="add[index].category.value"
-                                                :rules="[v=>!!v || 'Name is required.']"
-                                            ></v-text-field>
-                                            <v-btn
-                                                style="display: inline-block"
-                                                :loading="loading.category"
-                                                type="submit"
-                                            >Add Category?
-                                            </v-btn>
-                                        </v-form>
-                                    </template>
-                                </v-autocomplete>
-                            </div>
+                            <v-hover v-slot="{ hover }">
+                                <!-- category -->
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('category_id', productItem.category_id, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-autocomplete
+                                        outlined
+                                        style="width: 150px; margin-top: 5px"
+                                        v-model.trim="productItem.category_id"
+                                        :items="select.categories"
+                                        item-text="name"
+                                        item-value="category_id"
+                                        label="Category Name"
+                                        :rules="rule.category"
+                                        :search-input.sync="add[index].category.value"
+                                        dense
+                                    >
+                                        <template v-slot:no-data>
+                                            <v-form
+                                                :ref="`category${index}`"
+                                                style="margin-left: 10px; width: 100%"
+                                                v-model="valid"
+                                                @submit.prevent="handleAddCategory(add[index].category.value, `category${index}`)"
+                                            >
+                                                <v-text-field
+                                                    dense
+                                                    hide-details
+                                                    outlined
+                                                    style="display: inline-block; margin-left: 10px"
+                                                    v-model="add[index].category.value"
+                                                    :rules="[v=>!!v || 'Name is required.']"
+                                                ></v-text-field>
+                                                <v-btn
+                                                    style="display: inline-block"
+                                                    :loading="loading.category"
+                                                    type="submit"
+                                                >Add Category?
+                                                </v-btn>
+                                            </v-form>
+                                        </template>
+                                    </v-autocomplete>
+                                </div>
+                            </v-hover>
 
-                            <!-- brand -->
-                            <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('brand_id', productItem.brand_id, index)"
-                                >Fill below</span>
-                                <v-autocomplete
-                                   style="width: 150px; margin-top: 5px"
-                                    outlined
-                                    v-model.trim="productItem.brand_id"
-                                    :items="select.brands"
-                                    item-text="name"
-                                    item-value="brand_id"
-                                    label="Brand Name"
-                                    :rules="rule.brand"
-                                    :search-input.sync="add[index].brand.value"
-                                    dense
-                                >
-                                    <template v-slot:no-data>
-                                        <v-form
-                                            :ref="`brand${index}`"
-                                            style="margin-left: 10px;"
-                                            v-model="valid"
-                                            @submit.prevent="handleAddBrand(add[index].brand.value, `brand${index}`)"
-                                        >
-                                            <v-text-field
-                                                dense
-                                                hide-details
-                                                outlined
-                                                style="display: inline-block; margin-left: 10px"
-                                                v-model="add[index].brand.value"
-                                                :rules="[v=>!!v || 'Name is required.']"
-                                            ></v-text-field>
-                                            <v-btn
-                                                :loading="loading.brand"
-                                                type="submit"
-                                            >Add Brand?
-                                            </v-btn>
-                                        </v-form>
-                                    </template>
-                                </v-autocomplete>
-                            </div>
+                            <v-hover v-slot="{ hover }">
+                                <!-- brand -->
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('brand_id', productItem.brand_id, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-autocomplete
+                                    style="width: 150px; margin-top: 5px"
+                                        outlined
+                                        v-model.trim="productItem.brand_id"
+                                        :items="select.brands"
+                                        item-text="name"
+                                        item-value="brand_id"
+                                        label="Brand Name"
+                                        :rules="rule.brand"
+                                        :search-input.sync="add[index].brand.value"
+                                        dense
+                                    >
+                                        <template v-slot:no-data>
+                                            <v-form
+                                                :ref="`brand${index}`"
+                                                style="margin-left: 10px;"
+                                                v-model="valid"
+                                                @submit.prevent="handleAddBrand(add[index].brand.value, `brand${index}`)"
+                                            >
+                                                <v-text-field
+                                                    dense
+                                                    hide-details
+                                                    outlined
+                                                    style="display: inline-block; margin-left: 10px"
+                                                    v-model="add[index].brand.value"
+                                                    :rules="[v=>!!v || 'Name is required.']"
+                                                ></v-text-field>
+                                                <v-btn
+                                                    :loading="loading.brand"
+                                                    type="submit"
+                                                >Add Brand?
+                                                </v-btn>
+                                            </v-form>
+                                        </template>
+                                    </v-autocomplete>
+                                </div>
+                            </v-hover>
+
+                            <v-hover v-slot="{ hover }">
+                                <!-- product name -->
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('name', productItem.name, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-text-field
+                                        style="width: 150px; margin-top: 5px;"
+                                        outlined
+                                        label="Product Name"
+                                        v-model.trim="productItem.name"
+                                        :rules="[v=>!!v || 'Name is required.']"
+                                        dense
+                                    ></v-text-field>
+                                </div>
+                            </v-hover>
+
+                            <v-hover v-slot="{ hover }">
+                                <!-- unit -->
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('unit_id', productItem.unit_id, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-autocomplete
+                                        style="width: 150px; margin-top: 5px"
+                                        outlined
+                                        v-model.trim="productItem.unit_id"
+                                        :items="select.units"
+                                        item-text="name"
+                                        item-value="unit_id"
+                                        label="Measurements"
+                                        :rules="rule.unit"
+                                        :search-input.sync="add[index].unit.value"
+                                        dense
+                                    >
+                                        <template v-slot:no-data>
+                                            <v-form
+                                                :ref="`unit${index}`"
+                                                style="margin-left: 10px;"
+                                                v-model="valid"
+                                                @submit.prevent="handleAddUnit(add[index].unit.value, `unit${index}`)"
+                                            >
+                                                <v-text-field
+                                                    dense
+                                                    hide-details
+                                                    outlined
+                                                    style="display: inline-block; margin-left: 10px"
+                                                    v-model="add[index].unit.value"
+                                                    :rules="[v=>!!v || 'Name is required.']"
+                                                ></v-text-field>
+                                                <v-btn
+                                                    :loading="loading.unit"
+                                                    type="submit"
+                                                >Add Unit?
+                                                </v-btn>
+                                            </v-form>
+                                        </template>
+                                    </v-autocomplete>
+                                </div>
+                            </v-hover>
 
                             <!-- product name -->
                             <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('name', productItem.name, index)"
-                                >Fill below</span>
-                                <v-text-field
-                                    style="width: 150px; margin-top: 5px;"
-                                    outlined
-                                    label="Product Name"
-                                    v-model.trim="productItem.name"
-                                    :rules="[v=>!!v || 'Name is required.']"
-                                    dense
-                                ></v-text-field>
-                            </div>
-
-                            <!-- unit -->
-                            <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('unit_id', productItem.unit_id, index)"
-                                >Fill below</span>
-                                <v-autocomplete
-                                    style="width: 150px; margin-top: 5px"
-                                    outlined
-                                    v-model.trim="productItem.unit_id"
-                                    :items="select.units"
-                                    item-text="name"
-                                    item-value="unit_id"
-                                    label="Measurements"
-                                    :rules="rule.unit"
-                                    :search-input.sync="add[index].unit.value"
-                                    dense
-                                >
-                                    <template v-slot:no-data>
-                                        <v-form
-                                            :ref="`unit${index}`"
-                                            style="margin-left: 10px;"
-                                            v-model="valid"
-                                            @submit.prevent="handleAddUnit(add[index].unit.value, `unit${index}`)"
-                                        >
-                                            <v-text-field
-                                                dense
-                                                hide-details
-                                                outlined
-                                                style="display: inline-block; margin-left: 10px"
-                                                v-model="add[index].unit.value"
-                                                :rules="[v=>!!v || 'Name is required.']"
-                                            ></v-text-field>
-                                            <v-btn
-                                                :loading="loading.unit"
-                                                type="submit"
-                                            >Add Unit?
-                                            </v-btn>
-                                        </v-form>
-                                    </template>
-                                </v-autocomplete>
-                            </div>
-
-                            <!-- product name -->
-                            <div>
-                                <span
-                                    v-show="false"
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('name', productItem.name, index)"
-                                >Fill below</span>
                                 <v-text-field
                                     disabled
                                     style="width: 286px; margin-top: 27px;"
@@ -431,124 +441,144 @@
                             </div>
 
                             <!-- quantity -->
-                            <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('quantity', productItem.quantity, index)"
-                                >Fill below</span>
-                                <v-text-field
-                                    style="margin-top: 5px"
-                                    outlined
-                                    label="Quantity"
-                                    type="number"
-                                    v-model.trim=productItem.quantity
-                                    :rules="rule.quantity"
-                                    dense
-                                ></v-text-field>
-                            </div>
+                            <v-hover v-slot="{ hover }">
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('quantity', productItem.quantity, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-text-field
+                                        style="margin-top: 5px"
+                                        outlined
+                                        label="Quantity"
+                                        type="number"
+                                        v-model.trim=productItem.quantity
+                                        :rules="rule.quantity"
+                                        dense
+                                    ></v-text-field>
+                                </div>
+                            </v-hover>
 
                             <!-- reorder_level -->
-                            <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('reorder_level', productItem.reorder_level, index)"
-                                >Fill below</span>
-                                <v-text-field
-                                    style="margin-top: 5px"
-                                    outlined
-                                    label="Reorder Level"
-                                    v-model.trim="productItem.reorder_level"
-                                    type="number"
-                                    :rules="rule.reorder_level"
-                                    dense
-                                ></v-text-field>
-                            </div>
+                            <v-hover v-slot="{ hover }">
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('reorder_level', productItem.reorder_level, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-text-field
+                                        style="margin-top: 5px"
+                                        outlined
+                                        label="Reorder Level"
+                                        v-model.trim="productItem.reorder_level"
+                                        type="number"
+                                        :rules="rule.reorder_level"
+                                        dense
+                                    ></v-text-field>
+                                </div>
+                            </v-hover>
 
                             <!-- cost_price -->
-                            <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('cost_price', productItem.cost_price, index)"
-                                >Fill below</span>
-                                <v-text-field
-                                    style="margin-top: 5px"
-                                    outlined
-                                    label="Cost Price"
-                                    v-model.trim="productItem.cost_price"
-                                    type="number"
-                                    step="0.01"
-                                    @input="validateDecimalCost"
-                                    :rules="rule.cost_price"
-                                    dense
-                                ></v-text-field>
-                            </div>
+                            <v-hover v-slot="{ hover }">
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('cost_price', productItem.cost_price, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-text-field
+                                        style="margin-top: 5px"
+                                        outlined
+                                        label="Cost Price"
+                                        v-model.trim="productItem.cost_price"
+                                        type="number"
+                                        step="0.01"
+                                        @input="validateDecimalCost"
+                                        :rules="rule.cost_price"
+                                        dense
+                                    ></v-text-field>
+                                </div>
+                            </v-hover>
 
                             <!-- selling_price -->
-                            <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('selling_price', productItem.selling_price, index)"
-                                >Fill below</span>
-                                <v-text-field
-                                    style="margin-top: 5px"
-                                    outlined
-                                    label="Selling Price"
-                                    v-model.trim="productItem.selling_price"
-                                    type="number"
-                                    step="0.01"
-                                    @input="validateDecimalSelling"
-                                    :rules="rule.selling_price"
-                                    dense
-                                ></v-text-field>
-                            </div>
+                            <v-hover v-slot="{ hover }">
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('selling_price', productItem.selling_price, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-text-field
+                                        style="margin-top: 5px"
+                                        outlined
+                                        label="Selling Price"
+                                        v-model.trim="productItem.selling_price"
+                                        type="number"
+                                        step="0.01"
+                                        @input="validateDecimalSelling"
+                                        :rules="rule.selling_price"
+                                        dense
+                                    ></v-text-field>
+                                </div>
+                            </v-hover>
 
                             <!-- supplier_id -->
-                            <div>
-                                <span
-                                    x-small
-                                    style="color: white; background-color: green; border-radius: 5px; padding: 3px"
-                                    @click="applyAll('supplier_id', productItem.supplier_id, index)"
-                                >Fill below</span>
-                                <v-autocomplete
-                                    style="margin-top: 5px"
-                                    outlined
-                                    v-model.trim="productItem.supplier_id"
-                                    :items="select.suppliers"
-                                    item-text="name"
-                                    item-value="supplier_id"
-                                    label="Supplier's Name"
-                                    :rules="rule.supplier"
-                                    :search-input.sync="add[index].supplier.value"
-                                    dense
-                                >
-                                    <template v-slot:no-data>
-                                        <v-form
-                                            :ref="`supplier${index}`"
-                                            style="margin-left: 10px;"
-                                            v-model="valid"
-                                            @submit.prevent="handleAddSupplier(add[index].supplier.value, `supplier${index}`)"
-                                        >
-                                            <v-text-field
-                                                dense
-                                                hide-details
-                                                outlined
-                                                style="display: inline-block; margin-left: 10px"
-                                                v-model="add[index].supplier.value"
-                                                :rules="[v=>!!v || 'Name is required.']"
-                                            ></v-text-field>
-                                            <v-btn
-                                                :loading="loading.supplier"
-                                                type="submit"
-                                            >Add Supplier?
-                                            </v-btn>
-                                        </v-form>
-                                    </template>
-                                </v-autocomplete>
-                            </div>
+                            <v-hover v-slot="{ hover }">
+                                <div>
+                                    <span
+                                        v-if="hover"
+                                        x-small
+                                        style="color: white; background-color: green; border-radius: 5px; padding: 3px"
+                                        @click="applyAll('supplier_id', productItem.supplier_id, index)"
+                                    >Fill below</span>
+                                    <span v-else>&nbsp;</span>
+                                    <v-autocomplete
+                                        style="margin-top: 5px"
+                                        outlined
+                                        v-model.trim="productItem.supplier_id"
+                                        :items="select.suppliers"
+                                        item-text="name"
+                                        item-value="supplier_id"
+                                        label="Supplier's Name"
+                                        :rules="rule.supplier"
+                                        :search-input.sync="add[index].supplier.value"
+                                        dense
+                                    >
+                                        <template v-slot:no-data>
+                                            <v-form
+                                                :ref="`supplier${index}`"
+                                                style="margin-left: 10px;"
+                                                v-model="valid"
+                                                @submit.prevent="handleAddSupplier(add[index].supplier.value, `supplier${index}`)"
+                                            >
+                                                <v-text-field
+                                                    dense
+                                                    hide-details
+                                                    outlined
+                                                    style="display: inline-block; margin-left: 10px"
+                                                    v-model="add[index].supplier.value"
+                                                    :rules="[v=>!!v || 'Name is required.']"
+                                                ></v-text-field>
+                                                <v-btn
+                                                    :loading="loading.supplier"
+                                                    type="submit"
+                                                >Add Supplier?
+                                                </v-btn>
+                                            </v-form>
+                                        </template>
+                                    </v-autocomplete>
+                                </div>
+                            </v-hover>
                             <v-btn icon style="margin-top: 28px; color: red" @click="handleRemoveOneItem(index, item.length)"><v-icon>mdi-trash-can</v-icon></v-btn>
                         </div>
                     </v-card-text>
