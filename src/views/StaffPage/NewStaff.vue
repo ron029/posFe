@@ -43,6 +43,7 @@
                         v-model="user.birthdate"
                         label="Birthdate"
                         type="date"
+                        :rules="[v=>!!v||'Birthdate is required']"
                     ></v-text-field>
                     <v-text-field
                         v-model="user.address"

@@ -30,8 +30,21 @@ export const authentication = {
         isCashRegisterRecordedData: null,
         isUserTimeout: false,
         loginData: null,
+        changePasswordData: null,
     },
     actions: {
+        changePassword({commit}, params) {
+            try {
+                AUTH_API
+                    .changePassword(params)
+                    .then(res => {
+                        commit('CHANGE_PASSWORD', res.data)
+                    })
+            } catch (err) {
+                commit('CHANGE_PASSWORD', err.response)
+                console.error(err)
+            }
+        },
         findUserRolePermission({commit}, params) {
             try {
                 EMPLOYEE_API
@@ -57,18 +70,19 @@ export const authentication = {
                 console.error(err)
             }
         },
-        async login({commit}, params) {
+        login({commit}, params) {
             try {
-                await AUTH_API
+                AUTH_API
                     .login(params)
                     .then(res => {
+                        console.log('LOGIN RES: ', res)
                         commit('LOGIN', res.data)
-                        const permission = res && res.data && res.data.DATA && res.data.DATA.PERMISSIONS
-                        commit('FIND_USER_ROLE_PERMISSION', permission ? permission : [])
+                        // const permission = res && res.data && res.data.DATA && res.data.DATA.PERMISSIONS
+                        // commit('FIND_USER_ROLE_PERMISSION', permission ? permission : [])
                     })
             } catch (err) {
+                console.error('LOGIN ERROR: ', err.response)
                 commit('LOGIN', err.response)
-                console.error('LOGIN ERROR: ', err)
             }
         },
         async getCsrfToken() {
@@ -101,6 +115,9 @@ export const authentication = {
         },
     },
     mutations: {
+        CHANGE_PASSWORD(state, changePasswordData) {
+            state.changePasswordData = changePasswordData
+        },
         FIND_USER_ROLE_PERMISSION(state, findUserRolePermissionData) {
             state.findUserRolePermissionData = findUserRolePermissionData
         },
@@ -122,6 +139,9 @@ export const authentication = {
         }
     },
     getters: {
+        changePasswordData(state) {
+            return state.changePasswordData
+        },
         findUserRolePermissionData(state) {
             return state.findUserRolePermissionData
         },

@@ -3,7 +3,7 @@
         <h1>Inventory</h1>
         <v-card style="margin-bottom: 5px">
             <v-card-text>
-                <v-btn @click="showProductForm">Add Products</v-btn>
+                <v-btn @click="showProductForm" :disabled="!isUserCanCreateProducts">Add Products</v-btn>
                 <v-btn @click="show.unit = true">Measurement</v-btn>
                 <v-btn @click="show.category = true">Categories</v-btn>
                 <v-btn @click="show.brand = true">Brands</v-btn>
@@ -32,7 +32,11 @@
                 :search="search"
             >
                 <template slot="item.actions" slot-scope="{ item }">
-                    <v-icon @click="editItem(item)" color="warning">mdi-pencil</v-icon>
+                    <v-icon
+                        @click="editItem(item)"
+                        color="warning"
+                        :disabled="!isUserCanUpdateProducts"
+                    >mdi-pencil</v-icon>
                     <v-icon disabled @click="deleteItem(item)" color="error">mdi-trash-can</v-icon>
                 </template>
             </v-data-table>
@@ -152,7 +156,22 @@ export default {
         searchQuery: null,
     }),
     computed: {
-        ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData', 'productExportData'])
+        ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData', 'productExportData', 'findUserRolePermissionData']),
+        isUserCanReadProducts() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'product:read')
+            return false
+        },
+        isUserCanCreateProducts() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'product:create')
+            return false
+        },
+        isUserCanUpdateProducts() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'product:update')
+            return false
+        }
     },
     watch: {
         'show.productExpire'(newVal) {
@@ -223,11 +242,13 @@ export default {
     },
     async mounted() {
         await this.getCsrfToken()
-        this.units()
-        this.categories()
-        this.brands()
-        this.suppliers()
-        this.products()
+        // if (this.isUserCanReadUnits)
+        //     this.units()
+        // this.categories()
+        // this.brands()
+        // this.suppliers()
+        if (this.isUserCanReadProducts)
+            this.products()
     }
 }
 </script>

@@ -308,7 +308,7 @@ export default {
             this.discrepancyColor = color
         },
         formatTimeCard(time) {
-            return moment(time).format("MMMM D, YYYY h:mm:ss a");
+            return moment(time).utcOffset('+0800').format("MMMM D, YYYY h:mm:ss a");
         },
         formatAmount(total) {
             return total.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }); // With cents

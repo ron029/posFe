@@ -84,6 +84,14 @@ const routes = [
                 meta: {
                     middleware: [ auth ]
                 },
+            },
+            {
+                path: 'manage-account',
+                name: 'manage-account',
+                component: () =>  { return import('@/views/ManageAccount/IndexPage.vue') },
+                meta: {
+                    middleware: [ auth ]
+                },
             }
         ]
     },

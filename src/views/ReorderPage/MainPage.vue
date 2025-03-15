@@ -27,7 +27,7 @@
                                 :headers="headers.reoders"
                                 :items="reorders"
                                 :search="search"
-                                show-select
+                                :show-select="!isUserCanUpdateReorder"
                                 item-key="product_id"
                             >
                                 <template slot="top">
@@ -60,7 +60,7 @@
                                 :items="ignoredReorders"
                                 v-model="selected"
                                 :search="search"
-                                show-select
+                                :show-select="!isUserCanUpdateReorder"
                                 item-key="product_id"
                             >
                                 <template slot="top">
@@ -160,6 +160,11 @@ export default {
     },
     methods: {
         ...mapActions(['newReorder', 'destroyReorder']),
+        isUserCanUpdateReorder() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'reorder:update')
+            return false
+        },
         enableNotification(data) {
             console.log('enableNotification data: ', data)
             this.show.focus=false

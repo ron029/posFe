@@ -5,16 +5,8 @@
         persistent
     >
         <v-card>
-            <v-card-title>New Product Expiration<v-spacer></v-spacer>
-                <v-select
-                    style="width: 20px;"
-                    dense
-                    hide-details
-                    outlined
-                    :items="[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]"
-                    v-model="itemCounter"
-                ></v-select>
-                <v-btn @click="handleAddExpiryData">Add</v-btn>
+            <v-card-title>Edit Product Expiration<v-spacer></v-spacer>
+                <v-btn @click="showDialog = false">close</v-btn>
             </v-card-title>
             <v-form
                 ref="form"
@@ -23,7 +15,7 @@
                 <v-card-text>
                     <div
                         :style="`margin: 0 auto; width: 910px; background-color: ${index % 2 === 0 ? '#eee' : 'white'}; padding: 5px 10px 0 10px`"
-                        v-for="(counter, index) in expiryData"
+                        v-for="(counter, index) in items"
                         :key="index"
                     >
                         <div style="width: 250px; display: inline-block; margin-right: 10px;">
@@ -39,12 +31,12 @@
                                 v-model="counter.product_id"
                                 :rules="[v=>!!v||'Product name is required']"
                             >
-                                <template v-slot="{ item }">
+                                <template slot="item" slot-scope="{ item }">
                                     <p style="text-align: right; width: 600px; position: relative; height: 20px; padding-top: 5px;">
                                         <span style="position: absolute; left: 0; font-weight: 700;">{{ item.barcode }}</span> {{ String(item.brand).toUpperCase() }} {{ String(item.name).toUpperCase() }} {{ String(item.unit).toUpperCase() }} @ {{ item.selling_price }}
                                     </p>
                                 </template>
-                                <template v-slot:selection>
+                                <template slot="selection">
                                     {{ selectedProduct(index).brand }} {{ selectedProduct(index).name }} {{ selectedProduct(index).unit }}
                                 </template>
                             </v-combobox>
@@ -109,22 +101,11 @@ export default {
         loading: false,
         valid: false,
         itemCounter: 1,
-        expiryData: [{
-            product_id: null,
-            expiration_date: null,
-            notif_date: null,
-            comment: null
-        }],
-        expiryDataTemplate: {
-            product_id: null,
-            expiration_date: null,
-            notif_date: null,
-            comment: null
-        },
+        items: []
     }),
-    props: ['show'],
+    props: ['show', 'expiryData'],
     computed: {
-        ...mapGetters(['productData', 'productExpirationData', 'productExpirationsPostData']),
+        ...mapGetters(['productData', 'productExpirationData', 'productExpirationsPostData', 'productExpirationPutData']),
         showDialog: {
             get() {
                 return this.show
@@ -140,6 +121,16 @@ export default {
         },
     },
     watch: {
+        productExpirationPutData(newVal) {
+            console.log('productExpirationPutData newVal: ', newVal)
+        },
+        expiryData: {
+            handler(newVal) {
+                this.items = structuredClone(newVal.map(item => ({ ...item, notif_date: this.formatDate(item.notif_date), expiration_date: this.formatDate(item.expiration_date)})))
+            },
+            immediate: true,
+            deep: true
+        },
         loading(newVal, oldVal) {
             if (oldVal === true && newVal === false) {
                 this.productExpiration()
@@ -148,7 +139,10 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['productExpiration', 'productExpirationsPost']),
+        ...mapActions(['productExpiration', 'productExpirationPut']),
+        formatDate(date) {
+            return moment(date).format('YYYY-MM-DD')
+        },
         notifRule(notif_date, expDate) {
             return [moment(notif_date).utcOffset('+0800').isSameOrBefore(moment(expDate).utcOffset('+0800')) || 'Notif Date should not after Expiry Date']
         },
@@ -158,31 +152,28 @@ export default {
         async submitForm() {
             if (this.$refs && this.$refs.form.validate()) {
                 this.loading = true
-                for (let i=0; i<this.expiryData.length; i++) {
-                    await this.productExpirationsPost(this.expiryData[i])
+                for (let i=0; i<this.items.length; i++) {
+                    delete this.items[i].brand
+                    delete this.items[i].name
+                    delete this.items[i].unit
+                    delete this.items[i].days_remaining
+                    await this.productExpirationPut(this.items[i])
                 }
                 this.loading = false
             }
         },
         handleFillBelow(index) {
-            for (let i=index; i<this.expiryData.length; i++) {
-                this.expiryData[i].product_id = this.expiryData[index].product_id
+            for (let i=index; i<this.items.length; i++) {
+                this.items[i].product_id = this.items[index].product_id
             }
         },
         handleChangeExpiryDate(index) {
-            this.expiryData[index].notif_date = this.expiryData[index].expiration_date
+            this.items[index].notif_date = this.items[index].expiration_date
         },
         handleDeleteExpiryDate(index) {
-            this.expiryData.splice(index, 1)
-            if (this.expiryData.length <= 0) this.showDialog = false
+            this.items.splice(index, 1)
+            if (this.items.length <= 0) this.showDialog = false
         },
-        handleAddExpiryData() {
-            let test = []
-            for(let i = 0; i<this.itemCounter; i++) {
-                test.push(structuredClone(this.expiryDataTemplate))
-            }
-            this.expiryData = [...this.expiryData, ...test]
-        }
     },
 }
 </script>

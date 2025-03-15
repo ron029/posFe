@@ -1,6 +1,6 @@
 <template>
     <div style="margin: 0 20px">
-        <h1>STAFF</h1>
+        <h1>Staff</h1>
         <p>
             <v-btn
                 @click="displayPageFunc('staff')"
@@ -11,7 +11,6 @@
                 :color="displayPage.role ? 'primary' : ''"
             ><v-icon>mdi-account-multiple</v-icon>roles</v-btn>
             <v-btn
-                disabled
                 v-if="displayPage.staff"
                 absolute
                 right
@@ -19,7 +18,6 @@
                 color="success"
             ><v-icon>mdi-account-plus</v-icon>&nbsp;New</v-btn>
             <v-btn
-                disabled
                 v-if="displayPage.role"
                 absolute
                 right

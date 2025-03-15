@@ -3,7 +3,7 @@
         <h1>Company Page</h1>
         <v-card style="padding: 20px 40px;">
             <div v-if="company">
-                <p class="text-right"><v-btn color="warning" @click="showEditCompany = true"><v-icon small>mdi-pencil</v-icon>&nbsp;edit</v-btn></p>
+                <p class="text-right"><v-btn color="warning" @click="showEditCompany = true" :disabled="!isUserCanUpdateCompany"><v-icon small>mdi-pencil</v-icon>&nbsp;edit</v-btn></p>
                 <v-text-field
                     outlined
                     v-model="company.name"
@@ -40,6 +40,12 @@
                     label="Contact Number"
                     readonly
                 ></v-text-field>
+                <v-text-field
+                    outlined
+                    v-model="company.updated_at"
+                    label="Last Update"
+                    readonly
+                ></v-text-field>
             </div>
         </v-card>
         <EditCompanyDialog
@@ -74,13 +80,18 @@ export default {
         EditCompanyDialog
     },
     computed: {
-        ...mapGetters(['companyProfilesData'])
+        ...mapGetters(['companyProfilesData', 'findUserRolePermissionData']),
+        isUserCanUpdateCompany() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'company:update')
+            return false
+        },
     },
     watch: {
         companyProfilesData(newVal) {
             this.company = structuredClone(newVal.DATA[0])
-            this.company.updated_at = moment(this.company.updated_at).utcOffset(8).format('MMMM d, YYYY hh:mm A')
-            this.company.date_founded = moment(this.company.date_founded).utcOffset(8).format('YYYY-MM-DD')
+            this.company.updated_at = moment(this.company.updated_at).utcOffset('+0800').format('MMMM D, YYYY hh:mm A')
+            this.company.date_founded = moment(this.company.date_founded).utcOffset('+0800').format('YYYY-MM-DD')
         }
     },
     methods: {
