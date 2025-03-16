@@ -235,7 +235,7 @@
                             :key="index"
                             :style="`background-color: ${index % 2 == 0 ? '#ddd' : 'white'}; display: flex; width: 100%;`"
                         >
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <!-- category -->
                                 <div>
                                     <span
@@ -284,7 +284,7 @@
                                 </div>
                             </v-hover>
 
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <!-- brand -->
                                 <div>
                                     <span
@@ -332,7 +332,7 @@
                                 </div>
                             </v-hover>
 
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <!-- product name -->
                                 <div>
                                     <span
@@ -353,7 +353,7 @@
                                 </div>
                             </v-hover>
 
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <!-- unit -->
                                 <div>
                                     <span
@@ -429,7 +429,7 @@
                                     dense
                                 ></v-checkbox>
                                 <v-text-field
-                                    style="width: 150px; margin-top: 5px"
+                                    style="width: 135px; margin-top: 5px"
                                     outlined
                                     label="Barcode"
                                     v-model.trim="productItem.barcode"
@@ -441,7 +441,7 @@
                             </div>
 
                             <!-- quantity -->
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <div>
                                     <span
                                         v-if="hover"
@@ -463,7 +463,7 @@
                             </v-hover>
 
                             <!-- reorder_level -->
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <div>
                                     <span
                                         v-if="hover"
@@ -485,7 +485,7 @@
                             </v-hover>
 
                             <!-- cost_price -->
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <div>
                                     <span
                                         v-if="hover"
@@ -509,7 +509,7 @@
                             </v-hover>
 
                             <!-- selling_price -->
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <div>
                                     <span
                                         v-if="hover"
@@ -533,7 +533,7 @@
                             </v-hover>
 
                             <!-- supplier_id -->
-                            <v-hover v-slot="{ hover }">
+                            <v-hover v-slot="{ hover }" close-delay="100">
                                 <div>
                                     <span
                                         v-if="hover"
