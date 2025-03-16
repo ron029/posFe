@@ -7,6 +7,10 @@
         <template slot="item.birthdate" slot-scope="{ item }">
             {{ formatDate(item.birthdate) }}
         </template>
+        <template slot="item.is_active" slot-scope="{ item }">
+            <span v-if="item.is_active === 1" style="display: inline-block; width: 70px;"><v-icon color="green">mdi-checkbox-marked</v-icon> Active</span>
+            <span v-else style="display: inline-block; width: 80px;"><v-icon color="red">mdi-close-box</v-icon> Inactive</span>
+        </template>
         <template slot="item.actions" slot-scope="{ item }">
             <span style="text-wrap: nowrap;">
                 <v-btn icon color="warning" @click="$emit('editAccount', item.employee_id)"><v-icon>mdi-pencil</v-icon></v-btn>

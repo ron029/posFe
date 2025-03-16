@@ -52,8 +52,13 @@ export default {
             if (newVal) {
                 if (newVal.STATUS === 200) {
                     if (this.$route.path !== '/pos') window.location.href = '/pos'
-                } else {
-                    this.errMsg = 'Invalid username or password'
+                } else if (newVal.STATUS === 401) {
+                    this.errMsg = newVal.STATE
+                    setTimeout(()=>{
+                        this.errMsg = ""
+                    }, 5000)
+                } else if (newVal.STATUS === 403) {
+                    this.errMsg = newVal.STATE
                     setTimeout(()=>{
                         this.errMsg = ""
                     }, 5000)

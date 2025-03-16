@@ -56,6 +56,13 @@
                         v-model="user.emergency_name"
                         label="Emergency Name"
                     ></v-text-field>
+                    <v-select
+                        :items="[{status: 'Active', value: 1}, {status: 'Inactive', value: 0}]"
+                        v-model="user.is_active"
+                        item-text="status"
+                        item-value="value"
+                        label="Status"
+                    ></v-select>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -87,7 +94,7 @@ export default {
             emergency_name: null,
             isAdmin: null,
             role_id: null,
-            isActive: null,
+            is_active: null,
         },
         rules: {
             username: [v=>!!v||"Username is required"],
