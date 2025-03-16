@@ -50,7 +50,7 @@
         />
         <NewRole
             :show="show.role"
-            @closeDialog="show.role=false"
+            @closeDialog="closeRoleDialog"
         />
     </div>
 </template>
@@ -132,6 +132,10 @@ export default {
     },
     methods: {
         ...mapActions(['employee', 'employeeFind', 'userRole']),
+        closeRoleDialog() {
+            this.show.role=false
+            this.userRole()
+        },
         reloadRolePermission(data) {
             const test = this.groupedRolesAndPermissions(data)
             console.log('watch roleData test: ', test)

@@ -13,7 +13,7 @@
                 <v-card-text>
                     <v-select
                         v-model="user.role_id"
-                        :items="userRoleData && userRoleData.DATA"
+                        :items="userRolesItems"
                         label="Role"
                         item-text="name"
                         item-value="role_id"
@@ -86,6 +86,7 @@ export default {
             emergency_name: null,
             role_id: null,
         },
+        userRolesItems: [],
         rules: {
             username: [v=>!!v||"Username is required"],
             password: [v=>!!v||"Password is required"],
@@ -108,6 +109,11 @@ export default {
     },
     watch: {
         userRoleData(newVal) {
+            if (newVal && newVal.DATA) {
+                this.$nextTick(()=>{
+                    this.userRolesItems = newVal.DATA
+                })
+            }
             console.log('watch userRoleData newVal: ', newVal)
         },
         signUpData(newVal) {
