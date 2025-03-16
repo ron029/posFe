@@ -73,6 +73,7 @@
             </v-card-text>
         </v-card>
         <ChangePassDialog
+            v-if="showChangePass"
             :showChangePass="showChangePass"
             @closeDialog="showChangePass = false"
         />
@@ -116,11 +117,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['getCsrfToken', 'employeeFind', 'changePassword']),
-        handleChangePass() {
-            const employee_id = window.$cookies.get('userId')
-            this.changePassword({employee_id})
-        }
+        ...mapActions(['getCsrfToken', 'employeeFind']),
     },
     async mounted() {
         await this.getCsrfToken()

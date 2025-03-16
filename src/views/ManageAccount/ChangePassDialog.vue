@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
     data: ()=>({
@@ -88,14 +88,23 @@ export default {
         }
     },
     watch: {
-        changePassword(newVal) {
-            console.log('changePassword newVal: ', newVal)
+        changePasswordData(newVal) {
+            if (newVal.STATUS === 200) {
+                alert('Password updated successfully')
+                this.$emit('closeDialog')
+            } else if (newVal.STATUS === 406) {
+                alert(newVal.STATE)
+            }
+            console.log('changePasswordData newVal: ', newVal)
         }
     },
     methods: {
+        ...mapActions(['changePassword']),
         submitForm() {
             if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
                 console.log('fire change password')
+                const employee_id = window.$cookies.get('userId')
+                this.changePassword({employee_id, PASS_OLD: this.password.old.value, PASS_NEW: this.password.new.value})
             }
         }
     }
