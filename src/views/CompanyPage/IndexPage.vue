@@ -3,7 +3,17 @@
         <h1>Company Page</h1>
         <v-card style="padding: 20px 40px;">
             <div v-if="company">
-                <p class="text-right"><v-btn color="warning" @click="showEditCompany = true" :disabled="!isUserCanUpdateCompany"><v-icon small>mdi-pencil</v-icon>&nbsp;edit</v-btn></p>
+                <p class="text-right">
+                    <v-btn color="warning"
+                        @click="showEditCompany = true"
+                        :disabled="!isUserCanUpdateCompany"
+                    ><v-icon small>mdi-pencil</v-icon>&nbsp;edit</v-btn>
+                    <v-btn
+                        @click="showManageDatabase = true"
+                        :disabled="!isUserCanUpdateCompany"
+                        style="margin-left: 10px;"
+                    ><v-icon small>mdi-database-cog</v-icon>&nbsp;manage database</v-btn>
+                </p>
                 <v-text-field
                     outlined
                     v-model="company.name"
@@ -62,6 +72,7 @@ import moment from 'moment';
 import EditCompanyDialog from './EditCompanyDialog.vue';
 export default {
     data: ()=>({
+        showManageDatabase: false,
         showEditCompany: false,
         company: {
             "company_info_id": 1,
@@ -83,7 +94,17 @@ export default {
         ...mapGetters(['companyProfilesData', 'findUserRolePermissionData']),
         isUserCanUpdateCompany() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'company:update')
+            if (permissions) return permissions.some(item => item.name === 'company:2')
+            return false
+        },
+        isUserCanRestore() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'restore:0')
+            return false
+        },
+        isUserCanBackup() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'backup:0')
             return false
         },
     },

@@ -159,37 +159,37 @@ export default {
         ...mapGetters(['unitData', 'categoryData', 'brandData', 'supplierData', 'productData', 'productExportData', 'findUserRolePermissionData']),
         isUserCanReadSuppliers() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'supplier:read')
+            if (permissions) return permissions.some(item => item.name === 'supplier:1')
             return false
         },
         isUserCanReadBrands() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'brand:read')
+            if (permissions) return permissions.some(item => item.name === 'brand:1')
             return false
         },
         isUserCanReadCategories() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'category:read')
+            if (permissions) return permissions.some(item => item.name === 'category:1')
             return false
         },
         isUserCanReadUnits() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'unit:read')
+            if (permissions) return permissions.some(item => item.name === 'unit:1')
             return false
         },
         isUserCanReadProducts() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'product:read')
+            if (permissions) return permissions.some(item => item.name === 'product:1')
             return false
         },
         isUserCanCreateProducts() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'product:create')
+            if (permissions) return permissions.some(item => item.name === 'product:0')
             return false
         },
         isUserCanUpdateProducts() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'product:update')
+            if (permissions) return permissions.some(item => item.name === 'product:0')
             return false
         }
     },

@@ -154,17 +154,17 @@ export default {
         ...mapGetters(['supplierData', 'supplierPostData', 'supplierDeleteData', 'supplierPutData', 'findUserRolePermissionData']),
         isUserCanReadSuppliers() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'supplier:read')
+            if (permissions) return permissions.some(item => item.name === 'supplier:1')
             return false
         },
         isUserCanCreateSuppliers() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'supplier:create')
+            if (permissions) return permissions.some(item => item.name === 'supplier:0')
             return false
         },
         isUserCanUpdateSuppliers() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'supplier:update')
+            if (permissions) return permissions.some(item => item.name === 'supplier:3')
             return false
         },
         showDialog: {

@@ -152,17 +152,17 @@ export default {
         ...mapGetters(['productExpirationData', 'productExpirationPutData', 'findUserRolePermissionData']),
         isUserCanReadProductExpire() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'product_exp:read')
+            if (permissions) return permissions.some(item => item.name === 'product_exp:1')
             return false
         },
         isUserCanCreateProductExpire() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'product_exp:create')
+            if (permissions) return permissions.some(item => item.name === 'product_exp:0')
             return false
         },
         isUserCanUpdateProductExpire() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'product_exp:update')
+            if (permissions) return permissions.some(item => item.name === 'product_exp:2')
             return false
         },
         displayProductExpiryFilterByStatus() {

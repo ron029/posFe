@@ -164,17 +164,17 @@ export default {
         ...mapGetters(['categoryData', 'categoryPostData', 'categoryDeleteData', 'categoryPutData', 'findUserRolePermissionData']),
         isUserCanReadCategories() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'category:read')
+            if (permissions) return permissions.some(item => item.name === 'category:1')
             return false
         },
         isUserCanCreateCategories() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'category:create')
+            if (permissions) return permissions.some(item => item.name === 'category:0')
             return false
         },
         isUserCanUpdateCategories() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'category:update')
+            if (permissions) return permissions.some(item => item.name === 'category:2')
             return false
         },
         showDialog: {

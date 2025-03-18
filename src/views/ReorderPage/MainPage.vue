@@ -162,7 +162,7 @@ export default {
         ...mapActions(['newReorder', 'destroyReorder']),
         isUserCanUpdateReorder() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'reorder:update')
+            if (permissions) return permissions.some(item => item.name === 'reorder:2')
             return false
         },
         enableNotification(data) {

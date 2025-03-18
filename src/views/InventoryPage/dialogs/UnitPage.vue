@@ -163,17 +163,17 @@ export default {
         ...mapGetters(['unitData', 'unitPostData', 'unitDeleteData', 'unitPutData', 'findUserRolePermissionData']),
         isUserCanReadUnits() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'unit:read')
+            if (permissions) return permissions.some(item => item.name === 'unit:1')
             return false
         },
         isUserCanCreateUnits() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'unit:create')
+            if (permissions) return permissions.some(item => item.name === 'unit:0')
             return false
         },
         isUserCanUpdateUnits() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'unit:update')
+            if (permissions) return permissions.some(item => item.name === 'unit:2')
             return false
         },
         showDialog: {

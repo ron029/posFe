@@ -42,15 +42,15 @@
         </v-card>
         <div :style="`margin-left: ${this.$route.name === 'cash-register' ? 0 : 60}px`">
             <!-- Inner div with a background image -->
-            <div    
+            <div
                 v-show="this.$route.name !== 'cash-register'"
                 :style="{
                     position: 'absolute',
                     backgroundImage: `url(${require('@/assets/img/20999.jpg')})`,
-                    backgroundSize: 'cover', 
-                    backgroundPosition: 'center', 
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                     opacity: `${this.$route.name === 'pos' ? '100%' : '50%'}`,
-                    height: '100vh', 
+                    height: '100vh',
                     width: '100%',
                     zIndex: 0,
                 }"
@@ -82,7 +82,7 @@ import { mapActions, mapGetters } from 'vuex';
         ...mapGetters(['findUserRolePermissionData', 'findUserRolePermissionData']),
         isUserCanUpdatePassword() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'self_pass:update')
+            if (permissions) return permissions.some(item => item.name === 'self_pass:3')
             return false
         },
     },

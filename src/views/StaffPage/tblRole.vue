@@ -56,7 +56,7 @@
                         :key="index"
                         dense
                         v-model="permissionItem.value"
-                        :label="permissionItem.action[1]"
+                        :label="getLabel(Number(permissionItem.action[1]))"
                         :disabled="item.edit"
                     ></v-checkbox>
                 </div>
@@ -130,6 +130,20 @@ export default {
     },
     methods: {
         ...mapActions(['role', 'permission', 'rolePermissionPut']),
+        getLabel(index) {
+            let name = null
+            switch(index) {
+                case 0: name = 'create'
+                    break
+                case 1: name = 'read'
+                    break
+                case 2: name = 'update'
+                    break
+                case 3: name = 'delete'
+                    break
+            }
+            return name
+        },
         updateRole(item) {
             this.rolePermissionPut(item)
         },

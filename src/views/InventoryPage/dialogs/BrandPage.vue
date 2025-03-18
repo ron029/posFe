@@ -164,17 +164,17 @@ export default {
         ...mapGetters(['brandData', 'brandPostData', 'brandDeleteData', 'brandPutData', 'findUserRolePermissionData']),
         isUserCanReadBrands() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'brand:read')
+            if (permissions) return permissions.some(item => item.name === 'brand:1')
             return false
         },
         isUserCanCreateBrands() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'brand:create')
+            if (permissions) return permissions.some(item => item.name === 'brand:0')
             return false
         },
         isUserCanUpdateBrands() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'brand:update')
+            if (permissions) return permissions.some(item => item.name === 'brand:2')
             return false
         },
         showDialog: {
