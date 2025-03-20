@@ -1,15 +1,22 @@
 <template>
     <div style="margin: 0 20px">
         <h1>Staff</h1>
-        <p>
+        <v-card style="padding: 10px; margin-bottom: 10px;">
             <v-btn
+                style="margin-right: 5px;"
                 @click="displayPageFunc('staff')"
                 :color="displayPage.staff ? 'primary' : ''"
             ><v-icon>mdi-account</v-icon>accounts</v-btn>
             <v-btn
+                style="margin-right: 5px;"
                 @click="displayPageFunc('role')"
                 :color="displayPage.role ? 'primary' : ''"
             ><v-icon>mdi-account-multiple</v-icon>roles</v-btn>
+            <v-btn
+                style="margin-right: 5px;"
+                @click="displayPageFunc('audit')"
+                :color="displayPage.audit ? 'primary' : ''"
+            ><v-icon>mdi-clipboard-text-clock</v-icon>audit logs</v-btn>
             <v-btn
                 v-if="displayPage.staff"
                 absolute
@@ -24,7 +31,7 @@
                 @click="show.role=true"
                 color="success"
             ><v-icon>mdi-account-multiple-plus</v-icon>&nbsp;New</v-btn>
-        </p>
+        </v-card>
         <v-card>
             <tblStaff
                 :show="displayPage.staff"
@@ -37,6 +44,11 @@
                 :headers="headers.role"
                 :items="items.role"
                 @reloadRolePermission="reloadRolePermission"
+            />
+            <tblAudit
+                :show="displayPage.audit"
+                :headers="headers.audit"
+                :items="items.audit"
             />
         </v-card>
         <EditStaff
@@ -56,6 +68,7 @@
 </template>
 
 <script>
+import tblAudit from './tblAudit.vue';
 import tblRole from './tblRole.vue';
 import tblStaff from './tblStaff.vue';
 import EditStaff from './EditStaff.vue';
@@ -65,19 +78,15 @@ import { mapActions, mapGetters } from 'vuex';
 
 export default {
     components: {
-        tblRole,
-        tblStaff,
-        EditStaff,
-        NewRole,
-        NewStaff
-    },
+        tblAudit, tblRole, tblStaff, EditStaff, NewRole, NewStaff },
     data: () => ({
         expanded: [],
         lastExpanded: null,
         singleExpand: false,
         displayPage: {
             staff: true,
-            role: false
+            role: false,
+            audit: false,
         },
         show: {
             newStaff: false,
@@ -101,11 +110,19 @@ export default {
             role: [
                 {text: 'Name', value: 'name'},
                 {text: '', value: 'data-table-expand'},
+            ],
+            audit: [
+                {text: 'Name', value: 'name'},
+                {text: 'Role', value: 'role'},
+                {text: 'Action', value: 'action'},
+                {text: 'Description', value: 'description'},
+                {text: 'Time', value: 'time'}
             ]
         },
         items: {
             staff: [],
             role: [],
+            audit: [],
         },
     }),
     computed: {
@@ -155,6 +172,7 @@ export default {
         displayPageFunc(page) {
             this.displayPage.staff = page === 'staff'
             this.displayPage.role = page === 'role'
+            this.displayPage.audit = page === 'audit'
         },
         editAccount(employee_id) {
             this.employeeFind(employee_id)

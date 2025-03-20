@@ -10,7 +10,6 @@
                     ><v-icon small>mdi-pencil</v-icon>&nbsp;edit</v-btn>
                     <v-btn
                         @click="showManageDatabase = true"
-                        :disabled="!isUserCanUpdateCompany"
                         style="margin-left: 10px;"
                     ><v-icon small>mdi-database-cog</v-icon>&nbsp;manage database</v-btn>
                 </p>
@@ -58,6 +57,10 @@
                 ></v-text-field>
             </div>
         </v-card>
+        <ManageDatabase
+            :show="showManageDatabase"
+            @closeDialog="showManageDatabase = false"
+        />
         <EditCompanyDialog
             :showEditCompany="showEditCompany"
             :company="company"
@@ -70,6 +73,7 @@
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
 import EditCompanyDialog from './EditCompanyDialog.vue';
+import ManageDatabase from './ManageDatabase.vue';
 export default {
     data: ()=>({
         showManageDatabase: false,
@@ -88,7 +92,7 @@ export default {
         },
     }),
     components: {
-        EditCompanyDialog
+        EditCompanyDialog, ManageDatabase
     },
     computed: {
         ...mapGetters(['companyProfilesData', 'findUserRolePermissionData']),

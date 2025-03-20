@@ -27,7 +27,7 @@
                                 :headers="headers.reoders"
                                 :items="reorders"
                                 :search="search"
-                                :show-select="!isUserCanUpdateReorder"
+                                :show-select="isUserCanUpdateReorder()"
                                 item-key="product_id"
                             >
                                 <template slot="top">
@@ -60,7 +60,7 @@
                                 :items="ignoredReorders"
                                 v-model="selected"
                                 :search="search"
-                                :show-select="!isUserCanUpdateReorder"
+                                :show-select="isUserCanUpdateReorder()"
                                 item-key="product_id"
                             >
                                 <template slot="top">
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import FocusPage from './FocusPage.vue';
 import IgnorePage from './IgnorePage.vue';
 export default {
@@ -145,6 +145,7 @@ export default {
     },
     props: ['reorders', 'ignoredReorders'],
     computed: {
+        ...mapGetters(['findUserRolePermissionData']),
         enableIgnore() {
             return !this.selected.length>0
         }
