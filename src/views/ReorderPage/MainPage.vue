@@ -50,6 +50,9 @@
                                 <template slot="item.notificatioStatus">
                                     <v-icon>mdi-bell</v-icon> Active
                                 </template>
+                                <template slot="item.name" slot-scope="{ item }">
+                                    {{ productName(item) }}
+                                </template>
                             </v-data-table>
                         </v-card>
                     </v-card-text>
@@ -82,6 +85,9 @@
                                 </template>
                                 <template slot="item.notificatioStatus">
                                     <v-icon>mdi-bell-off</v-icon> Muted
+                                </template>
+                                <template slot="item.name" slot-scope="{ item }">
+                                    {{ productName(item) }}
                                 </template>
                             </v-data-table>
                         </v-card>
@@ -148,7 +154,7 @@ export default {
         ...mapGetters(['findUserRolePermissionData']),
         enableIgnore() {
             return !this.selected.length>0
-        }
+        },
     },
     watch: {
         tab() {
@@ -161,6 +167,10 @@ export default {
     },
     methods: {
         ...mapActions(['newReorder', 'destroyReorder']),
+        productName(item) {
+            const name = `${item.brand} ${item.name} ${item.unit}`
+            return name.toUpperCase()
+        },
         isUserCanUpdateReorder() {
             const permissions = this.findUserRolePermissionData
             if (permissions) return permissions.some(item => item.name === 'reorder:2')
