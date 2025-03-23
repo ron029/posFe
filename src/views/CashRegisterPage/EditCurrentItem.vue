@@ -88,7 +88,7 @@ export default {
             itemQuantity: 0,
             adjustment_type: null,
         },
-        adjustmentItems: ['REFUND', 'CANCEL', 'TEST']
+        adjustmentItems: ['REFUND', 'CANCEL']
     }),
     props: [ 'show', 'currentTransaction', 'isNewTransaction' ],
     computed: {
