@@ -189,7 +189,7 @@ export default {
         },
         isUserCanUpdateProducts() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'product:0')
+            if (permissions) return permissions.some(item => item.name === 'product:2')
             return false
         }
     },

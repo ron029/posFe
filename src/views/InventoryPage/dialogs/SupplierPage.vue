@@ -164,7 +164,7 @@ export default {
         },
         isUserCanUpdateSuppliers() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'supplier:3')
+            if (permissions) return permissions.some(item => item.name === 'supplier:2')
             return false
         },
         showDialog: {

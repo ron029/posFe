@@ -5,14 +5,14 @@
             width="650px"
         >
             <v-card style="padding-top: 20px;">
-                <v-card-subtitle>For safety, please backup before restoring.</v-card-subtitle>
+                <v-card-subtitle>For safety, please backup before restoring. {{ typeof isUserCanBackUpDatabase }}</v-card-subtitle>
                 <v-card-text class="container">
                     <v-btn
                         class="backup-btn"
                         color="primary"
                         :loading="loading.backup"
                         :disabled="loading.backup || !isUserCanBackUpDatabase"
-                        @click="!isUserCanBackUpDatabase ? null : handleBackup"
+                        @click="handleBackup"
                         height="240"
                         width="240"
                     >

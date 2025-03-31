@@ -82,7 +82,7 @@ import { mapActions, mapGetters } from 'vuex';
         ...mapGetters(['findUserRolePermissionData', 'findUserRolePermissionData']),
         isUserCanUpdatePassword() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'self_pass:3')
+            if (permissions) return permissions.some(item => item.name === 'self_pass:2')
             return false
         },
     },

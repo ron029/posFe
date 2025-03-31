@@ -62,6 +62,7 @@
             @closeDialog="showManageDatabase = false"
         />
         <EditCompanyDialog
+            v-if="showEditCompany"
             :showEditCompany="showEditCompany"
             :company="company"
             @hideEditCompany="showEditCompany = false"
@@ -79,16 +80,16 @@ export default {
         showManageDatabase: false,
         showEditCompany: false,
         company: {
-            "company_info_id": 1,
-            "name": "test",
+            "company_info_id": null,
+            "name": "",
             "address1": null,
             "address2": null,
-            "date_founded": '2025-03-10',
+            "date_founded": moment().format('YYYY-MM-DD'),
             "description": null,
             "contact_number": null,
             "status": 0,
-            "created_at": "2025-03-05T14:45:57.000Z",
-            "updated_at": "2025-03-05T14:45:57.000Z"
+            "created_at": moment(),
+            "updated_at": moment()
         },
     }),
     components: {
@@ -99,6 +100,11 @@ export default {
         isUserCanUpdateCompany() {
             const permissions = this.findUserRolePermissionData
             if (permissions) return permissions.some(item => item.name === 'company:2')
+            return false
+        },
+        isUserCanReadCompany() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'company:1')
             return false
         },
         isUserCanRestore() {
@@ -114,7 +120,7 @@ export default {
     },
     watch: {
         companyProfilesData(newVal) {
-            this.company = structuredClone(newVal.DATA[0])
+            this.company = this.isUserCanReadCompany ? structuredClone(newVal.DATA[0]) : []
             this.company.updated_at = moment(this.company.updated_at).utcOffset('+0800').format('MMMM D, YYYY hh:mm A')
             this.company.date_founded = moment(this.company.date_founded).utcOffset('+0800').format('YYYY-MM-DD')
         }

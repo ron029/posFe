@@ -105,7 +105,7 @@ export default {
         ...mapGetters(['employeeFindData', 'findUserRolePermissionData', 'changePasswordData']),
         isUserCanUpdatePassword() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'self_pass:update')
+            if (permissions) return permissions.some(item => item.name === 'self_pass:2')
             return false
         },
     },

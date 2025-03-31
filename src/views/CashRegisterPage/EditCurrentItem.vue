@@ -95,7 +95,7 @@ export default {
         ...mapGetters(['findUserRolePermissionData']),
         isUserCanEditPrice() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'price:3')
+            if (permissions) return permissions.some(item => item.name === 'price:2')
             return false
         },
         amount() {
