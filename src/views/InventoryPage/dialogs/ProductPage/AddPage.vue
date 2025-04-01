@@ -76,7 +76,10 @@
                             :search-input.sync="add[0].brand.value"
                             ref="brand30"
                         >
-                            <template v-slot:no-data>
+                            <template
+                                v-slot:no-data
+                                v-if="isUserCanCreateBrand"
+                            >
                                 <v-form
                                     v-model="valid"
                                     ref="brand30"
@@ -113,7 +116,10 @@
                             :rules="rule.unit"
                             :search-input.sync="add[0].unit.value"
                         >
-                            <template v-slot:no-data>
+                            <template
+                                v-slot:no-data
+                                v-if="isUserCanCreateUnit"
+                            >
                                 <v-form
                                     v-model="valid"
                                     ref="unit30"
@@ -186,7 +192,10 @@
                             :rules="rule.supplier"
                             :search-input.sync="add[0].supplier.value"
                         >
-                            <template v-slot:no-data>
+                            <template
+                                v-slot:no-data
+                                v-if="isUserCanCreateSupplier"
+                            >
                                 <v-form
                                     v-model="valid"
                                     ref="supplier30"
@@ -306,7 +315,10 @@
                                         :search-input.sync="add[index].brand.value"
                                         dense
                                     >
-                                        <template v-slot:no-data>
+                                        <template
+                                            v-slot:no-data
+                                            v-if="isUserCanCreateBrand"
+                                        >
                                             <v-form
                                                 :ref="`brand${index}`"
                                                 style="margin-left: 10px;"
@@ -375,7 +387,10 @@
                                         :search-input.sync="add[index].unit.value"
                                         dense
                                     >
-                                        <template v-slot:no-data>
+                                        <template
+                                            v-slot:no-data
+                                            v-if="isUserCanCreateUnit"
+                                        >
                                             <v-form
                                                 :ref="`unit${index}`"
                                                 style="margin-left: 10px;"
@@ -554,7 +569,10 @@
                                         :search-input.sync="add[index].supplier.value"
                                         dense
                                     >
-                                        <template v-slot:no-data>
+                                        <template
+                                            v-slot:no-data
+                                            v-if="isUserCanCreateSupplier"
+                                        >
                                             <v-form
                                                 :ref="`supplier${index}`"
                                                 style="margin-left: 10px;"
@@ -673,7 +691,22 @@ export default {
     }),
     props: ['data', 'show'],
     computed: {
-        ...mapGetters(['productPostData', 'categoryPostData', 'brandPostData', 'supplierPostData', 'unitPostData']),
+        ...mapGetters(['productPostData', 'categoryPostData', 'brandPostData', 'supplierPostData', 'unitPostData', 'findUserRolePermissionData']),
+        isUserCanCreateSupplier() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'supplier:0')
+            return false
+        },
+        isUserCanCreateBrand() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'brand:0')
+            return false
+        },
+        isUserCanCreateUnit() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'unit:0')
+            return false
+        },
         showDialog: {
             get() {
                 return this.show
