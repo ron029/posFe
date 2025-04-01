@@ -194,9 +194,6 @@ export default {
         }
     },
     watch: {
-        'show.productExpire'(newVal) {
-            console.log('show.productExpire newVal: ', newVal)
-        },
         searchQuery(newVal) {
             if (newVal === null || newVal === '')
                 this.search = null

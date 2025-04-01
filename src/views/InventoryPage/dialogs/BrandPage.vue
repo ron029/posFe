@@ -218,18 +218,24 @@ export default {
             if (newVal.STATUS === 200) {
                 this.newItem.brand_id = newVal.DATA.insertId
                 this.createBrandItem()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         brandData(newVal) {
             if (newVal.STATUS === 200) {
                 this.tblItems = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         brandPutData(newVal) {
             if (newVal.STATUS === 200) {
                 this.updateBrandItems()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -238,6 +244,8 @@ export default {
                 // this.removeBrandItem()
                 await this.getCsrfToken()
                 this.brands()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },

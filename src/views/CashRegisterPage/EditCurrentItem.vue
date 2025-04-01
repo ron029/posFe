@@ -136,9 +136,6 @@ export default {
         }
     },
     methods: {
-        test() {
-            console.log('test')
-        },
         reassignEditable(data) {
             this.edit = data
             const reason = this.edit.itemQuantity >= data.quantity ? 'FULL REFUND' : 'REFUND'
@@ -150,7 +147,6 @@ export default {
             Vue.set(this.edit, 'selling_price_placeholder', data.selling_price);
         },
         submitForm() {
-            console.log('SUBMIT ADJUSTMENT')
             if (this.$refs.form.validate()) {
                 this.edit.amount = this.amount
                 this.edit.itemQuantity = Number(this.edit.quantity_placeholder)

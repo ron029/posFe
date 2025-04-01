@@ -159,6 +159,8 @@ export default {
                         if (test) test.scrollIntoView({ behavior: "auto", block: "start" });
                     })
                     this.items = newVal
+                } else {
+                    console.error(newVal.STATE)
                 }
             },
             immediate: true,

@@ -94,7 +94,6 @@ export default {
     methods: {
         processTransaction() {
             if (this.$refs.form.validate()) {
-                console.log('PROCESS TRANSACTION')
                 this.$emit('saveTransaction', {tendered: this.cash})
                 this.show.payment = false
             }

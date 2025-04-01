@@ -218,18 +218,24 @@ export default {
             if (newVal.STATUS === 200) {
                 this.newItem.category_id = newVal.DATA.insertId
                 this.createCategoryItem()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         categoryData(newVal) {
             if (newVal.STATUS === 200) {
                 this.tblItems = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         categoryPutData(newVal) {
             if (newVal.STATUS === 200) {
                 this.updateCategoryItems()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -238,6 +244,8 @@ export default {
                 // this.removeCategoryItem()
                 await this.getCsrfToken()
                 this.categories()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },

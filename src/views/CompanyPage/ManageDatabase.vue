@@ -152,7 +152,6 @@ export default {
 
                 // Get CSRF token first
                 const csrfToken = await this.getCsrfToken();
-                console.log('csrfToken: ', csrfToken)
 
                 // Make the API request with the CSRF token included
                 const response = await fetch(`${process.env.VUE_APP_API}/manage-db/restore`, {
@@ -191,7 +190,6 @@ export default {
             this.showPromptRestore = false
         },
         handleFileChange(file) {
-            console.log('file: ', file)
             if (file) {
                 // Get the file path from the file object
                 // Note: Due to security restrictions, browsers don't provide the full file path
@@ -199,7 +197,6 @@ export default {
                 this.filePath = file.name;
 
                 // For demonstration purposes, we're just using the filename
-                console.log("SQL file selected:", this.filePath);
             } else {
                 this.filePath = null;
             }

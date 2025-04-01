@@ -171,7 +171,6 @@ export default {
             }
         },
         setTbl() {
-            console.log('RELOAD ROLE PERMISSION')
             let rolesWithPermission = structuredClone(this.items)
             let newItem = []
             let temp = []
@@ -197,7 +196,6 @@ export default {
             }
             this.tblItems = newItem
             if (this.originalItem === null) {
-                console.log('INIT ORIGINAL ITEM')
                 this.originalItem = structuredClone(this.tblItems)
             }
         },

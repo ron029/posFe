@@ -177,13 +177,11 @@ export default {
             return false
         },
         enableNotification(data) {
-            console.log('enableNotification data: ', data)
             this.show.focus=false
             this.destroyReorder(data)
             this.selected = []
         },
         ignoreProduct(data) {
-            console.log('ignoreProduct data: ', data)
             this.show.ignore = false
             this.newReorder(data)
             this.selected = []

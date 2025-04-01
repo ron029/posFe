@@ -209,18 +209,24 @@ export default {
             if (newVal.STATUS === 200) {
                 this.newItem.supplier_id = newVal.DATA.insertId
                 this.createSupplierItem()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         supplierData(newVal) {
             if (newVal.STATUS === 200) {
                 this.tblItems = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         supplierPutData(newVal) {
             if (newVal.STATUS === 200) {
                 this.updateSupplierItems()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -229,6 +235,8 @@ export default {
                 // this.removeSupplierItem()
                 await this.getCsrfToken()
                 this.suppliers()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },

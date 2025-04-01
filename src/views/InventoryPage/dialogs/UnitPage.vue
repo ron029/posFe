@@ -218,12 +218,16 @@ export default {
                 // this.newItem.unit_id = newVal.DATA.insertId
                 // this.createUnitItem()
                 this.units()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         unitData(newVal) {
             if (newVal.STATUS === 200) {
                 this.tblItems = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -231,6 +235,8 @@ export default {
             if (newVal.STATUS === 200) {
                 // this.updateUnitItems()
                 this.units()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -239,6 +245,8 @@ export default {
                 // this.removeUnitItem()
                 await this.getCsrfToken()
                 this.units()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },

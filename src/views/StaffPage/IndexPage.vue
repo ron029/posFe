@@ -129,21 +129,21 @@ export default {
         ...mapGetters(['employeeData', 'employeePostData', 'employeeFindData', 'roleData', 'permissionData'])
     },
     watch: {
-        'items.role'(newVal) {
-            console.log('item.role newVal: ', newVal)
-        },
         roleData(newVal) {
             if (newVal.STATUS === 200) {
-                console.log('watch roleData newVal: ', newVal.DATA)
                 this.reloadRolePermission(newVal.DATA)
+            } else {
+                console.error(newVal.STATE)
             }
         },
         employeeFindData(newVal) {
-            if (newVal.STATUS === 200)
+            if (newVal.STATUS === 200) {
                 this.show.edit.staff = true
+            } else {
+                console.error(newVal.STATE)
+            }
         },
         employeeData(newVal) {
-            console.log('employeeData newVal: ', newVal)
             if (newVal) this.items.staff = newVal.DATA
         }
     },
@@ -155,11 +155,9 @@ export default {
         },
         reloadRolePermission(data) {
             const test = this.groupedRolesAndPermissions(data)
-            console.log('watch roleData test: ', test)
             this.items.role = test
         },
         groupedRolesAndPermissions(roleAndPermissions) {
-            console.log('groupedRolesAndPermissions: ', roleAndPermissions)
             return roleAndPermissions.reduce((groups, item) => {
                 const role = item.role_name;
                 if (!groups[role]) {

@@ -175,6 +175,8 @@ export default {
             if (newVal.STATUS === 201) {
                 this.show.error = true
                 this.show.errorData = { message: 'Refund save successfully' }
+            } else {
+                console.error(newVal.STATE)
             }
         },
         saveSalesData(newVal) {

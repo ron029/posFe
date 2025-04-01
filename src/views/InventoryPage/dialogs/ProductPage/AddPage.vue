@@ -722,6 +722,8 @@ export default {
                 this.$emit('closeAddProduct')
                 await this.getCsrfToken()
                 this.products()
+            } else {
+                console.error(newVal.STATE)
             }
         },
         'supplierPostData'(newVal) {
@@ -730,6 +732,8 @@ export default {
                     this.loading.supplier = false
                     this.suppliers()
                 })
+            } else {
+                console.error(newVal.STATE)
             }
         },
         'unitPostData'(newVal) {
@@ -738,6 +742,8 @@ export default {
                     this.loading.unit = false
                     this.units()
                 })
+            } else {
+                console.error(newVal.STATE)
             }
         },
         'brandPostData'(newVal) {
@@ -746,6 +752,8 @@ export default {
                     this.loading.brand = false
                     this.brands()
                 })
+            } else {
+                console.error(newVal.STATE)
             }
         },
         'categoryPostData'(newVal) {
@@ -754,10 +762,11 @@ export default {
                     this.loading.category = false
                     this.categories()
                 })
+            } else {
+                console.error(newVal.STATE)
             }
         },
         'productNum.value'(newVal) {
-            console.log('productNum.value newVal: ', newVal)
             if (newVal) {
                 let newArrItem = []
                 for (let index = 0; index < newVal; index++) {

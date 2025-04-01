@@ -36,7 +36,11 @@ export default {
     },
     watch: {
         allCashFlowData(newVal) {
-            if (newVal.STATUS === 200) this.items = newVal.DATA
+            if (newVal.STATUS === 200) {
+                this.items = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
+            }
         }
     },
     methods: {

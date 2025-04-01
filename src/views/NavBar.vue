@@ -136,7 +136,6 @@ import { mapActions, mapGetters } from 'vuex';
                 if (this.$route.path !== '/pos') this.$router.push('/pos')
             }
             if (event.altKey && event.key === "s" || event.altKey && event.key === "S") {
-                console.log('SALES')
                 event.preventDefault()
                 if (this.$route.path !== '/pos/sales') this.$router.push('/pos/sales')
             }

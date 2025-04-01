@@ -62,6 +62,8 @@ export default {
                     setTimeout(()=>{
                         this.errMsg = ""
                     }, 5000)
+                } else {
+                    console.error(newVal.STATE)
                 }
             }
         }

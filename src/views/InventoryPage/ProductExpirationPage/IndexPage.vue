@@ -204,12 +204,12 @@ export default {
     },
     watch: {
         productExpirationPutData(newVal) {
-            if (newVal.STATUS === 200)
+            if (newVal.STATUS === 200) {
                 this.productExpiration()
+            } else {
+                console.error(newVal.STATE)
+            }
         },
-        productExpirationData(newVal) {
-            console.log('watch productExpirationData newVal: ', newVal)
-        }
     },
     methods: {
         ...mapActions(['productExpiration', 'productExpirationPut']),
