@@ -98,6 +98,11 @@ import { mapActions, mapGetters } from 'vuex';
             if (permissions) return permissions.some(item => item.name === 'self_pass:2')
             return false
         },
+        isUserCanReadEmployee() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'employee:1')
+            return false
+        },
     },
     watch: {
         fetchReorderData(newVal) {
@@ -150,7 +155,7 @@ import { mapActions, mapGetters } from 'vuex';
         },
     },
     async mounted() {
-        if (window.$cookies.get('admin') === '1') {
+        if (window.$cookies.get('admin') === '1' || this.isUserCanReadEmployee) {
             const newElement = ['mdi-account-group', 'Staff', 'staff']
             this.items.splice(this.items.length - 1, 0, newElement);
         }

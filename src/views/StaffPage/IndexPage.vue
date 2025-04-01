@@ -23,6 +23,7 @@
                 right
                 @click="show.newStaff=true"
                 color="success"
+                :disabled="isUserCanCreateEmployee"
             ><v-icon>mdi-account-plus</v-icon>&nbsp;New</v-btn>
             <v-btn
                 v-if="displayPage.role"
@@ -80,6 +81,7 @@ export default {
     components: {
         tblAudit, tblRole, tblStaff, EditStaff, NewRole, NewStaff },
     data: () => ({
+        isAdmin: window.$cookies.get("admin") === '1',
         expanded: [],
         lastExpanded: null,
         singleExpand: false,
@@ -126,7 +128,12 @@ export default {
         },
     }),
     computed: {
-        ...mapGetters(['employeeData', 'employeePostData', 'employeeFindData', 'roleData', 'permissionData'])
+        ...mapGetters(['employeeData', 'employeePostData', 'employeeFindData', 'roleData', 'permissionData']),
+        isUserCanCreateEmployee() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'employee:0')
+            return false
+        },
     },
     watch: {
         roleData(newVal) {
@@ -144,7 +151,12 @@ export default {
             }
         },
         employeeData(newVal) {
-            if (newVal) this.items.staff = newVal.DATA
+            if (newVal) {
+                this.items.staff = structuredClone(newVal.DATA)
+                if (!this.isAdmin) {
+                    this.items.staff = this.items.staff?.filter(item => item.is_admin !== 1)
+                }
+            }
         }
     },
     methods: {
