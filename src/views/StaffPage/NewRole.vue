@@ -83,7 +83,6 @@ export default {
         'userRole.permissions': {
             handler(newVal) {
                 this.selectedAllPermission = newVal.every(item => item.value === true)
-                console.log('watch role.permissions newVal: ', newVal)
             },
             deep: true,
             immediate: true,
@@ -92,7 +91,6 @@ export default {
             this.userRole.permissions = newVal.DATA.map(item => ({permission_id: item.permission_id, name: item.name, action: item.name.split(':'), value: false}))
         },
         signUpData(newVal) {
-            console.log('signUpData newVal: ', newVal)
             if (newVal.STATUS===201) {
                 this.employee()
                 this.showDialog = false
@@ -127,7 +125,6 @@ export default {
         },
         submitForm() {
             if (this.$refs.form.validate()) {
-                console.log('form submitted')
                 this.rolePost(this.userRole)
             }
         }

@@ -75,6 +75,8 @@ export default {
             if (newVal.STATUS === 200) {
                 this.companyProfiles()
                 this.showDialog = false
+            } else {
+                console.error(newVal.STATE)
             }
         }
     },

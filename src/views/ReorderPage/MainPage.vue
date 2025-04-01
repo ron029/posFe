@@ -27,7 +27,7 @@
                                 :headers="headers.reoders"
                                 :items="reorders"
                                 :search="search"
-                                :show-select="!isUserCanUpdateReorder"
+                                :show-select="isUserCanUpdateReorder()"
                                 item-key="product_id"
                             >
                                 <template slot="top">
@@ -50,6 +50,9 @@
                                 <template slot="item.notificatioStatus">
                                     <v-icon>mdi-bell</v-icon> Active
                                 </template>
+                                <template slot="item.name" slot-scope="{ item }">
+                                    {{ productName(item) }}
+                                </template>
                             </v-data-table>
                         </v-card>
                     </v-card-text>
@@ -60,7 +63,7 @@
                                 :items="ignoredReorders"
                                 v-model="selected"
                                 :search="search"
-                                :show-select="!isUserCanUpdateReorder"
+                                :show-select="isUserCanUpdateReorder()"
                                 item-key="product_id"
                             >
                                 <template slot="top">
@@ -82,6 +85,9 @@
                                 </template>
                                 <template slot="item.notificatioStatus">
                                     <v-icon>mdi-bell-off</v-icon> Muted
+                                </template>
+                                <template slot="item.name" slot-scope="{ item }">
+                                    {{ productName(item) }}
                                 </template>
                             </v-data-table>
                         </v-card>
@@ -106,7 +112,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+import { mapActions, mapGetters } from 'vuex';
 import FocusPage from './FocusPage.vue';
 import IgnorePage from './IgnorePage.vue';
 export default {
@@ -145,9 +151,10 @@ export default {
     },
     props: ['reorders', 'ignoredReorders'],
     computed: {
+        ...mapGetters(['findUserRolePermissionData']),
         enableIgnore() {
             return !this.selected.length>0
-        }
+        },
     },
     watch: {
         tab() {
@@ -160,19 +167,21 @@ export default {
     },
     methods: {
         ...mapActions(['newReorder', 'destroyReorder']),
+        productName(item) {
+            const name = `${item.brand} ${item.name} ${item.unit}`
+            return name.toUpperCase()
+        },
         isUserCanUpdateReorder() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'reorder:update')
+            if (permissions) return permissions.some(item => item.name === 'reorder:2')
             return false
         },
         enableNotification(data) {
-            console.log('enableNotification data: ', data)
             this.show.focus=false
             this.destroyReorder(data)
             this.selected = []
         },
         ignoreProduct(data) {
-            console.log('ignoreProduct data: ', data)
             this.show.ignore = false
             this.newReorder(data)
             this.selected = []

@@ -164,17 +164,17 @@ export default {
         ...mapGetters(['brandData', 'brandPostData', 'brandDeleteData', 'brandPutData', 'findUserRolePermissionData']),
         isUserCanReadBrands() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'brand:read')
+            if (permissions) return permissions.some(item => item.name === 'brand:1')
             return false
         },
         isUserCanCreateBrands() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'brand:create')
+            if (permissions) return permissions.some(item => item.name === 'brand:0')
             return false
         },
         isUserCanUpdateBrands() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'brand:update')
+            if (permissions) return permissions.some(item => item.name === 'brand:2')
             return false
         },
         showDialog: {
@@ -218,18 +218,24 @@ export default {
             if (newVal.STATUS === 200) {
                 this.newItem.brand_id = newVal.DATA.insertId
                 this.createBrandItem()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         brandData(newVal) {
             if (newVal.STATUS === 200) {
                 this.tblItems = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         brandPutData(newVal) {
             if (newVal.STATUS === 200) {
                 this.updateBrandItems()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -238,6 +244,8 @@ export default {
                 // this.removeBrandItem()
                 await this.getCsrfToken()
                 this.brands()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },

@@ -163,17 +163,17 @@ export default {
         ...mapGetters(['unitData', 'unitPostData', 'unitDeleteData', 'unitPutData', 'findUserRolePermissionData']),
         isUserCanReadUnits() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'unit:read')
+            if (permissions) return permissions.some(item => item.name === 'unit:1')
             return false
         },
         isUserCanCreateUnits() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'unit:create')
+            if (permissions) return permissions.some(item => item.name === 'unit:0')
             return false
         },
         isUserCanUpdateUnits() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'unit:update')
+            if (permissions) return permissions.some(item => item.name === 'unit:2')
             return false
         },
         showDialog: {
@@ -218,12 +218,16 @@ export default {
                 // this.newItem.unit_id = newVal.DATA.insertId
                 // this.createUnitItem()
                 this.units()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         unitData(newVal) {
             if (newVal.STATUS === 200) {
                 this.tblItems = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -231,6 +235,8 @@ export default {
             if (newVal.STATUS === 200) {
                 // this.updateUnitItems()
                 this.units()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -239,6 +245,8 @@ export default {
                 // this.removeUnitItem()
                 await this.getCsrfToken()
                 this.units()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },

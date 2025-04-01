@@ -164,17 +164,17 @@ export default {
         ...mapGetters(['categoryData', 'categoryPostData', 'categoryDeleteData', 'categoryPutData', 'findUserRolePermissionData']),
         isUserCanReadCategories() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'category:read')
+            if (permissions) return permissions.some(item => item.name === 'category:1')
             return false
         },
         isUserCanCreateCategories() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'category:create')
+            if (permissions) return permissions.some(item => item.name === 'category:0')
             return false
         },
         isUserCanUpdateCategories() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'category:update')
+            if (permissions) return permissions.some(item => item.name === 'category:2')
             return false
         },
         showDialog: {
@@ -218,18 +218,24 @@ export default {
             if (newVal.STATUS === 200) {
                 this.newItem.category_id = newVal.DATA.insertId
                 this.createCategoryItem()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         categoryData(newVal) {
             if (newVal.STATUS === 200) {
                 this.tblItems = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         categoryPutData(newVal) {
             if (newVal.STATUS === 200) {
                 this.updateCategoryItems()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -238,6 +244,8 @@ export default {
                 // this.removeCategoryItem()
                 await this.getCsrfToken()
                 this.categories()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },

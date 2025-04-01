@@ -104,8 +104,8 @@ html, body{
 	height: calc(100% - 0px);
 	/* border: 8px solid #162534;
 	border-top: 8px solid #09f; */
-	border: 8px solid #009688;
-	border-top: 8px solid #00E676;
+    border: 8px solid #1976D2; /* Primary Blue */
+    border-top: 8px solid #64B5F6; /* Lighter Blue */
 	border-radius: 50%;
 	animation: rotate 5s linear infinite;
 }

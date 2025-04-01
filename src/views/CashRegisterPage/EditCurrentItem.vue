@@ -88,14 +88,14 @@ export default {
             itemQuantity: 0,
             adjustment_type: null,
         },
-        adjustmentItems: ['REFUND', 'CANCEL', 'TEST']
+        adjustmentItems: ['REFUND', 'CANCEL']
     }),
     props: [ 'show', 'currentTransaction', 'isNewTransaction' ],
     computed: {
         ...mapGetters(['findUserRolePermissionData']),
         isUserCanEditPrice() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'price:update')
+            if (permissions) return permissions.some(item => item.name === 'price:2')
             return false
         },
         amount() {
@@ -136,9 +136,6 @@ export default {
         }
     },
     methods: {
-        test() {
-            console.log('test')
-        },
         reassignEditable(data) {
             this.edit = data
             const reason = this.edit.itemQuantity >= data.quantity ? 'FULL REFUND' : 'REFUND'
@@ -150,7 +147,6 @@ export default {
             Vue.set(this.edit, 'selling_price_placeholder', data.selling_price);
         },
         submitForm() {
-            console.log('SUBMIT ADJUSTMENT')
             if (this.$refs.form.validate()) {
                 this.edit.amount = this.amount
                 this.edit.itemQuantity = Number(this.edit.quantity_placeholder)

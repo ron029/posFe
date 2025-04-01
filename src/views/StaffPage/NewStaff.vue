@@ -114,10 +114,8 @@ export default {
                     this.userRolesItems = newVal.DATA
                 })
             }
-            console.log('watch userRoleData newVal: ', newVal)
         },
         signUpData(newVal) {
-            console.log('signUpData newVal: ', newVal)
             if (newVal.STATUS===201) {
                 this.employee()
                 this.showDialog = false
@@ -130,7 +128,6 @@ export default {
         ...mapActions(['signUp', 'employee']),
         submitForm() {
             if (this.$refs.form.validate()) {
-                console.log('form submitted')
                 this.signUp(this.user)
             }
         }

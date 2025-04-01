@@ -13,7 +13,16 @@
         </template>
         <template slot="item.actions" slot-scope="{ item }">
             <span style="text-wrap: nowrap;">
-                <v-btn icon color="warning" @click="$emit('editAccount', item.employee_id)"><v-icon>mdi-pencil</v-icon></v-btn>
+                <v-btn icon color="warning"
+                    @click="$emit('editAccount', item.employee_id)"
+                    :disabled="!isUserCanUpdateEmployee"
+                ><v-icon>mdi-pencil</v-icon></v-btn>
+            </span>
+            <span style="text-wrap: nowrap;">
+                <v-btn icon color="info"
+                    disabled
+                    @click="test"
+                ><v-icon>mdi-lock-reset</v-icon></v-btn>
             </span>
         </template>
         <template slot="item.role" slot-scope="{ item }">
@@ -28,9 +37,17 @@ import { mapGetters } from 'vuex';
 export default {
     props: ['show', 'headers', 'items'],
     computed: {
-        ...mapGetters(['userRoleData'])
+        ...mapGetters(['userRoleData', 'findUserRolePermissionData']),
+        isUserCanUpdateEmployee() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'employee:2')
+            return false
+        },
     },
     methods: {
+        test() {
+
+        },
         formatDate(date) {
             if (date === null) return ''
             return moment(date).utcOffset('+0800').format('MMMM D, YYYY')

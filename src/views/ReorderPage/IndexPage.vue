@@ -24,22 +24,31 @@ export default {
         ...mapGetters(['fetchReorderData', 'newReorderData', 'destroyReorderData', 'findUserRolePermissionData']),
         isUserCanReadReorder() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'reorder:read')
+            if (permissions) return permissions.some(item => item.name === 'reorder:1')
             return false
         },
     },
     watch: {
         fetchReorderData(newVal) {
-            if (newVal.STATUS === 200)
+            if (newVal.STATUS === 200) {
                 this.setReorderAndIgnore(newVal.DATA)
+            } else {
+                console.error(newVal.STATE)
+            }
         },
         newReorderData(newVal) {
-            if (newVal.STATUS === 201)
+            if (newVal.STATUS === 201) {
                 this.fetchReorder()
+            } else {
+                console.error(newVal.STATE)
+            }
         },
         destroyReorderData(newVal) {
-            if (newVal.STATUS === 200)
+            if (newVal.STATUS === 200) {
                 this.fetchReorder()
+            } else {
+                console.error(newVal.STATE)
+            }
         },
     },
     methods: {

@@ -121,9 +121,6 @@ export default {
         },
     },
     watch: {
-        productExpirationPutData(newVal) {
-            console.log('productExpirationPutData newVal: ', newVal)
-        },
         expiryData: {
             handler(newVal) {
                 this.items = structuredClone(newVal.map(item => ({ ...item, notif_date: this.formatDate(item.notif_date), expiration_date: this.formatDate(item.expiration_date)})))

@@ -50,7 +50,10 @@
                 <p class="text-center">
                     <!-- <span style="display: block;">Subtotal: <v-icon>mdi-currency-php</v-icon> {{ subtotal.toFixed(2) }}</span> -->
                     <span style="display: block; font-size: 24px; font-weight: 700;">Total: <v-icon>mdi-currency-php</v-icon> {{ total?.toFixed(2) }}</span>
-                    <!-- <span style="display: block;">Profit: <v-icon>mdi-currency-php</v-icon> {{ profit.toFixed(2) }}</span> -->
+                    <span
+                        v-if="isUserCanReadProfit"
+                        style="display: block;"
+                    >Profit: <v-icon>mdi-currency-php</v-icon> {{ profit.toFixed(2) }}</span>
                 </p>
         </v-card>
     </div>
@@ -80,7 +83,12 @@ export default {
         ],
     }),
     computed: {
-        ...mapGetters(['fetchSalesData']),
+        ...mapGetters(['fetchSalesData', 'findUserRolePermissionData']),
+        isUserCanReadProfit() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'profit:1')
+            return false
+        },
         subtotal() {
             return this.fetchSalesData?.DATA.reduce((subtotal, item) => {
                 return subtotal + parseFloat(item.subtotal)
@@ -126,6 +134,10 @@ export default {
     async mounted() {
         await this.getCsrfToken()
         this.fetchSales(this.date)
+        if (this.isUserCanReadProfit) {
+            const newElement = { text: 'Profit', value: 'profit', align: 'right'}
+            this.headers.splice(3, 0, newElement);
+        }
     }
 }
 </script>

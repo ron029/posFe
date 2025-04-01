@@ -118,16 +118,14 @@ export default {
     },
     watch: {
         employeeFindData(newVal) {
-            console.log('employeeFindData newVal: ', newVal)
             if (newVal.STATUS === 200) {
                 this.user = structuredClone(newVal.DATA[0])
                 this.user.birthdate = this.user.birthdate !== null
                     ? moment(this.user.birthdate).format('YYYY-MM-DD')
                     : null
+            } else {
+                console.error(newVal.STATE)
             }
-        },
-        'user.birthdate'(newVal) {
-            console.log('watch user.birthdate newVal: ', newVal)
         },
         employeePutData(newVal) {
             if (newVal.STATUS === 200) {
@@ -135,10 +133,11 @@ export default {
                 this.showDialog = false
             } else if (newVal.STATUS === 409) {
                 alert(newVal.STATE)
+            } else {
+                console.error(newVal.STATE)
             }
         },
         signUpData(newVal) {
-            console.log('signUpData newVal: ', newVal)
             if (newVal.STATUS===201) {
                 this.employee()
                 this.showDialog = false
@@ -152,7 +151,6 @@ export default {
         setForm() {
             if (this.employeeFindData.STATUS === 200) {
                 this.user = structuredClone(this.employeeFindData.DATA[0])
-                console.log('this.user: ', this.user)
                 this.user.birthdate = moment(this.user.birthdate).format('YYYY-MM-DD')
                 delete this.user.created_at
                 delete this.user.updated_at
@@ -161,7 +159,6 @@ export default {
         submitForm() {
             if (this.$refs.form.validate()) {
                 this.user.birthdate = moment(this.user.birthdate).format('YYYY-MM-DD')
-                console.log('form submitted')
                 this.employeePut(this.user)
             }
         }

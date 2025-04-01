@@ -94,15 +94,15 @@ export default {
                 this.$emit('closeDialog')
             } else if (newVal.STATUS === 406) {
                 alert(newVal.STATE)
+            } else {
+                console.error(newVal.STATE)
             }
-            console.log('changePasswordData newVal: ', newVal)
         }
     },
     methods: {
         ...mapActions(['changePassword']),
         submitForm() {
             if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
-                console.log('fire change password')
                 const employee_id = window.$cookies.get('userId')
                 this.changePassword({employee_id, PASS_OLD: this.password.old.value, PASS_NEW: this.password.new.value})
             }

@@ -19,7 +19,14 @@
                         link
                         @click="handleRoute(url)"
                     >
-                        <v-list-item-icon> <v-icon style="color: white;">{{ icon }}</v-icon> </v-list-item-icon>
+                        <v-list-item-icon>
+                            <v-icon style="color: white;">{{ icon }}</v-icon>
+                            <v-badge
+                                v-if="url === 'reorder' && reorders && reorders.length>0"
+                                color="red"
+                                :content="reorders && reorders.length"
+                            ></v-badge>
+                        </v-list-item-icon>
                         <v-list-item-content> <v-list-item-title style="font-weight: 500; color: white;">{{ text }}</v-list-item-title> </v-list-item-content>
                     </v-list-item>
                 </v-list>
@@ -42,15 +49,15 @@
         </v-card>
         <div :style="`margin-left: ${this.$route.name === 'cash-register' ? 0 : 60}px`">
             <!-- Inner div with a background image -->
-            <div    
+            <div
                 v-show="this.$route.name !== 'cash-register'"
                 :style="{
                     position: 'absolute',
                     backgroundImage: `url(${require('@/assets/img/20999.jpg')})`,
-                    backgroundSize: 'cover', 
-                    backgroundPosition: 'center', 
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
                     opacity: `${this.$route.name === 'pos' ? '100%' : '50%'}`,
-                    height: '100vh', 
+                    height: '100vh',
                     width: '100%',
                     zIndex: 0,
                 }"
@@ -67,6 +74,7 @@ import { mapActions, mapGetters } from 'vuex';
 
   export default {
     data: () => ({
+        reorders: [],
         mainValue: null,
         value: 'recent',
         items: [
@@ -79,15 +87,34 @@ import { mapActions, mapGetters } from 'vuex';
         ],
     }),
     computed: {
-        ...mapGetters(['findUserRolePermissionData', 'findUserRolePermissionData']),
+        ...mapGetters(['findUserRolePermissionData', 'findUserRolePermissionData', 'fetchReorderData']),
+        isUserCanReadReorder() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'reorder:1')
+            return false
+        },
         isUserCanUpdatePassword() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'self_pass:update')
+            if (permissions) return permissions.some(item => item.name === 'self_pass:2')
+            return false
+        },
+        isUserCanReadEmployee() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'employee:1')
             return false
         },
     },
+    watch: {
+        fetchReorderData(newVal) {
+            if (newVal.STATUS === 200)
+                this.setReorderAndIgnore(newVal.DATA)
+        },
+    },
     methods: {
-        ...mapActions(['findUserRolePermission']),
+        ...mapActions(['findUserRolePermission', 'fetchReorder', 'getCsrfToken']),
+        setReorderAndIgnore(data) {
+            this.reorders = (data).filter(item => item.is_ignored_reorder !== 1)
+        },
         redirectManageAccount() {
             if (this.$route.path !== '/pos/manage-account')
                 this.$router.push({name: 'manage-account'})
@@ -114,7 +141,6 @@ import { mapActions, mapGetters } from 'vuex';
                 if (this.$route.path !== '/pos') this.$router.push('/pos')
             }
             if (event.altKey && event.key === "s" || event.altKey && event.key === "S") {
-                console.log('SALES')
                 event.preventDefault()
                 if (this.$route.path !== '/pos/sales') this.$router.push('/pos/sales')
             }
@@ -128,8 +154,8 @@ import { mapActions, mapGetters } from 'vuex';
             }
         },
     },
-    mounted() {
-        if (window.$cookies.get('admin') === '1') {
+    async mounted() {
+        if (window.$cookies.get('admin') === '1' || this.isUserCanReadEmployee) {
             const newElement = ['mdi-account-group', 'Staff', 'staff']
             this.items.splice(this.items.length - 1, 0, newElement);
         }
@@ -137,6 +163,9 @@ import { mapActions, mapGetters } from 'vuex';
             const newElement = ['mdi-account-cash', 'Account Cash', 'account-cash']
             this.items.splice(this.items.length - 1, 0, newElement);
         }
+        await this.getCsrfToken()
+        if (this.isUserCanReadReorder)
+            this.fetchReorder()
         // const permissions = window.$cookies.get('permissions')
         // console.log('permissions: ', JSON.parse(permissions.slice(2, permissions.length)))
     },

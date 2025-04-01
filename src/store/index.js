@@ -16,6 +16,7 @@ import { role } from './modules/role';
 import { permission } from './modules/permission';
 import { companyProfile } from "./modules/companyProfile";
 import { productExpiration } from "./modules/productExpiration";
+import { manageDatabase } from './modules/manageDatabase';
 
 import loading from "./modules/loading";
 
@@ -23,6 +24,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
+    manageDatabase,
     productExpiration,
     role,
     permission,

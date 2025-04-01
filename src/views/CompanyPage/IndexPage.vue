@@ -3,7 +3,16 @@
         <h1>Company Page</h1>
         <v-card style="padding: 20px 40px;">
             <div v-if="company">
-                <p class="text-right"><v-btn color="warning" @click="showEditCompany = true" :disabled="!isUserCanUpdateCompany"><v-icon small>mdi-pencil</v-icon>&nbsp;edit</v-btn></p>
+                <p class="text-right">
+                    <v-btn color="warning"
+                        @click="showEditCompany = true"
+                        :disabled="!isUserCanUpdateCompany"
+                    ><v-icon small>mdi-pencil</v-icon>&nbsp;edit</v-btn>
+                    <v-btn
+                        @click="showManageDatabase = true"
+                        style="margin-left: 10px;"
+                    ><v-icon small>mdi-database-cog</v-icon>&nbsp;manage database</v-btn>
+                </p>
                 <v-text-field
                     outlined
                     v-model="company.name"
@@ -48,7 +57,12 @@
                 ></v-text-field>
             </div>
         </v-card>
+        <ManageDatabase
+            :show="showManageDatabase"
+            @closeDialog="showManageDatabase = false"
+        />
         <EditCompanyDialog
+            v-if="showEditCompany"
             :showEditCompany="showEditCompany"
             :company="company"
             @hideEditCompany="showEditCompany = false"
@@ -60,36 +74,53 @@
 import { mapActions, mapGetters } from 'vuex';
 import moment from 'moment';
 import EditCompanyDialog from './EditCompanyDialog.vue';
+import ManageDatabase from './ManageDatabase.vue';
 export default {
     data: ()=>({
+        showManageDatabase: false,
         showEditCompany: false,
         company: {
-            "company_info_id": 1,
-            "name": "test",
+            "company_info_id": null,
+            "name": "",
             "address1": null,
             "address2": null,
-            "date_founded": '2025-03-10',
+            "date_founded": moment().format('YYYY-MM-DD'),
             "description": null,
             "contact_number": null,
             "status": 0,
-            "created_at": "2025-03-05T14:45:57.000Z",
-            "updated_at": "2025-03-05T14:45:57.000Z"
+            "created_at": moment(),
+            "updated_at": moment()
         },
     }),
     components: {
-        EditCompanyDialog
+        EditCompanyDialog, ManageDatabase
     },
     computed: {
         ...mapGetters(['companyProfilesData', 'findUserRolePermissionData']),
         isUserCanUpdateCompany() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'company:update')
+            if (permissions) return permissions.some(item => item.name === 'company:2')
+            return false
+        },
+        isUserCanReadCompany() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'company:1')
+            return false
+        },
+        isUserCanRestore() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'restore:0')
+            return false
+        },
+        isUserCanBackup() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'backup:0')
             return false
         },
     },
     watch: {
         companyProfilesData(newVal) {
-            this.company = structuredClone(newVal.DATA[0])
+            this.company = this.isUserCanReadCompany ? structuredClone(newVal.DATA[0]) : []
             this.company.updated_at = moment(this.company.updated_at).utcOffset('+0800').format('MMMM D, YYYY hh:mm A')
             this.company.date_founded = moment(this.company.date_founded).utcOffset('+0800').format('YYYY-MM-DD')
         }

@@ -281,6 +281,8 @@ export default {
             if (newVal.STATUS === 200 && this.mode === 'out') {
                 await this.getCsrfToken()
                 this.logout()
+            } else {
+                console.error(newVal.STATE)
             }
         },
         fetchSalesBySessionData(newVal) {
@@ -289,11 +291,15 @@ export default {
                     return acc + parseFloat(item.total_amount);
                 }, 0);
                 this.sales = totalAmount
+            } else {
+                console.error(newVal.STATE)
             }
         },
         getExistingCashFlowData(newVal) {
             if (newVal.STATUS === 200) {
                 this.data.register.opening_amount = newVal.DATA[0].opening_amount
+            } else {
+                console.error(newVal.STATE)
             }
         },
         mode(newVal) {

@@ -154,17 +154,17 @@ export default {
         ...mapGetters(['supplierData', 'supplierPostData', 'supplierDeleteData', 'supplierPutData', 'findUserRolePermissionData']),
         isUserCanReadSuppliers() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'supplier:read')
+            if (permissions) return permissions.some(item => item.name === 'supplier:1')
             return false
         },
         isUserCanCreateSuppliers() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'supplier:create')
+            if (permissions) return permissions.some(item => item.name === 'supplier:0')
             return false
         },
         isUserCanUpdateSuppliers() {
             const permissions = this.findUserRolePermissionData
-            if (permissions) return permissions.some(item => item.name === 'supplier:update')
+            if (permissions) return permissions.some(item => item.name === 'supplier:2')
             return false
         },
         showDialog: {
@@ -209,18 +209,24 @@ export default {
             if (newVal.STATUS === 200) {
                 this.newItem.supplier_id = newVal.DATA.insertId
                 this.createSupplierItem()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         supplierData(newVal) {
             if (newVal.STATUS === 200) {
                 this.tblItems = newVal.DATA
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
         supplierPutData(newVal) {
             if (newVal.STATUS === 200) {
                 this.updateSupplierItems()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
@@ -229,6 +235,8 @@ export default {
                 // this.removeSupplierItem()
                 await this.getCsrfToken()
                 this.suppliers()
+            } else {
+                console.error(newVal.STATE)
             }
             this.loading = false
         },
