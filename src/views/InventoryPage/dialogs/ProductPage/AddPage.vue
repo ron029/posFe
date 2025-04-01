@@ -448,7 +448,7 @@
                                         x-small
                                         style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                         @click="applyAll('quantity', productItem.quantity, index)"
-                                    >Fill below</span>
+                                    >Fill</span>
                                     <span v-else>&nbsp;</span>
                                     <v-text-field
                                         style="margin-top: 5px"
@@ -470,7 +470,7 @@
                                         x-small
                                         style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                         @click="applyAll('reorder_level', productItem.reorder_level, index)"
-                                    >Fill below</span>
+                                    >Fill</span>
                                     <span v-else>&nbsp;</span>
                                     <v-text-field
                                         style="margin-top: 5px"
@@ -492,7 +492,7 @@
                                         x-small
                                         style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                         @click="applyAll('cost_price', productItem.cost_price, index)"
-                                    >Fill below</span>
+                                    >Fill</span>
                                     <span v-else>&nbsp;</span>
                                     <v-text-field
                                         style="margin-top: 5px"
@@ -516,7 +516,7 @@
                                         x-small
                                         style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                         @click="applyAll('selling_price', productItem.selling_price, index)"
-                                    >Fill below</span>
+                                    >Fill</span>
                                     <span v-else>&nbsp;</span>
                                     <v-text-field
                                         style="margin-top: 5px"
@@ -540,7 +540,7 @@
                                         x-small
                                         style="color: white; background-color: green; border-radius: 5px; padding: 3px"
                                         @click="applyAll('supplier_id', productItem.supplier_id, index)"
-                                    >Fill below</span>
+                                    >Fill</span>
                                     <span v-else>&nbsp;</span>
                                     <v-autocomplete
                                         style="margin-top: 5px"
