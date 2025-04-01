@@ -53,7 +53,7 @@
                     <span
                         v-if="isUserCanReadProfit"
                         style="display: block;"
-                    >Profit: <v-icon>mdi-currency-php</v-icon> {{ profit.toFixed(2) }}</span>
+                    >Profit: <v-icon>mdi-currency-php</v-icon> {{ profit?.toFixed(2) }}</span>
                 </p>
         </v-card>
     </div>
@@ -91,17 +91,17 @@ export default {
         },
         subtotal() {
             return this.fetchSalesData?.DATA.reduce((subtotal, item) => {
-                return subtotal + parseFloat(item.subtotal)
+                return subtotal + Number(item.subtotal)
             }, 0);
         },
         total() {
             return this.fetchSalesData?.DATA.reduce((subtotal, item) => {
-                return subtotal + parseFloat(item.total_after_discount)
+                return subtotal + Number(item.total_after_discount)
             }, 0);
         },
         profit() {
             return this.fetchSalesData?.DATA.reduce((profit, item) => {
-                return profit + parseFloat(item.profit)
+                return profit + Number(item.profit)
             }, 0);
         }
     },
