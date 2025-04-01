@@ -19,7 +19,14 @@
                         link
                         @click="handleRoute(url)"
                     >
-                        <v-list-item-icon> <v-icon style="color: white;">{{ icon }}</v-icon> </v-list-item-icon>
+                        <v-list-item-icon>
+                            <v-icon style="color: white;">{{ icon }}</v-icon>
+                            <v-badge
+                                v-if="url === 'reorder' && reorders && reorders.length>0"
+                                color="red"
+                                :content="reorders && reorders.length"
+                            ></v-badge>
+                        </v-list-item-icon>
                         <v-list-item-content> <v-list-item-title style="font-weight: 500; color: white;">{{ text }}</v-list-item-title> </v-list-item-content>
                     </v-list-item>
                 </v-list>
@@ -67,6 +74,7 @@ import { mapActions, mapGetters } from 'vuex';
 
   export default {
     data: () => ({
+        reorders: [],
         mainValue: null,
         value: 'recent',
         items: [
@@ -79,15 +87,29 @@ import { mapActions, mapGetters } from 'vuex';
         ],
     }),
     computed: {
-        ...mapGetters(['findUserRolePermissionData', 'findUserRolePermissionData']),
+        ...mapGetters(['findUserRolePermissionData', 'findUserRolePermissionData', 'fetchReorderData']),
+        isUserCanReadReorder() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'reorder:1')
+            return false
+        },
         isUserCanUpdatePassword() {
             const permissions = this.findUserRolePermissionData
             if (permissions) return permissions.some(item => item.name === 'self_pass:2')
             return false
         },
     },
+    watch: {
+        fetchReorderData(newVal) {
+            if (newVal.STATUS === 200)
+                this.setReorderAndIgnore(newVal.DATA)
+        },
+    },
     methods: {
-        ...mapActions(['findUserRolePermission']),
+        ...mapActions(['findUserRolePermission', 'fetchReorder', 'getCsrfToken']),
+        setReorderAndIgnore(data) {
+            this.reorders = (data).filter(item => item.is_ignored_reorder !== 1)
+        },
         redirectManageAccount() {
             if (this.$route.path !== '/pos/manage-account')
                 this.$router.push({name: 'manage-account'})
@@ -128,7 +150,7 @@ import { mapActions, mapGetters } from 'vuex';
             }
         },
     },
-    mounted() {
+    async mounted() {
         if (window.$cookies.get('admin') === '1') {
             const newElement = ['mdi-account-group', 'Staff', 'staff']
             this.items.splice(this.items.length - 1, 0, newElement);
@@ -137,6 +159,9 @@ import { mapActions, mapGetters } from 'vuex';
             const newElement = ['mdi-account-cash', 'Account Cash', 'account-cash']
             this.items.splice(this.items.length - 1, 0, newElement);
         }
+        await this.getCsrfToken()
+        if (this.isUserCanReadReorder)
+            this.fetchReorder()
         // const permissions = window.$cookies.get('permissions')
         // console.log('permissions: ', JSON.parse(permissions.slice(2, permissions.length)))
     },
