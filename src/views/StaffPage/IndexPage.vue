@@ -196,6 +196,9 @@ export default {
         reloadRolePermission(data) {
             const test = this.groupedRolesAndPermissions(data)
             this.items.role = test
+            if (!this.isAdmin) {
+                delete this.items.role.admin
+            }
         },
         groupedRolesAndPermissions(roleAndPermissions) {
             return roleAndPermissions.reduce((groups, item) => {
