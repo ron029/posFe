@@ -9,7 +9,7 @@
                 ref="form"
                 @submit.prevent="submitForm"
             >
-                <v-card-title style="background-color: blue; color: white">Edit Staff: ({{ employeeFindData.DATA[0].name }})</v-card-title>
+                <v-card-title style="background-color: blue; color: white">Edit staff: ({{ employeeFindData.DATA[0].name }})</v-card-title>
                 <v-card-text>
                     <v-select
                         v-model="user.role_id"

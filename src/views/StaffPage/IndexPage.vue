@@ -39,6 +39,7 @@
                 :headers="headers.staff"
                 :items="items.staff"
                 @editAccount="editAccount"
+                @editPassword="editPassword"
             />
             <tblRole
                 :show="displayPage.role"
@@ -53,9 +54,14 @@
             />
         </v-card>
         <EditStaff
-            v-if="show.edit.staff"
-            :show="show.edit.staff"
-            @closeDialog="show.edit.staff=false"
+            v-if="show.edit.staffInfo.value"
+            :show="show.edit.staffInfo.value"
+            @closeDialog="closeEditStaffInfo"
+        />
+        <EditPassword
+            v-if="show.edit.staffPassword.value"
+            :show="show.edit.staffPassword.value"
+            @closeDialog="closeEditStaffPassword"
         />
         <NewStaff
             :show="show.newStaff"
@@ -73,13 +79,13 @@ import tblAudit from './tblAudit.vue';
 import tblRole from './tblRole.vue';
 import tblStaff from './tblStaff.vue';
 import EditStaff from './EditStaff.vue';
+import EditPassword from './EditPassword.vue';
 import NewStaff from './NewStaff.vue';
 import NewRole from './NewRole.vue';
 import { mapActions, mapGetters } from 'vuex';
 
 export default {
-    components: {
-        tblAudit, tblRole, tblStaff, EditStaff, NewRole, NewStaff },
+    components: { tblAudit, tblRole, tblStaff, EditStaff, NewRole, NewStaff, EditPassword },
     data: () => ({
         isAdmin: window.$cookies.get("admin") === '1',
         expanded: [],
@@ -94,7 +100,14 @@ export default {
             newStaff: false,
             role: false,
             edit: {
-                staff: false
+                staffInfo: {
+                    value: false,
+                    status: false
+                },
+                staffPassword: {
+                    value: false,
+                    status: false
+                }
             }
         },
         headers: {
@@ -145,7 +158,10 @@ export default {
         },
         employeeFindData(newVal) {
             if (newVal.STATUS === 200) {
-                this.show.edit.staff = true
+                if (this.show.edit.staffInfo.status)
+                    this.show.edit.staffInfo.value = true
+                if (this.show.edit.staffPassword.status)
+                    this.show.edit.staffPassword.value = true
             } else {
                 console.error(newVal.STATE)
             }
@@ -161,6 +177,18 @@ export default {
     },
     methods: {
         ...mapActions(['employee', 'employeeFind', 'userRole']),
+        closeEditStaffPassword() {
+            this.show.edit.staffPassword = {
+                value: false,
+                status: false
+            }
+        },
+        closeEditStaffInfo() {
+            this.show.edit.staffInfo = {
+                value: false,
+                status: false
+            }
+        },
         closeRoleDialog() {
             this.show.role=false
             this.userRole()
@@ -185,6 +213,11 @@ export default {
             this.displayPage.audit = page === 'audit'
         },
         editAccount(employee_id) {
+            this.show.edit.staffInfo.status = true
+            this.employeeFind(employee_id)
+        },
+        editPassword(employee_id) {
+            this.show.edit.staffPassword.status = true
             this.employeeFind(employee_id)
         }
     },

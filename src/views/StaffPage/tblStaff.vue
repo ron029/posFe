@@ -20,8 +20,8 @@
             </span>
             <span style="text-wrap: nowrap;">
                 <v-btn icon color="info"
-                    disabled
-                    @click="test"
+                    @click="$emit('editPassword', item.employee_id)"
+                    :disabled="!isUserCanUpdateEmployeePass"
                 ><v-icon>mdi-lock-reset</v-icon></v-btn>
             </span>
         </template>
@@ -43,11 +43,13 @@ export default {
             if (permissions) return permissions.some(item => item.name === 'employee:2')
             return false
         },
+        isUserCanUpdateEmployeePass() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'empl_pass:2')
+            return false
+        },
     },
     methods: {
-        test() {
-
-        },
         formatDate(date) {
             if (date === null) return ''
             return moment(date).utcOffset('+0800').format('MMMM D, YYYY')
