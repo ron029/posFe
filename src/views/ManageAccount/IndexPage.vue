@@ -102,7 +102,7 @@ export default {
         }
     }),
     computed: {
-        ...mapGetters(['employeeFindData', 'findUserRolePermissionData', 'changePasswordData']),
+        ...mapGetters(['employeeFindData', 'findUserRolePermissionData']),
         isUserCanUpdatePassword() {
             const permissions = this.findUserRolePermissionData
             if (permissions) return permissions.some(item => item.name === 'self_pass:2')

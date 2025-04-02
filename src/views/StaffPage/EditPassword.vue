@@ -72,7 +72,7 @@ export default {
     }),
     props: ['show'],
     computed: {
-        ...mapGetters(['employeeFindData', 'changePasswordData']),
+        ...mapGetters(['employeeFindData', 'changePasswordStaffData']),
         showDialog: {
             get() {
                 return this.show
@@ -83,7 +83,7 @@ export default {
         }
     },
     watch: {
-        changePasswordData(newVal) {
+        changePasswordStaffData(newVal) {
             if (newVal.STATUS === 200) {
                 alert('Password updated successfully')
                 this.$emit('closeDialog')
@@ -95,11 +95,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['changePassword']),
+        ...mapActions(['changePasswordStaff']),
         submitForm() {
             if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
                 const employee_id = this.employeeFindData.DATA[0].employee_id
-                this.changePassword({employee_id, PASS_OLD: this.pass.old.value, PASS_NEW: this.pass.new.value})
+                this.changePasswordStaff({employee_id, PASS_OLD: this.pass.old.value, PASS_NEW: this.pass.new.value})
             }
         }
     }

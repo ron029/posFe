@@ -77,7 +77,7 @@ export default {
     }),
     props: ['showChangePass'],
     computed: {
-        ...mapGetters(['changePasswordData']),
+        ...mapGetters(['changePasswordSelfData']),
         showDialog: {
             get() {
                 return this.showChangePass
@@ -88,11 +88,11 @@ export default {
         }
     },
     watch: {
-        changePasswordData(newVal) {
+        changePasswordSelfData(newVal) {
             if (newVal.STATUS === 200) {
                 alert('Password updated successfully')
                 this.$emit('closeDialog')
-            } else if (newVal.STATUS === 406) {
+            } else if (newVal.STATUS === 406 || newVal.STATUS === 403) {
                 alert(newVal.STATE)
             } else {
                 console.error(newVal.STATE)
@@ -100,11 +100,11 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['changePassword']),
+        ...mapActions(['changePasswordSelf']),
         submitForm() {
             if (this.$refs && this.$refs.form && this.$refs.form.validate()) {
                 const employee_id = window.$cookies.get('userId')
-                this.changePassword({employee_id, PASS_OLD: this.password.old.value, PASS_NEW: this.password.new.value})
+                this.changePasswordSelf({employee_id, PASS_OLD: this.password.old.value, PASS_NEW: this.password.new.value})
             }
         }
     }

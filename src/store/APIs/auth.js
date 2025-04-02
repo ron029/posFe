@@ -1,8 +1,11 @@
 import API from "@/plugins/axios"
 
 export default {
-    changePassword(params) {
-        return API.post(`/auth/change-password/${params.employee_id}`, params)
+    changePasswordSelf(params) {
+        return API.post(`/auth/change-password/self/${params.employee_id}`, params)
+    },
+    changePasswordStaff(params) {
+        return API.post(`/auth/change-password/staff/${params.employee_id}`, params)
     },
     signUp(params) {
         return API.post('/auth/signup', params)

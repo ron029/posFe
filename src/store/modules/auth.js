@@ -30,18 +30,31 @@ export const authentication = {
         isCashRegisterRecordedData: null,
         isUserTimeout: false,
         loginData: null,
-        changePasswordData: null,
+        changePasswordSelfData: null,
+        changePasswordStaffData: null,
     },
     actions: {
-        changePassword({commit}, params) {
+        changePasswordSelf({commit}, params) {
             try {
                 AUTH_API
-                    .changePassword(params)
+                    .changePasswordSelf(params)
                     .then(res => {
-                        commit('CHANGE_PASSWORD', res.data)
+                        commit('CHANGE_PASSWORD_SELF', res.data)
                     })
             } catch (err) {
-                commit('CHANGE_PASSWORD', err.response)
+                commit('CHANGE_PASSWORD_SELF', err.response)
+                console.error(err)
+            }
+        },
+        changePasswordStaff({commit}, params) {
+            try {
+                AUTH_API
+                    .changePasswordStaff(params)
+                    .then(res => {
+                        commit('CHANGE_PASSWORD_STAFF', res.data)
+                    })
+            } catch (err) {
+                commit('CHANGE_PASSWORD_STAFF', err.response)
                 console.error(err)
             }
         },
@@ -115,8 +128,11 @@ export const authentication = {
         },
     },
     mutations: {
-        CHANGE_PASSWORD(state, changePasswordData) {
-            state.changePasswordData = changePasswordData
+        CHANGE_PASSWORD_SELF(state, changePasswordSelfData) {
+            state.changePasswordSelfData = changePasswordSelfData
+        },
+        CHANGE_PASSWORD_STAFF(state, changePasswordStaffData) {
+            state.changePasswordStaffData = changePasswordStaffData
         },
         FIND_USER_ROLE_PERMISSION(state, findUserRolePermissionData) {
             state.findUserRolePermissionData = findUserRolePermissionData
@@ -139,8 +155,11 @@ export const authentication = {
         }
     },
     getters: {
-        changePasswordData(state) {
-            return state.changePasswordData
+        changePasswordStaffData(state) {
+            return state.changePasswordStaffData
+        },
+        changePasswordSelfData(state) {
+            return state.changePasswordSelfData
         },
         findUserRolePermissionData(state) {
             return state.findUserRolePermissionData
