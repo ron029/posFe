@@ -31,6 +31,7 @@
                 right
                 @click="show.role=true"
                 color="success"
+                :disabled="isUserCanReadRole"
             ><v-icon>mdi-account-multiple-plus</v-icon>&nbsp;New</v-btn>
         </v-card>
         <v-card>
@@ -127,11 +128,11 @@ export default {
                 {text: '', value: 'data-table-expand'},
             ],
             audit: [
-                {text: 'Name', value: 'name'},
-                {text: 'Role', value: 'role'},
+                {text: 'Name', value: 'employee_id'},
                 {text: 'Action', value: 'action'},
-                {text: 'Description', value: 'description'},
-                {text: 'Time', value: 'time'}
+                {text: 'Description', value: 'details'},
+                {text: 'Permission', value: 'details.permission'},
+                {text: 'Timestamp', value: 'created_at'}
             ]
         },
         items: {
@@ -141,14 +142,37 @@ export default {
         },
     }),
     computed: {
-        ...mapGetters(['employeeData', 'employeePostData', 'employeeFindData', 'roleData', 'permissionData']),
+        ...mapGetters(['employeeData', 'employeePostData', 'employeeFindData', 'roleData', 'permissionData', 'loggerData', 'findUserRolePermissionData']),
         isUserCanCreateEmployee() {
             const permissions = this.findUserRolePermissionData
             if (permissions) return permissions.some(item => item.name === 'employee:0')
             return false
         },
+        isUserCanReadEmployee() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'employee:1')
+            return false
+        },
+        isUserCanReadRole() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'role:1')
+            return false
+        },
+        isUserCanReadLogs() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'logs:1')
+            return false
+        },
     },
     watch: {
+        loggerData(newVal) {
+            if (newVal.STATUS === 200) {
+                this.items.audit = newVal.DATA
+            } else {
+                console.log(newVal.STATE)
+            }
+            console.log('watch loggerData newVal: ', newVal)
+        },
         roleData(newVal) {
             if (newVal.STATUS === 200) {
                 this.reloadRolePermission(newVal.DATA)
@@ -176,7 +200,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(['employee', 'employeeFind', 'userRole']),
+        ...mapActions(['employee', 'employeeFind', 'userRole', 'logger']),
         closeEditStaffPassword() {
             this.show.edit.staffPassword = {
                 value: false,
@@ -225,8 +249,12 @@ export default {
         }
     },
     mounted() {
-        this.employee()
-        this.userRole()
+        if (this.isUserCanReadEmployee)
+            this.employee()
+        if (this.isUserCanReadRole)
+            this.userRole()
+        if (this.isUserCanReadLogs)
+            this.logger()
     }
 }
 </script>
