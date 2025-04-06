@@ -880,7 +880,7 @@ export default {
         },
         addCustomProduct() {
             this.productNum = {
-                value: 1,
+                value: null,
                 status: false,
                 custom: true
             }
