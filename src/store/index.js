@@ -18,7 +18,7 @@ import { companyProfile } from "./modules/companyProfile";
 import { productExpiration } from "./modules/productExpiration";
 import { manageDatabase } from './modules/manageDatabase';
 import { logger } from './modules/logger';
-
+import { inventoryAdjustments } from './modules/inventoryAdjustment'
 
 import loading from "./modules/loading";
 
@@ -26,6 +26,7 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   modules: {
+    inventoryAdjustments,
     logger,
     manageDatabase,
     productExpiration,

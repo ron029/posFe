@@ -11,6 +11,7 @@
                 <v-btn v-show="false" @click="show.import = true">Import</v-btn>
                 <v-btn v-show="false" @click="productExport">Export</v-btn>
                 <v-btn @click="show.productExpire = true">Product Expiry Dates</v-btn>
+                <v-btn @click="show.inventoryAdjustment = true">Inventory Adjustments</v-btn>
             </v-card-text>
         </v-card>
         <v-text-field
@@ -87,10 +88,16 @@
             :show="show.productExpire"
             @closeDialog="show.productExpire = false"
         />
+        <InventoryAdjustment
+            v-if="show.inventoryAdjustment"
+            :show="show.inventoryAdjustment"
+            @closeDialog="show.inventoryAdjustment = false"
+        />
     </div>
 </template>
 
 <script>
+import InventoryAdjustment from './InventoryAdjustments/IndexPage.vue'
 import PrductExpirationPage from './ProductExpirationPage/IndexPage.vue';
 import deletePage from './dialogs/ProductPage/DeletePage.vue';
 import addPage from './dialogs/ProductPage/AddPage.vue';
@@ -102,7 +109,7 @@ import { mapActions, mapGetters } from 'vuex';
 import editPage from './dialogs/ProductPage/EditPage.vue';
 export default {
     components: {
-        deletePage, addPage, editPage, showBrand, showSupplier, showUnit, showCategory, PrductExpirationPage,
+        deletePage, addPage, editPage, showBrand, showSupplier, showUnit, showCategory, PrductExpirationPage, InventoryAdjustment,
     },
     data: ()=>({
         show: {
@@ -119,6 +126,7 @@ export default {
             brand: false,
             supplier: false,
             productExpire: false,
+            inventoryAdjustment: false
         },
         valid: false,
         select: {
