@@ -28,7 +28,7 @@
                         :key="index"
                         dense
                         v-model="permissionItem.value"
-                        :label="permissionItem.action[1]"
+                        :label="getLabel(Number(permissionItem.action[1]))"
                     ></v-checkbox>
                 </div>
                 </v-card-text>
@@ -101,6 +101,20 @@ export default {
     },
     methods: {
         ...mapActions(['signUp', 'employee', 'role', 'rolePost']),
+        getLabel(index) {
+            let name = null
+            switch(index) {
+                case 0: name = 'create'
+                    break
+                case 1: name = 'read'
+                    break
+                case 2: name = 'update'
+                    break
+                case 3: name = 'delete'
+                    break
+            }
+            return name
+        },
         selectAllPermission() {
             this.selectedAllPermission = true
             this.userRole.permissions.forEach((item) => {
