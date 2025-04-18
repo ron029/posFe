@@ -23,7 +23,7 @@
                 right
                 @click="show.newStaff=true"
                 color="success"
-                :disabled="isUserCanCreateEmployee"
+                :disabled="!isUserCanCreateEmployee"
             ><v-icon>mdi-account-plus</v-icon>&nbsp;New</v-btn>
             <v-btn
                 v-if="displayPage.role"
@@ -31,7 +31,7 @@
                 right
                 @click="show.role=true"
                 color="success"
-                :disabled="isUserCanReadRole"
+                :disabled="!isUserCanCreateRole"
             ><v-icon>mdi-account-multiple-plus</v-icon>&nbsp;New</v-btn>
         </v-card>
         <v-card>
@@ -153,6 +153,11 @@ export default {
             if (permissions) return permissions.some(item => item.name === 'employee:1')
             return false
         },
+        isUserCanCreateRole() {
+            const permissions = this.findUserRolePermissionData
+            if (permissions) return permissions.some(item => item.name === 'role:0')
+            return false
+        },
         isUserCanReadRole() {
             const permissions = this.findUserRolePermissionData
             if (permissions) return permissions.some(item => item.name === 'role:1')
@@ -249,6 +254,7 @@ export default {
         }
     },
     mounted() {
+        console.log('this.findUserRolePermissionData: ', this.findUserRolePermissionData)
         if (this.isUserCanReadEmployee)
             this.employee()
         if (this.isUserCanReadRole)
