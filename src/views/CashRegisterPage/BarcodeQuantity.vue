@@ -49,7 +49,7 @@
                     >
                         <template v-slot:item="{ item }">
                             <p style="text-align: right; width: 100%; position: relative; height: 20px; padding-top: 5px;">
-                                <span style="position: absolute; left: 0; font-weight: 700;">{{ item.barcode }}</span> {{ String(item.brand).toUpperCase() }} <strong>{{ String(item.name).toUpperCase() }}</strong> {{ String(item.unit).toUpperCase() }} @ {{ item.selling_price }}
+                                <span style="position: absolute; left: 0; font-weight: 700;">{{ item.barcode }}</span> {{ String(item.brand).toUpperCase() }} <span style="font-weight: 800;">{{ String(item.name).toUpperCase() }}</span> {{ String(item.unit).toUpperCase() }} @ <span style="font-weight: 800;">{{ item.selling_price }}</span>
                             </p>
                         </template>
                     </v-combobox>
