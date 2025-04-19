@@ -130,12 +130,6 @@ export default {
         },
     },
     watch: {
-        productData(newVal) {
-            console.log('productData: ', newVal)
-        },
-        productItemsToSearch(newVal) {
-            console.log('productItemsToSearch: ', newVal)
-        },
         triggerBlurBarcode() {
             this.$nextTick(()=>{
                 if (this.$refs && this.$refs.barcode) {
