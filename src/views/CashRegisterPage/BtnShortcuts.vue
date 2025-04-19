@@ -8,7 +8,10 @@
             <img src="./../../assets/buy_8305477-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F12</span>Input Quantity
         </div>
-        <div style="height: 190px; width: 200px; background-color: #00ff00 ; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div
+            @click="onClickFunc.f9 = true"
+            style="height: 190px; width: 200px; background-color: #00ff00 ; color: black; margin: 10px; display: inline-block; vertical-align: top;"
+        >
             <img src="./../../assets/wallet_10630192-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F9</span>Finish Payment
         </div>

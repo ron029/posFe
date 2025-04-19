@@ -44,6 +44,7 @@
         <PaymentPage
             :data="{ totalAmount, transactions: transactions.value }"
             :isNewTransaction="isNewTransaction"
+            :onClickFunc="onClickFunc"
             @focusToBarcode="focusToBarcode"
             @saveTransaction="saveTransaction"
         />

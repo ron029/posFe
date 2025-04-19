@@ -63,7 +63,7 @@ export default {
     components: {
         NotifDialog,
     },
-    props: ['data', 'isNewTransaction'],
+    props: ['data', 'isNewTransaction', 'onClickFunc'],
     data: () => ({
         valid: false,
         cash: null,
@@ -90,6 +90,30 @@ export default {
                 return 'error'
             }
         }
+    },
+    watch: {
+        onClickFunc: {
+            handler(newVal) {
+                const BtnShortcuts = Object.keys(newVal)
+                for (let i=0; i<BtnShortcuts.length; i++) {
+                    if (newVal[BtnShortcuts[i]] === true) {
+                        if (BtnShortcuts[i] === 'f9') {
+                            if (this.data.transactions.length > 0 || !this.isNewTransaction) {
+                                this.cash = null;
+                                this.show.payment = true;
+                                this.$nextTick(()=>{
+                                    this.$refs?.form?.reset()
+                                })
+                            } else {
+                                this.show.error = true;
+                            }
+                        }
+                    }
+                }
+            },
+            immediate: true,
+            deep: true
+        },
     },
     methods: {
         processTransaction() {
