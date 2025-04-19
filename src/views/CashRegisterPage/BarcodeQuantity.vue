@@ -106,7 +106,7 @@ export default {
         showQuantity: false,
         quantity: 1,
     }),
-    props: ['focusToBarcode', 'isNewTransaction', 'triggerBlurBarcode'],
+    props: ['focusToBarcode', 'isNewTransaction', 'triggerBlurBarcode', 'onClickFunc'],
     computed: {
         ...mapGetters(['findBarcodeData', 'productData']),
         productItemsToSearch() {
@@ -125,11 +125,35 @@ export default {
                             this.$refs.barcode.focus()
                     }
                 })
+                if (String(this.quantity).trim() !== null || typeof this.quantity !== 'number' && isNaN(this.quantity)) {
+                    this.quantity = 1
+                }
                 this.showQuantity = false
             }
         },
     },
     watch: {
+        onClickFunc: {
+            handler(newVal) {
+                const BtnShortcuts = Object.keys(newVal)
+                for (let i=0; i<BtnShortcuts.length; i++) {
+                    if (newVal[BtnShortcuts[i]] === true) {
+                        if (BtnShortcuts[i] === 'f12') {
+                            this.quantity = null
+                            this.$nextTick(()=>{
+                                if (this.$refs) {
+                                    if (this.$refs.quantity)
+                                        this.$refs.quantity.reset()
+                                }
+                            })
+                            this.showQuantity = true
+                        }
+                    }
+                }
+            },
+            immediate: true,
+            deep: true
+        },
         triggerBlurBarcode() {
             this.$nextTick(()=>{
                 if (this.$refs && this.$refs.barcode) {

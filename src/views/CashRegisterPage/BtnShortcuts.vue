@@ -1,6 +1,10 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
     <div style="vertical-align: top" class="btnContainer">
-        <div style="height: 190px; width: 200px; background-color: yellow; color: black; margin: 10px; display: inline-block; vertical-align: top; text-shadow: 2px 2px 5px white;">
+        <div
+            @click="onClickFunc.f12 = true"
+            style="height: 190px; width: 200px; background-color: yellow; color: black; margin: 10px; display: inline-block; vertical-align: top; text-shadow: 2px 2px 5px white;"
+        >
             <img src="./../../assets/buy_8305477-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F12</span>Input Quantity
         </div>
@@ -44,6 +48,17 @@
 
     </div>
 </template>
+
+<script>
+export default {
+    props: ['onClickFunc'],
+    methods: {
+        test() {
+            alert('ok')
+        }
+    }
+}
+</script>
 
 <style scoped>
 .btnContainer {

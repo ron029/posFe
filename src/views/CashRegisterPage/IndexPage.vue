@@ -8,6 +8,7 @@
                         :focusToBarcode="focus.barcode"
                         :isNewTransaction="isNewTransaction"
                         :triggerBlurBarcode="triggerBlurBarcode"
+                        :onClickFunc="onClickFunc"
                         @saveBarcodeQuantity="saveBarcodeQuantity"
                         @offFocusToBarcode="focus.barcode = false"
                         @isSearchIsEmpty="isSearchIsEmpty"
@@ -17,7 +18,10 @@
                         <p class="title1" style="margin: 0; padding: 0; position: absolute; left: 10px; top: 10px;">Step 3: Complete Payment (F9)</p>
                         <p class="text-right" style="font-size: 80px; font-weight: 700; color: green; padding: 0; margin: 0">{{ totalAmount.toFixed(2) }}</p>
                     </div>
-                    <BtnShortcuts style="height: 300px; width: 100%;"/>
+                    <BtnShortcuts
+                        style="height: 300px; width: 100%;"
+                        :onClickFunc="onClickFunc"
+                    />
                 </div>
             </v-col>
             <v-col lg="6" md="6" style="padding: 10px 10px 0 5px;">
@@ -121,6 +125,14 @@ export default {
         NotifDialog,
     },
     data: () => ({
+        onClickFunc: {
+            f12: false,
+            f11: false,
+            f9: false,
+            f4: false,
+            f6: false,
+            f2: false
+        },
         triggerBlurBarcode: 0,
         isNewTransaction: true,
         cashierMode: '',
@@ -171,6 +183,19 @@ export default {
         }
     },
     watch: {
+        onClickFunc: {
+            handler(newVal) {
+                const BtnShortcuts = Object.keys(newVal)
+                this.$nextTick(()=> {
+                    for (let i=0; i<BtnShortcuts.length; i++) {
+                        if (newVal[BtnShortcuts[i]] === true) {
+                            newVal[BtnShortcuts[i]] = false
+                        }
+                    }
+                })
+            },
+            deep: true
+        },
         saveSalesModifiedData(newVal) {
             if (newVal.STATUS === 201) {
                 this.show.error = true
