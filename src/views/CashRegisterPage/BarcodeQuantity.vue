@@ -48,7 +48,7 @@
                         :search-input.sync="searchInputSync"
                     >
                         <template v-slot:item="{ item }">
-                            <p style="text-align: right; width: 100%; position: relative; height: 20px; padding-top: 5px;">
+                            <p :style="`background-color: ${item.quantity <= item.reorder_level && item.quantity > 0 ? '#ddd' : item.quantity < 1 ? '#ffc4c4' : ''}; text-align: right; width: 100%; position: relative; padding-top: 5px;`">
                                 <span style="position: absolute; left: 0; font-weight: 700;">{{ item.barcode }}</span> {{ String(item.brand).toUpperCase() }} <span style="font-weight: 800;">{{ String(item.name).toUpperCase() }}</span> {{ String(item.unit).toUpperCase() }} @ <span style="font-weight: 800;">{{ item.selling_price }}</span>
                             </p>
                         </template>
@@ -111,7 +111,7 @@ export default {
         ...mapGetters(['findBarcodeData', 'productData']),
         productItemsToSearch() {
             return this.productData && this.productData.DATA && this.productData.DATA.length > 0
-                ? this.productData.DATA.map(item => ({brand: item.brand, unit: item.unit, name: item.name, barcode: item.barcode, selling_price: item.selling_price, displayName: `${item.barcode} ${item.category} ${item.brand} ${item.name} ${item.unit} ${item.selling_price}`}))
+                ? this.productData.DATA.map(item => ({brand: item.brand, unit: item.unit, name: item.name, barcode: item.barcode, selling_price: item.selling_price, displayName: `${item.barcode} ${item.category} ${item.brand} ${item.name} ${item.unit} ${item.selling_price}`, quantity: item.quantity, reorder_level: item.reorder_level}))
                 : []
         },
         showDialog: {
@@ -130,6 +130,12 @@ export default {
         },
     },
     watch: {
+        productData(newVal) {
+            console.log('productData: ', newVal)
+        },
+        productItemsToSearch(newVal) {
+            console.log('productItemsToSearch: ', newVal)
+        },
         triggerBlurBarcode() {
             this.$nextTick(()=>{
                 if (this.$refs && this.$refs.barcode) {
