@@ -191,6 +191,11 @@ export default {
                 this.$nextTick(()=> {
                     for (let i=0; i<BtnShortcuts.length; i++) {
                         if (newVal[BtnShortcuts[i]] === true) {
+                            if (BtnShortcuts[i] === 'f11') {
+                                this.handleF11Func()
+                            } else if (BtnShortcuts[i] === 'f2') {
+                                if (this.$route.path !== '/pos') this.$router.push('/pos')
+                            }
                             newVal[BtnShortcuts[i]] = false
                         }
                     }
@@ -219,6 +224,18 @@ export default {
     },
     methods: {
         ...mapActions(['saveSales', 'getCsrfToken', 'getNextSalesId', 'retriveTransaction', 'saveSalesModified', 'companyProfiles']),
+        handleF11Func() {
+            if (this.transactions.value.length > 0) {
+                const isItemSelected = this.transactions.value.some(item => item.isCurrent === true)
+                if (isItemSelected) {
+                    this.$eventBus.$emit('isDialogOpen', { status: true });
+                    this.show.editItem = true
+                } else {
+                    this.show.error = true
+                    this.show.errorData = { message: 'Please select an item to edit' }
+                }
+            }
+        },
         showNoItemsLeft() {
             this.show.noItemsLeft = true
         },
@@ -344,17 +361,7 @@ export default {
             // }
             if (event.key === "F11") {
                 event.preventDefault()
-                if (this.transactions.value.length > 0) {
-                    const isItemSelected = this.transactions.value.some(item => item.isCurrent === true)
-                    if (isItemSelected) {
-                        this.$eventBus.$emit('isDialogOpen', { status: true });
-                        this.show.editItem = true
-                    } else {
-                        this.show.error = true
-                        this.show.errorData = { message: 'Please select an item to edit' }
-                    }
-
-                }
+                this.handleF11Func()
             }
             if (event.key === "ArrowUp" && this.isSearchIsEmptyVar) {
                 event.preventDefault()

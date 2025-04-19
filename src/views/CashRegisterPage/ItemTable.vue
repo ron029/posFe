@@ -139,17 +139,9 @@ export default {
                 for (let i=0; i<BtnShortcuts.length; i++) {
                     if (newVal[BtnShortcuts[i]] === true) {
                         if (BtnShortcuts[i] === 'f4') {
-                            this.$nextTick(()=>{
-                            this.items.forEach((item) => {
-                                item.isPrinting = true
-                            });
-                            this.$nextTick(()=>{
-                                window.print()
-                                this.items.forEach((item) => {
-                                    item.isPrinting = false
-                                });
-                            })
-                        })
+                            this.handleF4Func()
+                        } else if (BtnShortcuts[i] === 'f6') {
+                            this.handleF6Func()
                         }
                     }
                 }
@@ -193,6 +185,29 @@ export default {
     },
     methods: {
         ...mapActions(['retriveTransaction', 'getNextSalesId']),
+        handleF6Func() {
+            const indexOfTaret = this.items.findIndex(item => item.isCurrent === true)
+            if (indexOfTaret !== -1) {
+                this.items.splice(indexOfTaret, 1)
+                if (this.items.length > 0)
+                    this.items[indexOfTaret]
+                        ? this.items[indexOfTaret].isCurrent = true
+                        : this.items[indexOfTaret - 1].isCurrent = true
+            }
+        },
+        handleF4Func() {
+            this.$nextTick(()=>{
+                this.items.forEach((item) => {
+                    item.isPrinting = true
+                });
+                this.$nextTick(()=>{
+                    window.print()
+                    this.items.forEach((item) => {
+                        item.isPrinting = false
+                    });
+                })
+            })
+        },
         retrieveTrans(direction) {
             // Set loading state to true
             this.isLoading = true;
@@ -227,28 +242,10 @@ export default {
         handleKeyPress(event) {
             if (event.key === "F6") {
                 event.preventDefault(); // Prevent default browser behavior
-                const indexOfTaret = this.items.findIndex(item => item.isCurrent === true)
-                if (indexOfTaret !== -1) {
-                    this.items.splice(indexOfTaret, 1)
-                    if (this.items.length > 0)
-                        this.items[indexOfTaret]
-                            ? this.items[indexOfTaret].isCurrent = true
-                            : this.items[indexOfTaret - 1].isCurrent = true
-                }
+                this.handleF6Func()
             }
             if (event.key === "F4") {
-                this.$nextTick(()=>{
-                    event.preventDefault()
-                    this.items.forEach((item) => {
-                        item.isPrinting = true
-                    });
-                    this.$nextTick(()=>{
-                        window.print()
-                        this.items.forEach((item) => {
-                            item.isPrinting = false
-                        });
-                    })
-                })
+                this.handleF4Func()
             }
             if (event.key === "p" || event.key === "P") {
                 this.$nextTick(()=>{

@@ -23,15 +23,24 @@
             <span>F4</span>Print Order Slip
         </div>
         <br>
-        <div style="height: 190px; width: 200px; background-color: red; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div
+            @click="onClickFunc.f6 = true"
+            style="height: 190px; width: 200px; background-color: red; color: black; margin: 10px; display: inline-block; vertical-align: top;"
+        >
             <img src="./../../assets/dustbin_8305532-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F6</span>Remove Item
         </div>
-        <div style="height: 190px; width: 200px; background-color: orange; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div
+            @click="onClickFunc.f11 = true"
+            style="height: 190px; width: 200px; background-color: orange; color: black; margin: 10px; display: inline-block; vertical-align: top;"
+        >
             <img src="./../../assets/brain_7650331-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F11</span>Revise Order
         </div>
-        <div style="height: 190px; width: 200px; background-color: #1e90ff ; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div
+            @click="onClickFunc.f2 = true"
+            style="height: 190px; width: 200px; background-color: #1e90ff ; color: black; margin: 10px; display: inline-block; vertical-align: top;"
+        >
             <img src="./../../assets/printer_10134828-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F2</span>Start/End Shift
         </div>
