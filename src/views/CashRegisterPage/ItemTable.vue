@@ -100,6 +100,7 @@ export default {
             last: null,
         },
     }),
+    props: ['isNewTransaction', 'transactions', 'tendered', 'onClickFunc'],
     computed: {
         ...mapGetters(['getNextSalesIdData', 'retriveTransactionData', 'companyProfilesData']),
         address2() {
@@ -131,8 +132,31 @@ export default {
             return window.$cookies.get('name').toUpperCase()
         }
     },
-    props: ['isNewTransaction', 'transactions', 'tendered'],
     watch: {
+        onClickFunc: {
+            handler(newVal) {
+                const BtnShortcuts = Object.keys(newVal)
+                for (let i=0; i<BtnShortcuts.length; i++) {
+                    if (newVal[BtnShortcuts[i]] === true) {
+                        if (BtnShortcuts[i] === 'f4') {
+                            this.$nextTick(()=>{
+                            this.items.forEach((item) => {
+                                item.isPrinting = true
+                            });
+                            this.$nextTick(()=>{
+                                window.print()
+                                this.items.forEach((item) => {
+                                    item.isPrinting = false
+                                });
+                            })
+                        })
+                        }
+                    }
+                }
+            },
+            immediate: true,
+            deep: true
+        },
         retriveTransactionData(newVal) {
             this.isLoading = false
             if (newVal.STATUS === 200) {

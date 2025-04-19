@@ -12,7 +12,10 @@
             <img src="./../../assets/wallet_10630192-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F9</span>Finish Payment
         </div>
-        <div style="height: 190px; width: 200px; background-color: gray; color: black; margin: 10px; display: inline-block; vertical-align: top;">
+        <div
+            @click="onClickFunc.f4 = true"
+            style="height: 190px; width: 200px; background-color: gray; color: black; margin: 10px; display: inline-block; vertical-align: top;"
+        >
             <img src="./../../assets/printer_12142397-removebg-preview.png" alt="test" height="100px" width="100px">
             <span>F4</span>Print Order Slip
         </div>

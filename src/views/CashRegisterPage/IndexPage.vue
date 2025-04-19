@@ -33,6 +33,7 @@
                             :transactions="transactions.value"
                             :tendered="tendered"
                             :show="show"
+                            :onClickFunc="onClickFunc"
                             @renderLastTrans="renderLastTrans"
                             @renderNewTrans="isNewTransaction = true"
                         />
