@@ -8,7 +8,7 @@
             <v-card-text class="text-center" style="padding: 30px 0; height: 100%">
                 <p style=" font-size: 30px; "><v-icon size="37" style="margin-bottom: 3px;">mdi-cash</v-icon> Change Due</p>
                 <p style=" font-size: 50px; "><v-icon size="47" style="margin-bottom: 10px;">mdi-currency-php</v-icon> {{ change?.toFixed(2) }}</p>
-                <p>Press <v-chip x-small class="chip">Alt + P</v-chip> to print <v-icon>mdi-receipt-text</v-icon> receipt</p>
+                <p>Press <v-chip x-small class="chip">F4</v-chip> to print <v-icon>mdi-receipt-text</v-icon> receipt</p>
             </v-card-text>
         </v-card>
     </v-dialog>
