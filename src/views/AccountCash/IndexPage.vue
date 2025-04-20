@@ -10,6 +10,12 @@
                     <template slot="item.created_at" slot-scope="{ item }">
                         {{ formatDate(item.created_at) }}
                     </template>
+                    <template slot="item.discrepancy" slot-scope="{ item }">
+                        <v-chip
+                            :color="discrepancyColor(item.discrepancy)"
+                            :style="`color: ${discrepancyColor(item.discrepancy) !== 'gray' ? 'white' : 'black'}`"
+                        >{{ item.discrepancy < 0 ? Number(Math.abs(item.discrepancy)).toFixed(2) : item.discrepancy }}</v-chip>
+                    </template>
                 </v-data-table>
             </v-card-text>
         </v-card>
@@ -45,6 +51,9 @@ export default {
     },
     methods: {
         ...mapActions(['allCashFlow']),
+        discrepancyColor(discrepancyNum) {
+            return discrepancyNum < 0 && discrepancyNum != 0  ? 'green' : Number(discrepancyNum) == 0 ? 'gray' : 'red'
+        },
         formatDate(date) {
             return moment(date).utcOffset('+0800').format('MMMM D, YYYY HH:mm:ss')
         }
