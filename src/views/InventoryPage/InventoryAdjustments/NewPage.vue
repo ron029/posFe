@@ -137,13 +137,12 @@ export default {
             if (newVal.STATUS === 201) {
                 this.showDialog = false
                 this.inventoryAdjustmentsGet()
-                this.adjustmentItems = structuredClone(this.template)
+                this.adjustmentItems = [structuredClone(this.template)]
                 this.referenceNum = {
                     autoGenerate: false,
                     value: null,
                 }
                 this.isFormSubmitted = false
-                this.items = []
                 this.remarks = null
             }
         },
@@ -154,18 +153,19 @@ export default {
                     displayName: `${item.brand} ${item.name} ${item.unit}`
                 }))
             }
-            console.log('watch productData newVal: ', newVal)
         },
         adjustmentItems: {
             handler() {
-                if (!this.isFormSubmitted) {
-                    const lastItem = this.adjustmentItems[this.adjustmentItems.length-1]
-                    if (lastItem.productId !== null && lastItem.incomingQuantity !== null && lastItem.adjustmentQuantity !== null) {
-                        setTimeout(() => {
-                            this.adjustmentItems.push(structuredClone(this.template))
-                        }, 500)
+                this.$nextTick(()=>{
+                    if (!this.isFormSubmitted && this.adjustmentItems.length > 0) {
+                        const lastItem = this.adjustmentItems[this.adjustmentItems.length-1]
+                        if (lastItem.productId !== null && lastItem.incomingQuantity !== null && lastItem.adjustmentQuantity !== null) {
+                            setTimeout(() => {
+                                this.adjustmentItems.push(structuredClone(this.template))
+                            }, 500)
+                        }
                     }
-                }
+                })
             },
             deep: true,
             immediate: true
@@ -191,7 +191,6 @@ export default {
                 params.referenceNum = this.referenceNum.value
                 params.employeeId = Number(window.$cookies.get('userId'))
                 params.remarks = this.remarks
-                console.log('params: ', params)
                 this.inventoryAdjustmentsPost(params)
             }
         },
