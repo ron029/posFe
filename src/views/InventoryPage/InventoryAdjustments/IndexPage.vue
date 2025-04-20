@@ -6,6 +6,8 @@
                     <v-data-table
                         :headers="headers"
                         :items="items"
+                        sort-by="created_at"
+                        :sort-desc="true"
                     >
                         <template v-slot:top>
                             <p class="text-right" style="padding: 10px 10px 0 10px;">
