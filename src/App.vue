@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import CashRegisterTransactions from './views/CashRegisterTransactions.vue';
+import CashRegisterTransactions from './views/CashRegisterTransactions/IndexPage.vue';
 import store from './store';
 import { mapActions, mapGetters } from 'vuex';
 import NotifDialog from './components/NotifDialog.vue'
@@ -52,7 +52,9 @@ export default {
     },
     watch: {
         registerCashFlowData(newVal) {
-            if (newVal.STATUS === 200) this.showCashRegisterRecorder = false
+            if (newVal.STATUS === 200) {
+                // this.showCashRegisterRecorder = false
+            }
         }
     },
     methods: {

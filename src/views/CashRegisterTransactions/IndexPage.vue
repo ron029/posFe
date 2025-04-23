@@ -23,9 +23,9 @@
                     <v-row>
                         <v-col cols="6">
                             <ul style="list-style-type: none; padding-left: 0;">
-                                <li>{{ user.timeIn ? formatTimeCard(user.timeIn) : '' }}</li>
-                                <li>{{ user.timeOut ? formatTimeCard(user.timeOut) : '' }}</li>
-                                <li>{{ user.name }}</li>
+                                <li>In: {{ user.timeIn ? formatTimeCard(user.timeIn) : '' }}</li>
+                                <li>Out: {{ user.timeOut ? formatTimeCard(user.timeOut) : '' }}</li>
+                                <li>Cashier: {{ user.name }}</li>
                             </ul>
                         </v-col>
                         <v-col cols="6">
@@ -124,23 +124,39 @@
                     </v-row>
                 </v-card-text>
                 <v-card-actions>
+                    <v-btn
+                        v-if="showBtn.summary"
+                        @click="printSummary=true"
+                    >print summary</v-btn>
                     <v-spacer></v-spacer>
+                    <v-btn
+                        color="error"
+                        v-if="showBtn.logout"
+                        @click="logoutFunc"
+                    >logout</v-btn>
                     <v-btn color="success" type="submit">submit</v-btn>
                 </v-card-actions>
             </v-form>
         </v-card>
+        <SummaryPage
+            :show="printSummary"
+            @closeDialog="printSummary=false"
+        />
     </v-dialog>
 </template>
 
 <script>
 import moment from 'moment';
 import CashQuantityInput from '@/components/CashQuantityInput.vue';
+import SummaryPage from './SummaryPage.vue';
 import { mapActions, mapGetters } from 'vuex';
 export default {
     components: {
-        CashQuantityInput,
+        CashQuantityInput, SummaryPage,
     },
     data: () => ({
+        intervalId: null,
+        logoutStatus: false,
         discrepancyColor: 'secondary',
         sales: null,
         user: {
@@ -195,7 +211,12 @@ export default {
             sentimo_10: 0.10,
             sentimo_5: 0.05,
             sentimo_1: 0.01,
-        }
+        },
+        showBtn: {
+            logout: false,
+            summary: false
+        },
+        printSummary: false
     }),
     props: ['show', 'mode'],
     computed: {
@@ -264,7 +285,7 @@ export default {
         showCashRegisterRecorder: {
             get() {
                 return this.show
-            }
+            },
         },
         totalAmount() {
             let total = 0;
@@ -277,10 +298,21 @@ export default {
         },
     },
     watch: {
+        logoutStatus(newVal) {
+            if (newVal && this.intervalId) {
+                clearInterval(this.intervalId)
+                this.intervalId = null
+            }
+        },
         async registerCashFlowData(newVal) {
-            if (newVal.STATUS === 200 && this.mode === 'out') {
-                await this.getCsrfToken()
-                this.logout()
+            if (newVal.STATUS === 200 ) {
+                if (this.mode === 'out') {
+                    await this.getCsrfToken()
+                    this.showBtn.logout = true
+                    this.showBtn.summary = true
+                } else if (this.mode === 'in') {
+                    this.$emit('closeCashRegisterTransactions')
+                }
             } else {
                 console.error(newVal.STATE)
             }
@@ -304,12 +336,20 @@ export default {
         },
         mode(newVal) {
             if (newVal === 'out') {
-                this.user.timeOut = moment().format('YYYY-MM-DD HH:mm:ss')
+                this.intervalId = setInterval(() => {
+                    this.user.timeOut = moment().format('YYYY-MM-DD HH:mm:ss');
+                }, 1000);
             }
         }
     },
     methods: {
         ...mapActions(['registerCashFlow', 'logout', 'getCsrfToken']),
+        printSummaryFunc() {
+
+        },
+        logoutFunc() {
+            this.logout()
+        },
         assignDiscrepancyColor(color) {
             this.discrepancyColor = color
         },
@@ -345,10 +385,10 @@ export default {
                     this.data.deno.isTimeIn = 0
                     this.data.register.closing_amount = Number(this.totalAmount)
                 }
+                this.logoutStatus = true
                 this.registerCashFlow(this.data)
             }
         },
-
     },
     async mounted() {
         await this.getCsrfToken()
