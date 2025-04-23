@@ -6,8 +6,21 @@ export const registerCashFlow = {
     fetchSalesBySessionData: null,
     getExistingCashFlowData: null,
     registerCashFlowData: null,
+    fetchCashFlowSummaryData: null,
   },
   actions: {
+    fetchCashFlowSummary({commit}, data) {
+        try {
+            CASH_REGISTER_API
+            .fetchCashFlowSummary(data)
+            .then(res => {
+                commit('FETCH_CASH_FLOW_SUMMARY', res.data)
+                console.log('FETCH_CASH_FLOW_SUMMARY res.data: ', res.data)
+            })
+        } catch (err) {
+            console.error(err)
+        }
+    },
     allCashFlow({commit}) {
         try {
             CASH_REGISTER_API
