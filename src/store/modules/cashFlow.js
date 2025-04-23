@@ -15,7 +15,6 @@ export const registerCashFlow = {
             .fetchCashFlowSummary(data)
             .then(res => {
                 commit('FETCH_CASH_FLOW_SUMMARY', res.data)
-                console.log('FETCH_CASH_FLOW_SUMMARY res.data: ', res.data)
             })
         } catch (err) {
             console.error(err)
@@ -76,6 +75,9 @@ export const registerCashFlow = {
     },
   },
   mutations: {
+    FETCH_CASH_FLOW_SUMMARY(state, fetchCashFlowSummaryData) {
+        state.fetchCashFlowSummaryData = fetchCashFlowSummaryData
+    },
     ALL_CASH_FLOW(state, allCashFlowData) {
         state.allCashFlowData = allCashFlowData
     },
@@ -90,6 +92,9 @@ export const registerCashFlow = {
     },
   },
   getters: {
+    fetchCashFlowSummaryData(state) {
+        return state.fetchCashFlowSummaryData
+    },
     allCashFlowData(state) {
         return state.allCashFlowData
     },

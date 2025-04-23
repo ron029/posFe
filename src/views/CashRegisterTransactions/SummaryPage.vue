@@ -30,11 +30,8 @@ export default {
         }
     },
     watch: {
-        fetchSalesBySessionData(newVal) {
-            console.log('fetchSalesBySessionData newVal: ', newVal)
-        },
-        fetchCashFlowSummary(newVal) {
-            console.log('fetchCashFlowSummary newVal: ', newVal)
+        fetchCashFlowSummaryData(newVal) {
+            console.log('fetchCashFlowSummaryData newVal: ', newVal)
         },
         show(newVal) {
             if (newVal) {
